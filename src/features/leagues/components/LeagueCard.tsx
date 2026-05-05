@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import type { LeagueItem } from "../types/league.types";
+import { Card } from "@/components/ui/Card";
 
 type LeagueCardProps = {
   league: LeagueItem;
@@ -11,7 +12,8 @@ type LeagueCardProps = {
 export function LeagueCard({ league }: LeagueCardProps) {
   return (
     <Link href={`/ligas/${league.slug}`} className="block">
-      <article className="h-full rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:-translate-y-1 hover:border-[var(--color-accent)] hover:bg-white/10">
+
+      <Card>
         {/* País */}
         <span className="text-sm text-[var(--color-accent)]">
           {league.country}
@@ -22,7 +24,7 @@ export function LeagueCard({ league }: LeagueCardProps) {
 
         {/* Descripción */}
         <p className="mt-3 text-sm text-gray-400">{league.description}</p>
-      </article>
+      </Card>
     </Link>
   );
 }

@@ -13,6 +13,9 @@ export const eventsMock: EventItem[] = [
     league: "FMS México",
     date: "2026-06-15",
     status: "upcoming",
+    venue: "Pepsi Center WTC",
+time: "20:00",
+posterUrl: "/images/events/fms-mexico.jpg",
   },
   {
     id: "2",
@@ -23,6 +26,9 @@ export const eventsMock: EventItem[] = [
     league: "Red Bull Batalla",
     date: "2026-07-20",
     status: "upcoming",
+    venue: "Movistar Arena",
+    time: "19:00",
+    posterUrl: "/images/events/red-bull-colombia.jpg",
   },
   {
     id: "3",
@@ -33,6 +39,9 @@ export const eventsMock: EventItem[] = [
     league: "God Level",
     date: "2026-08-10",
     status: "upcoming",
+    venue: "Estadio Monumental",
+    time: "18:00",
+    posterUrl: "/images/events/god-level.jpg",
   },
   {
     id: "4",
@@ -43,6 +52,9 @@ export const eventsMock: EventItem[] = [
     league: "FMS México",
     date: "2026-06-15",
     status: "upcoming",
+    venue: "Pepsi Center WTC",
+    time: "20:00",
+    posterUrl: "/images/events/fms-mexico.jpg",
   },
   {
     id: "5",
@@ -53,6 +65,9 @@ export const eventsMock: EventItem[] = [
     league: "Red Bull Batalla",
     date: "2026-07-20",
     status: "upcoming",
+    venue: "Movistar Arena",
+    time: "19:00",
+    posterUrl: "/images/events/red-bull-colombia.jpg",
   },
   {
     id: "6",
@@ -63,5 +78,8 @@ export const eventsMock: EventItem[] = [
     league: "God Level",
     date: "2026-08-10",
     status: "upcoming",
+    venue: "Estadio Monumental",
+    time: "18:00",
+    posterUrl: "/images/events/god-level.jpg",
   },
 ];

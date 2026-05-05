@@ -11,8 +11,10 @@ type BlogDetailPageProps = {
   };
 };
 
-export default function BlogDetailPage({ params }: BlogDetailPageProps) {
-  const post = blogMock.find((post) => post.slug === params.slug);
+export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
+  const { slug } = await params;
+
+  const post = blogMock.find((post) => post.slug === slug);
 
   if (!post) {
     notFound();
