@@ -1,9 +1,9 @@
-// Card visual para mostrar la información resumida de un evento.
-// Ahora incluye navegación al detalle usando el slug.
+// Card visual para mostrar información resumida de un evento.
+// Usa componentes reutilizables como Card y Badge.
 
 import Link from "next/link";
-import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
 import type { EventItem } from "../types/event.types";
 
 type EventCardProps = {
@@ -12,33 +12,40 @@ type EventCardProps = {
 
 export function EventCard({ event }: EventCardProps) {
   return (
-    // Convertimos toda la card en un link
     <Link href={`/eventos/${event.slug}`} className="block">
-
       <Card>
-        {/* Liga o marca principal del evento */}
-        <span className="text-sm text-[var(--color-accent)]">
-          {event.league}
-        </span>
+        {/* Header: liga y estado */}
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-sm font-medium text-[var(--color-accent)]">
+            {event.league}
+          </span>
 
-        {/* Nombre del evento */}
-        <h3 className="mt-2 text-xl font-bold">{event.title}</h3>
+          <Badge>{event.status}</Badge>
+        </div>
 
-        {/* Ubicación */}
-        <p className="mt-2 text-sm text-gray-400">
-          {event.city}, {event.country}
-        </p>
+        {/* Body: título y ubicación */}
+        <div className="mt-5">
+          <h3 className="text-xl font-bold leading-tight">
+            {event.title}
+          </h3>
 
-        {/* Fecha */}
-        <p className="mt-4 text-sm text-gray-300">
-          Fecha: {event.date}
-        </p>
+          <p className="mt-2 text-sm text-gray-400">
+            {event.city}, {event.country}
+          </p>
+        </div>
 
-        {/* Estado */}
-        <Badge>{event.status}</Badge>
+        {/* Footer: fecha, hora y venue */}
+        <div className="mt-6 border-t border-white/10 pt-4">
+          <p className="text-sm text-gray-300">
+            {event.date} · {event.time}
+          </p>
+
+          <p className="mt-1 text-sm text-gray-500">
+            {event.venue}
+          </p>
+        </div>
 
       </Card>
     </Link>
-
   );
 }

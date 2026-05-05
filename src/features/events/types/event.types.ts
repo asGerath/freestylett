@@ -9,7 +9,10 @@ export type EventItem = {
   slug: string;
   country: string;
   city: string;
+  venue: string;
   league: string;
   date: string;
+  time: string;
+  posterUrl?: string;
   status: EventStatus;
 };

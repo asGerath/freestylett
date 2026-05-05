@@ -11,18 +11,16 @@ type FreestylerDetailPageProps = {
   };
 };
 
-export default function FreestylerDetailPage({
-  params,
-}: FreestylerDetailPageProps) {
-  // Buscamos el freestyler que coincida con el slug de la URL
-  const freestyler = freestylersMock.find(
-    (freestyler) => freestyler.slug === params.slug
-  );
+export default async function FreestylerDetailPage({ params,}: FreestylerDetailPageProps) {
+  const { slug } = await params;
 
-  // Si no existe, mandamos al 404 de Next
+  const freestyler = freestylersMock.find((freestyler) => freestyler.slug === slug);
+
   if (!freestyler) {
     notFound();
   }
+
+
 
   return (
     <main className="py-10">

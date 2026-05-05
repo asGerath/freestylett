@@ -11,11 +11,11 @@ type LeagueDetailPageProps = {
   };
 };
 
-export default function LeagueDetailPage({ params }: LeagueDetailPageProps) {
-  // Buscamos la liga por slug
-  const league = leaguesMock.find((league) => league.slug === params.slug);
+export default async function LeagueDetailPage({ params }: LeagueDetailPageProps) {
+  const { slug } = await params;
 
-  // Si no existe, mostramos 404
+  const league = leaguesMock.find((league) => league.slug === slug);
+
   if (!league) {
     notFound();
   }
