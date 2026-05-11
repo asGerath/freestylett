@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import type { EventItem } from "../types/event.types";
+import Image from "next/image";
 
 type EventCardProps = {
   event: EventItem;
@@ -14,6 +15,17 @@ export function EventCard({ event }: EventCardProps) {
   return (
     <Link href={`/eventos/${event.slug}`} className="block">
       <Card>
+        {event.posterUrl && (
+  <div className="mb-5 overflow-hidden rounded-xl bg-white/10">
+    <Image
+      src={event.posterUrl}
+      alt={event.title}
+      width={600}
+      height={400}
+      className="h-44 w-full object-cover"
+    />
+  </div>
+)}
         {/* Header: liga y estado */}
         <div className="flex items-center justify-between gap-4">
           <span className="text-sm font-medium text-[var(--color-accent)]">

@@ -3,6 +3,21 @@
 
 export type EventStatus = "upcoming" | "live" | "finished" | "cancelled";
 
+export type EventParticipantRole =
+  | "competitor"
+  | "host"
+  | "judge"
+  | "dj"
+  | "guest";
+
+export type EventParticipant = {
+  id: string;
+  name: string;
+  slug?: string;
+  country?: string;
+  role: EventParticipantRole;
+};
+
 export type EventItem = {
   id: string;
   title: string;
@@ -15,4 +30,5 @@ export type EventItem = {
   time: string;
   posterUrl?: string;
   status: EventStatus;
+  participants: EventParticipant[];
 };
