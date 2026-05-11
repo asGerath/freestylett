@@ -16,6 +16,34 @@ export const eventsMock: EventItem[] = [
     venue: "Pepsi Center WTC",
     time: "20:00",
     posterUrl: "/images/events/PP-fms.webp",
+    participants: [
+  {
+    id: "1",
+    name: "Aczino",
+    slug: "aczino",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "2",
+    name: "Rapder",
+    slug: "rapder",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "3",
+    name: "Serko Fu",
+    country: "México",
+    role: "host",
+  },
+  {
+    id: "4",
+    name: "DJ Sonicko",
+    country: "México",
+    role: "dj",
+  },
+],
   },
   {
     id: "2",
@@ -29,6 +57,34 @@ export const eventsMock: EventItem[] = [
     venue: "Movistar Arena",
     time: "19:00",
     posterUrl: "/images/events/PP-red-bull.webp",
+    participants: [
+  {
+    id: "1",
+    name: "Aczino",
+    slug: "aczino",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "2",
+    name: "Rapder",
+    slug: "rapder",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "3",
+    name: "Serko Fu",
+    country: "México",
+    role: "host",
+  },
+  {
+    id: "4",
+    name: "DJ Sonicko",
+    country: "México",
+    role: "dj",
+  },
+],
   },
   {
     id: "3",
@@ -42,6 +98,34 @@ export const eventsMock: EventItem[] = [
     venue: "Estadio Monumental",
     time: "18:00",
     posterUrl: "/images/events/PP-god-level.webp",
+    participants: [
+  {
+    id: "1",
+    name: "Aczino",
+    slug: "aczino",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "2",
+    name: "Rapder",
+    slug: "rapder",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "3",
+    name: "Serko Fu",
+    country: "México",
+    role: "host",
+  },
+  {
+    id: "4",
+    name: "DJ Sonicko",
+    country: "México",
+    role: "dj",
+  },
+],
   },
   {
     id: "4",
@@ -55,6 +139,34 @@ export const eventsMock: EventItem[] = [
     venue: "Pepsi Center WTC",
     time: "20:00",
     posterUrl: "/images/events/PP-fms.webp",
+    participants: [
+  {
+    id: "1",
+    name: "Aczino",
+    slug: "aczino",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "2",
+    name: "Rapder",
+    slug: "rapder",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "3",
+    name: "Serko Fu",
+    country: "México",
+    role: "host",
+  },
+  {
+    id: "4",
+    name: "DJ Sonicko",
+    country: "México",
+    role: "dj",
+  },
+],
   },
   {
     id: "5",
@@ -68,6 +180,34 @@ export const eventsMock: EventItem[] = [
     venue: "Movistar Arena",
     time: "19:00",
     posterUrl: "/images/events/PP-red-bull.webp",
+    participants: [
+  {
+    id: "1",
+    name: "Aczino",
+    slug: "aczino",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "2",
+    name: "Rapder",
+    slug: "rapder",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "3",
+    name: "Serko Fu",
+    country: "México",
+    role: "host",
+  },
+  {
+    id: "4",
+    name: "DJ Sonicko",
+    country: "México",
+    role: "dj",
+  },
+],
   },
   {
     id: "6",
@@ -81,5 +221,33 @@ export const eventsMock: EventItem[] = [
     venue: "Estadio Monumental",
     time: "18:00",
     posterUrl: "/images/events/PP-god-level.webp",
+    participants: [
+  {
+    id: "1",
+    name: "Aczino",
+    slug: "aczino",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "2",
+    name: "Rapder",
+    slug: "rapder",
+    country: "México",
+    role: "competitor",
+  },
+  {
+    id: "3",
+    name: "Serko Fu",
+    country: "México",
+    role: "host",
+  },
+  {
+    id: "4",
+    name: "DJ Sonicko",
+    country: "México",
+    role: "dj",
+  },
+],
   },
 ];
