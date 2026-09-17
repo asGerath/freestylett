@@ -104,11 +104,13 @@ Current core palette:
 
 - Black: `#111111`
 - Off-white: `#F5F5F5`
-- Primary yellow: `#F2C230`
-- Secondary blue: `#2563EB`
+- Primary cyan blue: `#22C7F2`
+- Secondary yellow: `#F2C230`
 
-The selected identity is the dark logo with a fist and microphone. Inspect the
-current code and assets before changing colors, typography, or logos.
+The selected identity is the dark logo with a fist and microphone. Its original
+cyan blue is the primary brand color; yellow is a secondary variant only.
+Inspect the current code and assets before changing colors, typography, or
+logos.
 
 Keep cards scannable, dates visible, calls to action clear, and the Home page
 focused on previews rather than complete listings.
@@ -180,4 +182,3 @@ A change is complete when the applicable items are true:
 - Accessibility basics are preserved.
 - No unnecessary hardcoding, secrets, generated files, or unrelated refactors
   were introduced.
-
