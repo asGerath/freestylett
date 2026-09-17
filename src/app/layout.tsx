@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import "./globals.css";
 
@@ -24,12 +25,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body>
-        {/* Navbar global disponible en todas las páginas */}
+      <body className="flex min-h-screen flex-col">
         <Navbar />
-
-        {/* Contenido de cada página */}
-        {children}
+        <div className="flex-1">{children}</div>
+        <Footer />
       </body>
     </html>
   );
