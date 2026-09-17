@@ -2,6 +2,7 @@
 // Vive en el layout para aparecer en todas las páginas.
 
 import Link from "next/link";
+import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 
 const navItems = [
@@ -28,9 +29,20 @@ export function Navbar() {
     <header className="border-b border-white/10 bg-black/80">
       <Container>
         <nav className="flex h-16 items-center justify-between">
-          {/* Logo / nombre de la marca */}
-          <Link href="/" className="text-lg font-bold">
-            Freestyle Total
+          {/* Logo principal de la marca */}
+          <Link
+            href="/"
+            aria-label="Ir al inicio de Freestyle Total"
+            className="shrink-0"
+          >
+            <Image
+              src="/images/brand/logo-horizontal.webp"
+              alt="Freestyle Total"
+              width={2172}
+              height={724}
+              priority
+              className="h-11 w-auto"
+            />
           </Link>
 
           {/* Links principales */}
