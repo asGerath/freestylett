@@ -11,7 +11,7 @@ const footerLinks = [
 
 export function Footer() {
   return (
-    <footer className="mt-20 border-t border-[var(--color-border)] bg-[var(--color-bg-deep)]">
+    <footer className="mt-20 border-t border-white/10 bg-[var(--color-bg-deep)]">
       <Container>
         <div className="flex flex-col gap-10 py-12 md:flex-row md:items-center md:justify-between">
           <div>
@@ -24,7 +24,7 @@ export function Footer() {
                 className="h-12 w-auto"
               />
             </Link>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-[var(--color-muted)]">
+            <p className="mt-4 max-w-sm text-sm leading-6 text-[#b8c8cf]">
               La escena completa: eventos, ligas, freestylers y noticias en un
               solo lugar.
             </p>
@@ -36,7 +36,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm font-semibold text-[var(--color-muted)] transition hover:text-[var(--color-primary)]"
+                    className="text-sm font-semibold text-[#b8c8cf] transition hover:text-[var(--color-primary)]"
                   >
                     {item.label}
                   </Link>
@@ -46,7 +46,7 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="border-t border-[var(--color-border)] py-6 text-xs text-[var(--color-muted)]">
+        <div className="border-t border-white/10 py-6 text-xs text-[#b8c8cf]">
           © {new Date().getFullYear()} FreeStyle Total. Todos los derechos
           reservados.
         </div>
