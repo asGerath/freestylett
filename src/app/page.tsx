@@ -29,7 +29,7 @@ export default function HomePage() {
                 La cultura habla aquí
               </span>
 
-              <h1 className="mt-7 max-w-2xl text-5xl font-black leading-[0.95] tracking-[-0.05em] text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-7 max-w-2xl text-5xl font-black leading-[0.95] tracking-[-0.05em] text-[var(--color-text)] sm:text-6xl lg:text-7xl">
                 TODO EL
                 <span className="block text-[var(--color-primary)]">
                   FREESTYLE.
@@ -51,7 +51,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   href="/freestylers"
-                  className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-3.5 text-center text-sm font-black text-white transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
+                  className="rounded-full border border-[var(--color-border)] bg-white px-6 py-3.5 text-center text-sm font-black text-[var(--color-text)] shadow-sm transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
                 >
                   VER FREESTYLERS
                 </Link>
@@ -132,14 +132,14 @@ export default function HomePage() {
         <LeaguesPreview />
       </Container>
 
-      <section className="mt-20 bg-[var(--color-surface)]/55 py-4 sm:py-10">
+      <section className="mt-20 border-y border-[var(--color-border)] bg-white/60 py-4 sm:py-10">
         <Container>
           <BlogPreview />
         </Container>
       </section>
 
       <Container>
-        <section className="mt-20 overflow-hidden rounded-[2rem] border border-[var(--color-primary)]/25 bg-gradient-to-r from-[var(--color-surface-raised)] to-[var(--color-surface)] px-6 py-10 sm:px-10 lg:flex lg:items-center lg:justify-between lg:px-14 lg:py-14">
+        <section className="mt-20 overflow-hidden rounded-[2rem] border border-[var(--color-primary)]/25 bg-gradient-to-r from-[#193542] to-[var(--color-bg-deep)] px-6 py-10 sm:px-10 lg:flex lg:items-center lg:justify-between lg:px-14 lg:py-14">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-accent)]">
               FreeStyle Total
