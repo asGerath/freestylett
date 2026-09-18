@@ -1,6 +1,3 @@
-// Header reutilizable para secciones.
-// Sirve para previews del Home y encabezados internos con CTA opcional.
-
 import Link from "next/link";
 
 type SectionHeaderProps = {
@@ -15,15 +12,19 @@ export function SectionHeader({
   description,
   href,
   linkLabel = "Ver todos →",
-  
 }: SectionHeaderProps) {
   return (
-    <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div className="mb-7 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
       <div>
-        <h2 className="text-2xl font-bold">{title}</h2>
+        <span className="mb-3 block text-xs font-bold uppercase tracking-[0.22em] text-[var(--color-primary)]">
+          Explora la escena
+        </span>
+        <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+          {title}
+        </h2>
 
         {description && (
-          <p className="mt-2 text-gray-400">
+          <p className="mt-3 max-w-2xl text-[var(--color-muted)]">
             {description}
           </p>
         )}
@@ -32,7 +33,7 @@ export function SectionHeader({
       {href && (
         <Link
           href={href}
-          className="text-sm font-bold text-[var(--color-accent)] hover:underline"
+          className="w-fit rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-2.5 text-sm font-bold text-[var(--color-primary)] transition hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-dark)]"
         >
           {linkLabel}
         </Link>
