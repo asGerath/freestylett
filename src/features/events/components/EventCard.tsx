@@ -16,7 +16,7 @@ export function EventCard({ event }: EventCardProps) {
     >
       <Card className="p-0">
         {event.posterUrl && (
-          <div className="relative overflow-hidden bg-[var(--color-surface-raised)]">
+          <div className="relative overflow-hidden bg-[var(--color-surface-soft)]">
             <Image
               src={event.posterUrl}
               alt={event.title}
@@ -24,7 +24,7 @@ export function EventCard({ event }: EventCardProps) {
               height={400}
               className="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface)] via-transparent to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/45 to-transparent" />
             <span className="absolute bottom-4 left-4 rounded-full bg-[var(--color-accent)] px-3 py-1.5 text-xs font-black text-[var(--color-text-dark)]">
               {event.date}
             </span>
@@ -39,7 +39,7 @@ export function EventCard({ event }: EventCardProps) {
             <Badge variant="muted">{event.status}</Badge>
           </div>
 
-          <h3 className="mt-4 text-2xl font-black leading-tight tracking-tight text-white">
+          <h3 className="mt-4 text-2xl font-black leading-tight tracking-tight text-[var(--color-text)]">
             {event.title}
           </h3>
 
@@ -48,7 +48,9 @@ export function EventCard({ event }: EventCardProps) {
           </p>
 
           <div className="mt-6 border-t border-[var(--color-border)] pt-4">
-            <p className="text-sm font-semibold text-white">{event.time}</p>
+            <p className="text-sm font-semibold text-[var(--color-text)]">
+              {event.time}
+            </p>
             <p className="mt-1 text-sm text-[var(--color-muted)]">
               {event.venue}
             </p>
