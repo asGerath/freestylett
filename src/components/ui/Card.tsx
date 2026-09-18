@@ -1,6 +1,3 @@
-// Card base reutilizable.
-// Centraliza estilos comunes de contenedores tipo tarjeta.
-
 type CardProps = {
   children: React.ReactNode;
   className?: string;
@@ -9,7 +6,7 @@ type CardProps = {
 export function Card({ children, className = "" }: CardProps) {
   return (
     <article
-      className={`h-full rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:-translate-y-1 hover:border-[var(--color-accent)] hover:bg-white/10 ${className}`}
+      className={`h-full overflow-hidden rounded-3xl border border-[var(--color-border)] bg-[var(--color-surface)] p-5 shadow-[0_24px_70px_rgba(1,12,18,0.24)] transition duration-300 hover:-translate-y-1.5 hover:border-[var(--color-primary)] hover:bg-[var(--color-surface-raised)] ${className}`}
     >
       {children}
     </article>
