@@ -26,9 +26,7 @@ html {
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 12% 0%, rgba(34, 199, 242, 0.13), transparent 32rem),
-    linear-gradient(180deg, #f7fafb 0%, var(--color-bg) 38%, #e8eff2 100%);
+  background: var(--color-bg);
   color: var(--color-text);
 }
 
