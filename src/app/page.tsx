@@ -5,7 +5,8 @@ import { FreestylersPreview } from "@/features/freestylers/components/Freestyler
 import { LeaguesPreview } from "@/features/leagues/components/LeaguesPreview";
 import { BlogPreview } from "@/features/blog/components/BlogPreview";
 import { EventsPreview } from "@/features/events/components/EventsPreview";
-import { eventsMock } from "@/features/events/data/events.mock";
+import { getFeaturedEvents } from "@/features/events/services/event.service";
+import { formatEventDate, formatEventTime } from "@/features/events/utils/event-date";
 
 const sceneStats = [
   { value: "5", label: "países conectados" },
@@ -13,8 +14,8 @@ const sceneStats = [
   { value: "1", label: "escena sin fronteras" },
 ];
 
-export default function HomePage() {
-  const featuredEvent = eventsMock[0];
+export default async function HomePage() {
+  const [featuredEvent] = await getFeaturedEvents(1);
 
   return (
     <main className="overflow-hidden">
@@ -73,12 +74,12 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-[#071219]/15" />
 
                 <div className="absolute left-5 top-5 rounded-full bg-[var(--color-accent)] px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-[var(--color-text-dark)] sm:left-7 sm:top-7">
-                  Próximo evento
+                  Evento destacado
                 </div>
 
                 <div className="absolute inset-x-4 bottom-4 rounded-3xl bg-[#071219]/88 p-6 backdrop-blur-sm sm:inset-x-6 sm:bottom-6 sm:p-8">
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-[var(--color-primary-soft)]">
-                    {featuredEvent.league} · {featuredEvent.date}
+                    {featuredEvent.league} · {formatEventDate(featuredEvent)}
                   </p>
                   <h2 className="mt-3 text-4xl font-black leading-none tracking-[-0.04em] text-white sm:text-5xl">
                     {featuredEvent.title}
@@ -87,7 +88,7 @@ export default function HomePage() {
                     <span>
                       {featuredEvent.city}, {featuredEvent.country}
                     </span>
-                    <span>{featuredEvent.time}</span>
+                    <span>{formatEventTime(featuredEvent)}</span>
                     <span>{featuredEvent.venue}</span>
                   </div>
                 </div>

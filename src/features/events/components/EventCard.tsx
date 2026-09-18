@@ -2,10 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import type { EventItem } from "../types/event.types";
+import type { Event } from "../types/event.types";
+import { formatEventDate, formatEventTime } from "../utils/event-date";
 
 type EventCardProps = {
-  event: EventItem;
+  event: Event;
 };
 
 export function EventCard({ event }: EventCardProps) {
@@ -26,7 +27,7 @@ export function EventCard({ event }: EventCardProps) {
             />
             <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/45 to-transparent" />
             <span className="absolute bottom-4 left-4 rounded-full bg-[var(--color-accent)] px-3 py-1.5 text-xs font-black text-[var(--color-text-dark)]">
-              {event.date}
+              {formatEventDate(event)}
             </span>
           </div>
         )}
@@ -49,7 +50,7 @@ export function EventCard({ event }: EventCardProps) {
 
           <div className="mt-6 border-t border-[var(--color-border)] pt-4">
             <p className="text-sm font-semibold text-[var(--color-text)]">
-              {event.time}
+              {formatEventTime(event)}
             </p>
             <p className="mt-1 text-sm text-[var(--color-muted)]">
               {event.venue}

@@ -4,11 +4,13 @@
 // Por eso usamos "use client", porque necesitamos useState.
 
 import { useMemo, useState } from "react";
-import { eventsMock } from "../data/events.mock";
+import type { Event } from "../types/event.types";
 import { EventCard } from "./EventCard";
 import { EventsFilters } from "./EventsFilters";
 
-export function EventsSection() {
+type EventsSectionProps = { events: Event[] };
+
+export function EventsSection({ events }: EventsSectionProps) {
   // Guardamos el país seleccionado
   const [selectedCountry, setSelectedCountry] = useState("all");
 
@@ -17,17 +19,17 @@ export function EventsSection() {
 
   // Obtenemos países únicos desde los datos mock
   const countries = useMemo(() => {
-    return [...new Set(eventsMock.map((event) => event.country))];
-  }, []);
+    return [...new Set(events.map((event) => event.country))];
+  }, [events]);
 
   // Obtenemos ligas únicas desde los datos mock
   const leagues = useMemo(() => {
-    return [...new Set(eventsMock.map((event) => event.league))];
-  }, []);
+    return [...new Set(events.map((event) => event.league))];
+  }, [events]);
 
   // Filtramos eventos según país y liga seleccionados
   const filteredEvents = useMemo(() => {
-    return eventsMock.filter((event) => {
+    return events.filter((event) => {
       const matchesCountry =
         selectedCountry === "all" || event.country === selectedCountry;
 
@@ -36,15 +38,15 @@ export function EventsSection() {
 
       return matchesCountry && matchesLeague;
     });
-  }, [selectedCountry, selectedLeague]);
+  }, [events, selectedCountry, selectedLeague]);
 
   return (
     <section className="mt-12">
       {/* Encabezado de la sección */}
       <div className="mb-6">
-        <h2 className="text-2xl font-bold">Próximos eventos</h2>
+        <h2 className="text-2xl font-bold">Eventos destacados</h2>
 
-        <p className="mt-2 text-gray-400">
+        <p className="mt-2 text-[var(--color-muted)]">
           Batallas, jornadas y competencias relevantes del ecosistema freestyle.
         </p>
       </div>
@@ -60,15 +62,19 @@ export function EventsSection() {
       />
 
       {/* Validamos si hay eventos para mostrar */}
-      {filteredEvents.length > 0 ? (
+      {events.length === 0 ? (
+        <p className="rounded-2xl border border-[var(--color-border)] bg-white p-6 text-[var(--color-muted)]">
+          Todavía no hay eventos disponibles.
+        </p>
+      ) : filteredEvents.length > 0 ? (
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {filteredEvents.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
         </div>
       ) : (
-        <p className="rounded-xl border border-white/10 bg-white/5 p-5 text-gray-400">
-          No hay eventos con estos filtros.
+        <p className="rounded-2xl border border-[var(--color-border)] bg-white p-6 text-[var(--color-muted)]">
+          No encontramos eventos con estos filtros.
         </p>
       )}
     </section>
