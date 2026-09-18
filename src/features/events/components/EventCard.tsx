@@ -1,11 +1,8 @@
-// Card visual para mostrar información resumida de un evento.
-// Usa componentes reutilizables como Card y Badge.
-
 import Link from "next/link";
+import Image from "next/image";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import type { EventItem } from "../types/event.types";
-import Image from "next/image";
 
 type EventCardProps = {
   event: EventItem;
@@ -13,50 +10,50 @@ type EventCardProps = {
 
 export function EventCard({ event }: EventCardProps) {
   return (
-    <Link href={`/eventos/${event.slug}`} className="block">
-      <Card>
+    <Link
+      href={`/eventos/${event.slug}`}
+      className="group block h-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-primary)]"
+    >
+      <Card className="p-0">
         {event.posterUrl && (
-  <div className="mb-5 overflow-hidden rounded-xl bg-white/10">
-    <Image
-      src={event.posterUrl}
-      alt={event.title}
-      width={600}
-      height={400}
-      className="h-44 w-full object-cover"
-    />
-  </div>
-)}
-        {/* Header: liga y estado */}
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-sm font-medium text-[var(--color-accent)]">
-            {event.league}
-          </span>
+          <div className="relative overflow-hidden bg-[var(--color-surface-raised)]">
+            <Image
+              src={event.posterUrl}
+              alt={event.title}
+              width={600}
+              height={400}
+              className="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-surface)] via-transparent to-transparent" />
+            <span className="absolute bottom-4 left-4 rounded-full bg-[var(--color-accent)] px-3 py-1.5 text-xs font-black text-[var(--color-text-dark)]">
+              {event.date}
+            </span>
+          </div>
+        )}
 
-          <Badge>{event.status}</Badge>
-        </div>
+        <div className="p-5">
+          <div className="flex items-start justify-between gap-4">
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--color-primary)]">
+              {event.league}
+            </span>
+            <Badge variant="muted">{event.status}</Badge>
+          </div>
 
-        {/* Body: título y ubicación */}
-        <div className="mt-5">
-          <h3 className="text-xl font-bold leading-tight">
+          <h3 className="mt-4 text-2xl font-black leading-tight tracking-tight text-white">
             {event.title}
           </h3>
 
-          <p className="mt-2 text-sm text-gray-400">
+          <p className="mt-2 text-sm text-[var(--color-muted)]">
             {event.city}, {event.country}
           </p>
+
+          <div className="mt-6 border-t border-[var(--color-border)] pt-4">
+            <p className="text-sm font-semibold text-white">{event.time}</p>
+            <p className="mt-1 text-sm text-[var(--color-muted)]">
+              {event.venue}
+            </p>
+          </div>
         </div>
-
-        {/* Footer: fecha, hora y venue */}
-        <div className="mt-6 border-t border-white/10 pt-4">
-          <p className="text-sm text-gray-300">
-            {event.date} · {event.time}
-          </p>
-
-          <p className="mt-1 text-sm text-gray-500">
-            {event.venue}
-          </p>
-        </div>
-
       </Card>
     </Link>
   );
