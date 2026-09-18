@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --color-bg: #0b1820;
-  --color-bg-deep: #071219;
-  --color-surface: #122733;
-  --color-surface-raised: #193542;
+  --color-bg: #eef3f5;
+  --color-bg-deep: #0b1820;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f7fafb;
   --color-surface-soft: #dcecf1;
-  --color-text: #f4f8fa;
+  --color-text: #10232c;
   --color-text-dark: #0b1820;
-  --color-muted: #9fb3bd;
-  --color-primary: #22c7f2;
+  --color-muted: #58707b;
+  --color-primary: #099bc2;
+  --color-primary-bright: #22c7f2;
   --color-primary-soft: #8be7ff;
   --color-accent: #f2c230;
-  --color-border: rgba(139, 231, 255, 0.16);
+  --color-border: rgba(11, 24, 32, 0.12);
 }
 
 * {
@@ -20,18 +21,18 @@
 }
 
 html {
-  background: var(--color-bg-deep);
+  background: var(--color-bg);
 }
 
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 15% 0%, rgba(34, 199, 242, 0.13), transparent 30rem),
-    linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-deep) 72%);
+    radial-gradient(circle at 12% 0%, rgba(34, 199, 242, 0.13), transparent 32rem),
+    linear-gradient(180deg, #f7fafb 0%, var(--color-bg) 38%, #e8eff2 100%);
   color: var(--color-text);
 }
 
 ::selection {
-  background: var(--color-primary);
+  background: var(--color-primary-bright);
   color: var(--color-text-dark);
 }
