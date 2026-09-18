@@ -122,7 +122,7 @@ export default function HomePage() {
 
       <section className="mt-20 border-y border-[var(--color-border)] bg-[var(--color-surface-soft)] py-4 text-[var(--color-text-dark)] sm:py-10">
         <Container>
-          <div className="[&_h2]:text-[var(--color-text-dark)] [&_p]:text-[#48626d] [&_article]:border-[#0b1820]/10 [&_article]:bg-white [&_article]:shadow-[0_20px_60px_rgba(11,24,32,0.12)]">
+          <div className="[&_h2]:text-[var(--color-text-dark)] [&_h3]:text-[var(--color-text-dark)] [&_p]:text-[#48626d] [&_article]:border-[#0b1820]/10 [&_article]:bg-white [&_article]:shadow-[0_20px_60px_rgba(11,24,32,0.12)] [&_article:hover]:bg-[#f4fbfd]">
             <FreestylersPreview />
           </div>
         </Container>
