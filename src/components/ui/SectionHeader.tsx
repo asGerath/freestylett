@@ -19,7 +19,7 @@ export function SectionHeader({
         <span className="mb-3 block text-xs font-bold uppercase tracking-[0.22em] text-[var(--color-primary)]">
           Explora la escena
         </span>
-        <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+        <h2 className="text-3xl font-black tracking-tight text-[var(--color-text)] sm:text-4xl">
           {title}
         </h2>
 
@@ -33,7 +33,7 @@ export function SectionHeader({
       {href && (
         <Link
           href={href}
-          className="w-fit rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-2.5 text-sm font-bold text-[var(--color-primary)] transition hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-[var(--color-text-dark)]"
+          className="w-fit rounded-full border border-[var(--color-border)] bg-white px-5 py-2.5 text-sm font-bold text-[var(--color-primary)] shadow-sm transition hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white"
         >
           {linkLabel}
         </Link>
