@@ -28,6 +28,8 @@ The following decisions are closed for V1:
 5. Published content can be read directly from the browser. Public reads are
    protected by RLS and designed to support server rendering, static
    generation, metadata, sitemaps, and search engine indexing.
+6. Registered users do not receive an editorial role automatically.
+   `user_roles` is reserved for CMS editors and administrators.
 
 Administrators retain exclusive control over user roles, destructive
 maintenance operations, and exceptional hard deletes.
@@ -404,6 +406,9 @@ remain exclusively in Supabase Auth.
 
 ### 5.14 `user_roles`
 
+Editorial access assignments for CMS staff. Regular registered users have a
+profile but do not require a row in this table.
+
 | Column | Type | Rules |
 |---|---|---|
 | `user_id` | `uuid` | FK to `auth.users(id)` |
@@ -484,6 +489,10 @@ policies are versioned in migrations and tested together.
 - All editor capabilities.
 - Manage roles and operational catalogs.
 - Perform exceptional hard deletes and maintenance.
+
+The `user_roles` table is reserved for CMS staff. Regular registered users have
+a profile but do not require an editorial role. Only `editor` and `admin`
+roles are stored in this table.
 
 Role checks must be implemented in database functions or policy expressions
 against `user_roles`. UI visibility is not authorization.
