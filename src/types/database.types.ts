@@ -126,7 +126,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "editor" | "viewer"
+      app_role: "admin" | "editor"
       editorial_status: "draft" | "published" | "archived"
       event_status:
         | "scheduled"
@@ -280,7 +280,7 @@ export const Constants = {
   },
   public: {
     Enums: {
-      app_role: ["admin", "editor", "viewer"],
+      app_role: ["admin", "editor"],
       editorial_status: ["draft", "published", "archived"],
       event_status: ["scheduled", "live", "finished", "cancelled", "postponed"],
       event_type: [
