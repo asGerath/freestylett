@@ -24,11 +24,16 @@ values ('30000000-0000-0000-0000-000000000001', 'editor');
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"30000000-0000-0000-0000-000000000001","role":"authenticated"}';
 select ok(private.is_editor(), 'editor role is resolved from auth.uid()');
+
 select results_eq(
-  $$select role::text from public.user_roles where user_id = auth.uid()$$,
-  $$values ('editor'::text)$$,
-  'editor can read their own role'
+  $$select role::text
+    from public.user_roles
+    where user_id = auth.uid()
+    order by role$$,
+  $$values ('editor'::text), ('viewer'::text)$$,
+  'editor can read their own roles'
 );
+
 select throws_ok(
   $$insert into public.user_roles (user_id, role) values ('30000000-0000-0000-0000-000000000001', 'admin')$$,
   '42501',
