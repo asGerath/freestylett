@@ -152,7 +152,6 @@ caster
 ```text
 admin
 editor
-viewer
 ```
 
 ## 5. Core V1 tables
@@ -464,10 +463,13 @@ policies are versioned in migrations and tested together.
 - Cannot read drafts or archives.
 - Cannot insert, update, archive, or delete.
 
-### Authenticated viewer
+### Authenticated user
 
 - Same public reads as an anonymous visitor.
-- Future private profile/favorite access will be scoped to `auth.uid()`.
+- Private profile, preference, favorite, follow, and notification access is
+  scoped to `auth.uid()`.
+- Does not receive an editorial role automatically.
+- Does not require a row in `user_roles`.
 
 ### Editor
 

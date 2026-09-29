@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/features/auth/actions/auth.actions";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -12,17 +12,11 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const [{ data: profile }, { data: roles }] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("display_name, avatar_path")
-      .eq("id", userId)
-      .single(),
-    supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId),
-  ]);
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name, avatar_path")
+    .eq("id", userId)
+    .single();
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-12">
@@ -36,7 +30,8 @@ export default async function DashboardPage() {
         </h1>
 
         <p className="mt-3 text-[var(--color-muted)]">
-          Roles: {roles?.map(({ role }) => role).join(", ") || "sin rol"}
+          Desde aquí podrás administrar tus preferencias, seguimientos y
+          notificaciones.
         </p>
 
         <form action={signOut} className="mt-8">

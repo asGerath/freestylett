@@ -40,6 +40,5 @@ create type public.participant_role as enum (
 
 create type public.app_role as enum (
   'admin',
-  'editor',
-  'viewer'
+  'editor'
 );
