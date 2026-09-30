@@ -76,6 +76,163 @@ export type Database = {
         }
         Relationships: []
       }
+      league_countries: {
+        Row: {
+          country_id: string
+          created_at: string
+          is_primary: boolean
+          league_id: string
+        }
+        Insert: {
+          country_id: string
+          created_at?: string
+          is_primary?: boolean
+          league_id: string
+        }
+        Update: {
+          country_id?: string
+          created_at?: string
+          is_primary?: boolean
+          league_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "league_countries_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "league_countries_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      league_seasons: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          editorial_status: Database["public"]["Enums"]["editorial_status"]
+          ends_on: string | null
+          id: string
+          league_id: string
+          name: string
+          published_at: string | null
+          slug: string
+          starts_on: string | null
+          updated_at: string
+          updated_by: string | null
+          year: number | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          ends_on?: string | null
+          id?: string
+          league_id: string
+          name: string
+          published_at?: string | null
+          slug: string
+          starts_on?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          year?: number | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          ends_on?: string | null
+          id?: string
+          league_id?: string
+          name?: string
+          published_at?: string | null
+          slug?: string
+          starts_on?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "league_seasons_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leagues: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          editorial_status: Database["public"]["Enums"]["editorial_status"]
+          id: string
+          instagram_url: string | null
+          logo_path: string | null
+          name: string
+          organization_id: string | null
+          published_at: string | null
+          short_name: string | null
+          slug: string
+          updated_at: string
+          updated_by: string | null
+          website_url: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description: string
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          id?: string
+          instagram_url?: string | null
+          logo_path?: string | null
+          name: string
+          organization_id?: string | null
+          published_at?: string | null
+          short_name?: string | null
+          slug: string
+          updated_at?: string
+          updated_by?: string | null
+          website_url?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          id?: string
+          instagram_url?: string | null
+          logo_path?: string | null
+          name?: string
+          organization_id?: string | null
+          published_at?: string | null
+          short_name?: string | null
+          slug?: string
+          updated_at?: string
+          updated_by?: string | null
+          website_url?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leagues_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           country_id: string | null
