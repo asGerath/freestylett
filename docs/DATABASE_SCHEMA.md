@@ -296,19 +296,33 @@ separate relations rather than mutable columns on the profile.
 | Column | Type | Rules |
 |---|---|---|
 | `id` | `uuid` | Primary key |
-| `country_id` | `uuid` | Optional FK to `countries` |
+| `country_id` | `uuid` | Optional FK to `countries`; delete restricted |
 | `stage_name` | `text` | Required |
 | `slug` | `text` | Required, unique |
 | `real_name` | `text` | Optional and only when publicly appropriate |
 | `aka` | `text` | Optional |
 | `bio` | `text` | Optional |
 | `city` | `text` | Optional |
-| `photo_path` | `text` | Optional Storage path |
-| `birth_date` | `date` | Optional |
-| social URLs | `text` | Optional |
+| `photo_path` | `text` | Optional relative Storage path |
+| `birth_date` | `date` | Optional; cannot be in the future |
+| `instagram_url` | `text` | Optional HTTP or HTTPS URL |
+| `youtube_url` | `text` | Optional HTTP or HTTPS URL |
+| `tiktok_url` | `text` | Optional HTTP or HTTPS URL |
+| `twitch_url` | `text` | Optional HTTP or HTTPS URL |
+| `x_url` | `text` | Optional HTTP or HTTPS URL |
 | `editorial_status` | enum | Default `draft` |
 | `published_at` | `timestamptz` | Required when published |
 | audit columns | | |
+
+Published freestylers require `published_at`. Anonymous visitors and regular
+authenticated users can only read published profiles. Editors can manage draft,
+published, and archived profiles, while hard deletion remains restricted to
+administrators.
+
+Personal fields such as `real_name` and `birth_date` are optional and should
+only contain information that is publicly appropriate and verifiable.
+Statistics, rankings, titles, and event appearances remain separate historical
+relations.
 
 ### 5.8 `events`
 
@@ -576,6 +590,7 @@ league_seasons.league_id
 league_seasons.published_at (published rows)
 venues(country_id, city)
 freestylers.country_id
+freestylers.published_at (published rows)
 events.country_id
 events.organization_id
 events.venue_id
@@ -612,6 +627,10 @@ Migrations must enforce at least:
 - venue longitude must be between `-180` and `180`;
 - venue coordinates must provide both latitude and longitude or neither;
 - venue slugs are unique within each country;
+- freestyler birth dates cannot be in the future;
+- freestyler photos use relative Storage paths;
+- freestyler social links use HTTP or HTTPS URLs;
+- published freestylers require `published_at`;
 
 ## 12. Migration plan
 

@@ -76,6 +76,86 @@ export type Database = {
         }
         Relationships: []
       }
+      freestylers: {
+        Row: {
+          aka: string | null
+          bio: string | null
+          birth_date: string | null
+          city: string | null
+          country_id: string | null
+          created_at: string
+          created_by: string | null
+          editorial_status: Database["public"]["Enums"]["editorial_status"]
+          id: string
+          instagram_url: string | null
+          photo_path: string | null
+          published_at: string | null
+          real_name: string | null
+          slug: string
+          stage_name: string
+          tiktok_url: string | null
+          twitch_url: string | null
+          updated_at: string
+          updated_by: string | null
+          x_url: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          aka?: string | null
+          bio?: string | null
+          birth_date?: string | null
+          city?: string | null
+          country_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          id?: string
+          instagram_url?: string | null
+          photo_path?: string | null
+          published_at?: string | null
+          real_name?: string | null
+          slug: string
+          stage_name: string
+          tiktok_url?: string | null
+          twitch_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          x_url?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          aka?: string | null
+          bio?: string | null
+          birth_date?: string | null
+          city?: string | null
+          country_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          id?: string
+          instagram_url?: string | null
+          photo_path?: string | null
+          published_at?: string | null
+          real_name?: string | null
+          slug?: string
+          stage_name?: string
+          tiktok_url?: string | null
+          twitch_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          x_url?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "freestylers_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       league_countries: {
         Row: {
           country_id: string
