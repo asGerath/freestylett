@@ -76,6 +76,68 @@ export type Database = {
         }
         Relationships: []
       }
+      organizations: {
+        Row: {
+          country_id: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          editorial_status: Database["public"]["Enums"]["editorial_status"]
+          id: string
+          instagram_url: string | null
+          logo_path: string | null
+          name: string
+          published_at: string | null
+          slug: string
+          updated_at: string
+          updated_by: string | null
+          website_url: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          country_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          id?: string
+          instagram_url?: string | null
+          logo_path?: string | null
+          name: string
+          published_at?: string | null
+          slug: string
+          updated_at?: string
+          updated_by?: string | null
+          website_url?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          country_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          id?: string
+          instagram_url?: string | null
+          logo_path?: string | null
+          name?: string
+          published_at?: string | null
+          slug?: string
+          updated_at?: string
+          updated_by?: string | null
+          website_url?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_path: string | null

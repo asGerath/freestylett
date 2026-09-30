@@ -185,7 +185,7 @@ or BDM.
 | Column | Type | Rules |
 |---|---|---|
 | `id` | `uuid` | Primary key |
-| `country_id` | `uuid` | Optional FK to `countries` |
+| `country_id` | `uuid` | Optional FK to `countries`; delete restricted |
 | `name` | `text` | Required |
 | `slug` | `text` | Required, unique |
 | `description` | `text` | Optional |
@@ -194,7 +194,13 @@ or BDM.
 | `instagram_url` | `text` | Optional |
 | `youtube_url` | `text` | Optional |
 | `editorial_status` | enum | Default `draft` |
+| `published_at` | `timestamptz` | Required when published |
 | audit columns | | Required for editorial changes |
+
+Published organizations require `published_at`. Anonymous visitors and regular
+authenticated users can only read organizations with `editorial_status =
+'published'`. Editors can manage editorial content, while hard deletion remains
+restricted to administrators.
 
 ### 5.3 `leagues`
 
@@ -543,6 +549,8 @@ nets rather than the standard workflow.
 In addition to primary keys and unique constraints:
 
 ```text
+organizations.country_id
+organizations.published_at (published rows)
 leagues.organization_id
 league_countries.country_id
 league_seasons.league_id
