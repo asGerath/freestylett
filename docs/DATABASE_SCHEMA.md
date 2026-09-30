@@ -194,7 +194,13 @@ or BDM.
 | `instagram_url` | `text` | Optional |
 | `youtube_url` | `text` | Optional |
 | `editorial_status` | enum | Default `draft` |
+| `published_at` | `timestamptz` | Required when published |
 | audit columns | | Required for editorial changes |
+
+Published organizations require `published_at`. Anonymous visitors and regular
+authenticated users can only read organizations with `editorial_status =
+'published'`. Editors can manage editorial content, while hard deletion remains
+restricted to administrators.
 
 ### 5.3 `leagues`
 
