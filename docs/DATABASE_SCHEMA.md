@@ -209,7 +209,7 @@ A competition identity independent of a specific season or country.
 | Column | Type | Rules |
 |---|---|---|
 | `id` | `uuid` | Primary key |
-| `organization_id` | `uuid` | Optional FK to `organizations` |
+| `organization_id` | `uuid` | Optional FK to `organizations`; delete restricted |
 | `name` | `text` | Required |
 | `slug` | `text` | Required, unique |
 | `short_name` | `text` | Optional |
@@ -220,17 +220,23 @@ A competition identity independent of a specific season or country.
 | `published_at` | `timestamptz` | Required when published |
 | audit columns | | |
 
+Published leagues require `published_at`. Anonymous visitors and regular
+authenticated users can only read published leagues. Editors can manage league
+content, while hard deletion remains restricted to administrators.
+
 ### 5.4 `league_countries`
 
 Many-to-many relation between leagues and countries.
 
 | Column | Type | Rules |
 |---|---|---|
-| `league_id` | `uuid` | FK to `leagues` |
-| `country_id` | `uuid` | FK to `countries` |
+| `league_id` | `uuid` | FK to `leagues`; cascade on league deletion |
+| `country_id` | `uuid` | FK to `countries`; delete restricted |
 | `is_primary` | `boolean` | Default `false` |
 
-Primary key: `(league_id, country_id)`.
+Primary key: `(league_id, country_id)`. A partial unique index allows at most
+one `is_primary = true` country per league. Editors can manage these relationship
+rows because removing one does not physically delete a league or country.
 
 ### 5.5 `league_seasons`
 
@@ -240,16 +246,21 @@ historically scoped.
 | Column | Type | Rules |
 |---|---|---|
 | `id` | `uuid` | Primary key |
-| `league_id` | `uuid` | Required FK to `leagues` |
+| `league_id` | `uuid` | Required FK to `leagues`; delete restricted |
 | `name` | `text` | Required |
 | `slug` | `text` | Required |
 | `year` | `smallint` | Optional |
 | `starts_on` | `date` | Optional |
-| `ends_on` | `date` | Optional |
+| `ends_on` | `date` | Optional; cannot be before `starts_on` |
 | `editorial_status` | enum | Default `draft` |
+| `published_at` | `timestamptz` | Required when published |
 | audit columns | | |
 
 Unique constraint: `(league_id, slug)`.
+
+A season is publicly readable only when both the season and its parent league
+are published. Editors can manage seasons, while hard deletion remains
+restricted to administrators.
 
 ### 5.6 `venues`
 
@@ -552,8 +563,12 @@ In addition to primary keys and unique constraints:
 organizations.country_id
 organizations.published_at (published rows)
 leagues.organization_id
+leagues.published_at (published rows)
 league_countries.country_id
+league_countries.league_id (primary key)
+league_countries.league_id (primary country, partial unique)
 league_seasons.league_id
+league_seasons.published_at (published rows)
 venues.country_id
 freestylers.country_id
 events.country_id
