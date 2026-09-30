@@ -270,18 +270,23 @@ a venue is unknown.
 | Column | Type | Rules |
 |---|---|---|
 | `id` | `uuid` | Primary key |
-| `country_id` | `uuid` | Required FK to `countries` |
+| `country_id` | `uuid` | Required FK to `countries`; delete restricted |
 | `name` | `text` | Required |
-| `slug` | `text` | Required |
+| `slug` | `text` | Required and URL-safe |
 | `city` | `text` | Required |
 | `region` | `text` | Optional |
 | `address` | `text` | Optional |
-| `latitude` | `numeric(9,6)` | Optional |
-| `longitude` | `numeric(9,6)` | Optional |
-| `website_url` | `text` | Optional |
-| timestamps | | |
+| `latitude` | `numeric(9,6)` | Optional; between `-90` and `90` |
+| `longitude` | `numeric(9,6)` | Optional; between `-180` and `180` |
+| `website_url` | `text` | Optional HTTP or HTTPS URL |
+| audit columns | | Required for catalog changes |
 
 Unique constraint: `(country_id, slug)`.
+
+Latitude and longitude must either both be null or both contain valid values.
+Venues are a public catalog without an editorial status. Anonymous visitors and
+authenticated users can read them, editors can create and update them, and hard
+deletion remains restricted to administrators.
 
 ### 5.7 `freestylers`
 
@@ -569,7 +574,7 @@ league_countries.league_id (primary key)
 league_countries.league_id (primary country, partial unique)
 league_seasons.league_id
 league_seasons.published_at (published rows)
-venues.country_id
+venues(country_id, city)
 freestylers.country_id
 events.country_id
 events.organization_id
@@ -603,6 +608,10 @@ Migrations must enforce at least:
 - Storage paths are relative object paths, not full URLs;
 - `content_markdown` is not empty for a published post;
 - authors cannot assign themselves administrative roles.
+- venue latitude must be between `-90` and `90`;
+- venue longitude must be between `-180` and `180`;
+- venue coordinates must provide both latitude and longitude or neither;
+- venue slugs are unique within each country;
 
 ## 12. Migration plan
 
