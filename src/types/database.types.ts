@@ -337,6 +337,65 @@ export type Database = {
         }
         Relationships: []
       }
+      venues: {
+        Row: {
+          address: string | null
+          city: string
+          country_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          name: string
+          region: string | null
+          slug: string
+          updated_at: string
+          updated_by: string | null
+          website_url: string | null
+        }
+        Insert: {
+          address?: string | null
+          city: string
+          country_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          region?: string | null
+          slug: string
+          updated_at?: string
+          updated_by?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string
+          country_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          region?: string | null
+          slug?: string
+          updated_at?: string
+          updated_by?: string | null
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venues_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
