@@ -1,7 +1,7 @@
 create table public.organizations (
   id uuid primary key default gen_random_uuid(),
 
-  country_id uuid references public.countries(id) on delete set null,
+  country_id uuid references public.countries(id) on delete restrict,
 
   name text not null,
   slug text not null unique,

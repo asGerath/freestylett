@@ -185,7 +185,7 @@ or BDM.
 | Column | Type | Rules |
 |---|---|---|
 | `id` | `uuid` | Primary key |
-| `country_id` | `uuid` | Optional FK to `countries` |
+| `country_id` | `uuid` | Optional FK to `countries`; delete restricted |
 | `name` | `text` | Required |
 | `slug` | `text` | Required, unique |
 | `description` | `text` | Optional |
@@ -549,6 +549,8 @@ nets rather than the standard workflow.
 In addition to primary keys and unique constraints:
 
 ```text
+organizations.country_id
+organizations.published_at (published rows)
 leagues.organization_id
 league_countries.country_id
 league_seasons.league_id
