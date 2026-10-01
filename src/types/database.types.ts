@@ -76,6 +76,115 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          city: string
+          country_id: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          editorial_status: Database["public"]["Enums"]["editorial_status"]
+          ends_at: string | null
+          event_status: Database["public"]["Enums"]["event_status"]
+          event_type: Database["public"]["Enums"]["event_type"]
+          id: string
+          official_url: string | null
+          organization_id: string | null
+          poster_path: string | null
+          published_at: string | null
+          slug: string
+          source_url: string | null
+          starts_at: string
+          stream_url: string | null
+          ticket_url: string | null
+          time_zone: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+          venue_id: string | null
+          venue_name: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          city: string
+          country_id: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          ends_at?: string | null
+          event_status?: Database["public"]["Enums"]["event_status"]
+          event_type: Database["public"]["Enums"]["event_type"]
+          id?: string
+          official_url?: string | null
+          organization_id?: string | null
+          poster_path?: string | null
+          published_at?: string | null
+          slug: string
+          source_url?: string | null
+          starts_at: string
+          stream_url?: string | null
+          ticket_url?: string | null
+          time_zone: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+          venue_id?: string | null
+          venue_name?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          city?: string
+          country_id?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          ends_at?: string | null
+          event_status?: Database["public"]["Enums"]["event_status"]
+          event_type?: Database["public"]["Enums"]["event_type"]
+          id?: string
+          official_url?: string | null
+          organization_id?: string | null
+          poster_path?: string | null
+          published_at?: string | null
+          slug?: string
+          source_url?: string | null
+          starts_at?: string
+          stream_url?: string | null
+          ticket_url?: string | null
+          time_zone?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+          venue_id?: string | null
+          venue_name?: string | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       freestylers: {
         Row: {
           aka: string | null
