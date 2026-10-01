@@ -76,6 +76,109 @@ export type Database = {
         }
         Relationships: []
       }
+      event_leagues: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          event_id: string
+          is_primary: boolean
+          league_id: string
+          season_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          event_id: string
+          is_primary?: boolean
+          league_id: string
+          season_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          event_id?: string
+          is_primary?: boolean
+          league_id?: string
+          season_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_leagues_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_leagues_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_leagues_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "league_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_participants: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          display_name: string
+          display_order: number
+          event_id: string
+          freestyler_id: string | null
+          id: string
+          role: Database["public"]["Enums"]["participant_role"]
+          seed: number | null
+          team_name: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          display_name: string
+          display_order?: number
+          event_id: string
+          freestyler_id?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["participant_role"]
+          seed?: number | null
+          team_name?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          display_name?: string
+          display_order?: number
+          event_id?: string
+          freestyler_id?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["participant_role"]
+          seed?: number | null
+          team_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_participants_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_participants_freestyler_id_fkey"
+            columns: ["freestyler_id"]
+            isOneToOne: false
+            referencedRelation: "freestylers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           city: string

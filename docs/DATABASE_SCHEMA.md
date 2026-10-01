@@ -382,10 +382,16 @@ one circuit. Most events will have exactly one row marked as primary.
 | `season_id` | `uuid` | Optional FK to `league_seasons` |
 | `is_primary` | `boolean` | Default `false` |
 | `created_at` | `timestamptz` | Default `now()` |
+| `created_by` | `uuid` | Optional FK to `auth.users`; set null on user deletion |
 
 Primary key: `(event_id, league_id)`. A partial unique index enforces at most
-one `is_primary = true` row per event. A trigger or deferred validation must
-also ensure that `season_id` belongs to the selected `league_id`.
+one `is_primary = true` row per event. A trigger ensures that `season_id`
+belongs to the selected `league_id`.
+
+Anonymous visitors and regular authenticated users can read a relationship only
+when its event and league are published and, when present, its season is also
+published. Editors can read and manage all relationship rows. Deleting a
+relationship does not delete its event, league, or season.
 
 ### 5.10 `event_participants`
 
@@ -402,10 +408,16 @@ Participants, hosts, judges, DJs, guests, and casters associated with an event.
 | `display_order` | `integer` | Default `0` |
 | `team_name` | `text` | Optional |
 | `created_at` | `timestamptz` | Default `now()` |
+| `created_by` | `uuid` | Optional FK to `auth.users`; set null on user deletion |
 
 `freestyler_id` remains optional because not every host, judge, DJ, or guest
 needs a full FT profile. `display_name` is retained even when a profile exists
 to preserve historical event presentation.
+
+`display_name` must not be blank, `seed` must be positive when provided,
+`display_order` cannot be negative, and `team_name` must not be blank when
+provided. Public visitors can read participants of published events. Editors
+can read and manage participant rows for published, draft, and archived events.
 
 ### 5.11 `post_categories`
 
@@ -533,6 +545,7 @@ policies are versioned in migrations and tested together.
 - Create and update editorial entities.
 - Publish and archive content.
 - Upload and replace public media.
+- Manage event-league and event-participant relationship rows.
 - Cannot manage roles or perform normal hard deletes.
 
 ### Administrator
@@ -637,7 +650,7 @@ Migrations must enforce at least:
 - an `event_leagues.season_id` belongs to the same `league_id`;
 - Storage paths are relative object paths, not full URLs;
 - `content_markdown` is not empty for a published post;
-- authors cannot assign themselves administrative roles.
+- authors cannot assign themselves administrative roles;
 - venue latitude must be between `-90` and `90`;
 - venue longitude must be between `-180` and `180`;
 - venue coordinates must provide both latitude and longitude or neither;
@@ -650,6 +663,12 @@ Migrations must enforce at least:
 - an event venue must belong to the same country as the event;
 - event URLs use HTTP or HTTPS;
 - event poster paths are relative Storage paths;
+- an event can have at most one primary league;
+- an event league season must belong to the selected league;
+- participant display names cannot be blank;
+- participant seeds must be positive when provided;
+- participant display order cannot be negative;
+- participant team names cannot be blank when provided;
 
 ## 12. Migration plan
 
@@ -672,6 +691,11 @@ The schema will be implemented incrementally:
 014_seed_catalogs.sql
 015_rls_tests.sql
 ```
+
+Implementation is complete and locally validated through
+`010_event_relationships.sql`. The current pgTAP suite contains eight files and
+156 passing tests covering schema integrity and RLS allow/deny cases through
+event relationships.
 
 Each migration should be small enough to review and reproduce in local,
 preview, and production environments. Dashboard-only manual changes are not a
