@@ -426,10 +426,16 @@ can read and manage participant rows for published, draft, and archived events.
 | `id` | `uuid` | Primary key |
 | `name` | `text` | Required |
 | `slug` | `text` | Required, unique |
-| `description` | `text` | Optional |
-| timestamps | | |
+| `description` | `text` | Optional; cannot be blank when present |
+| `created_at` | `timestamptz` | Default `now()` |
+| `updated_at` | `timestamptz` | Maintained by trigger |
+| `created_by` | `uuid` | Optional FK to `auth.users`; set null on user deletion |
+| `updated_by` | `uuid` | Optional FK to `auth.users`; set null on user deletion |
 
 Initial categories: news, recap, analysis, opinion, interview, and guide.
+Categories are publicly readable catalogs. Editors can create and update them,
+while hard deletion remains restricted to administrators. A category referenced
+by a post cannot be deleted.
 
 ### 5.12 `posts`
 
@@ -438,19 +444,29 @@ Editorial content. Markdown is the canonical body format for V1.
 | Column | Type | Rules |
 |---|---|---|
 | `id` | `uuid` | Primary key |
-| `category_id` | `uuid` | Optional FK to `post_categories` |
-| `author_id` | `uuid` | Optional FK to `profiles` |
+| `category_id` | `uuid` | Optional FK to `post_categories`; delete restricted |
+| `author_id` | `uuid` | Optional FK to `profiles`; set null on profile deletion |
 | `title` | `text` | Required |
 | `slug` | `text` | Required, unique |
 | `excerpt` | `text` | Required |
-| `content_markdown` | `text` | Required |
+| `content_markdown` | `text` | Required; defaults to empty for drafts |
 | `cover_path` | `text` | Optional Storage path |
 | `editorial_status` | enum | Default `draft` |
 | `published_at` | `timestamptz` | Required when published |
 | `seo_title` | `text` | Optional override |
 | `seo_description` | `text` | Optional override |
-| `source_url` | `text` | Optional provenance |
-| audit columns | | |
+| `source_url` | `text` | Optional HTTP or HTTPS provenance URL |
+| audit columns | | Required for editorial changes |
+
+Draft posts may temporarily contain empty Markdown, but published posts require
+non-empty `content_markdown` and `published_at`. Cover images use relative
+Storage paths. Optional SEO overrides cannot be blank, and `source_url` must
+use HTTP or HTTPS.
+
+Anonymous visitors and regular authenticated users can only read published
+posts. Editors can read drafts, published posts, and archives, and can create,
+update, publish, or archive them. Hard deletion remains restricted to
+administrators.
 
 Markdown is rendered through a controlled server-side pipeline. Raw HTML is
 disabled by default and external links must be sanitized.
@@ -596,6 +612,8 @@ pure relationship or dependent tables:
 - `event_leagues` cascades when its event is hard-deleted;
 - `event_participants` cascades when its event is hard-deleted;
 - joining rows such as `league_countries` cascade with their parent;
+- deleting a post author profile sets `posts.author_id` to null;
+- deleting a category referenced by a post is restricted;
 - deleting a country, league, freestyler, venue, organization, or user with
   referenced published content is restricted.
 
@@ -669,6 +687,12 @@ Migrations must enforce at least:
 - participant seeds must be positive when provided;
 - participant display order cannot be negative;
 - participant team names cannot be blank when provided;
+- post category names, slugs, and optional descriptions must be valid;
+- post titles and excerpts cannot be blank;
+- published posts require non-empty Markdown and `published_at`;
+- post cover images use relative Storage paths;
+- optional post SEO overrides cannot be blank;
+- post source URLs use HTTP or HTTPS;
 
 ## 12. Migration plan
 
@@ -692,10 +716,9 @@ The schema will be implemented incrementally:
 015_rls_tests.sql
 ```
 
-Implementation is complete and locally validated through
-`010_event_relationships.sql`. The current pgTAP suite contains eight files and
-156 passing tests covering schema integrity and RLS allow/deny cases through
-event relationships.
+Implementation is complete and locally validated through `011_posts.sql`. The
+current pgTAP suite contains nine files and 192 passing tests covering schema
+integrity and RLS allow/deny cases through editorial categories and posts.
 
 Each migration should be small enough to review and reproduce in local,
 preview, and production environments. Dashboard-only manual changes are not a
