@@ -1,7 +1,7 @@
 # FreeStyle Total — Database Schema
 
 Status: approved design for the Supabase V1 foundation  
-Last updated: September 2026
+Last updated: October 2026
 
 ## 1. Purpose
 
@@ -355,6 +355,21 @@ event may belong to several leagues.
 | `published_at` | `timestamptz` | Required when published |
 | audit columns | | |
 
+Published events require `published_at`. Anonymous visitors and regular
+authenticated users can only read published events. Editors can create, update,
+publish, postpone, cancel, finish, and archive events, while hard deletion
+remains restricted to administrators.
+
+When an event references a reusable venue, the event and venue must belong to
+the same country. The database enforces this relationship with a trigger.
+`venue_name` remains available for provisional locations or as a historical
+display value when a reusable venue is not yet available.
+
+Event schedules use `timestamptz` together with a valid IANA `time_zone`.
+This allows the application to preserve the absolute moment while displaying
+the correct local time for each country and accounting for daylight-saving
+rules.
+
 ### 5.9 `event_leagues`
 
 Many-to-many relationship approved for events that participate in more than
@@ -631,6 +646,10 @@ Migrations must enforce at least:
 - freestyler photos use relative Storage paths;
 - freestyler social links use HTTP or HTTPS URLs;
 - published freestylers require `published_at`;
+- event time zones must be valid IANA identifiers;
+- an event venue must belong to the same country as the event;
+- event URLs use HTTP or HTTPS;
+- event poster paths are relative Storage paths;
 
 ## 12. Migration plan
 
