@@ -1,13 +1,11 @@
- -- =========================================================
+-- =========================================================
 -- Datos ficticios exclusivos para desarrollo local
 -- No deben utilizarse como información real o histórica
 -- =========================================================
 
-
 -- =========================================================
 -- Organización de demostración
 -- =========================================================
-
 insert into public.organizations (
   id,
   country_id,
@@ -361,3 +359,4 @@ set
   role = excluded.role,
   seed = excluded.seed,
   display_order = excluded.display_order;
+  
