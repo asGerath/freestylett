@@ -17,12 +17,12 @@ export function EventsSection({ events }: EventsSectionProps) {
   // Guardamos la liga seleccionada
   const [selectedLeague, setSelectedLeague] = useState("all");
 
-  // Obtenemos países únicos desde los datos mock
+  // Obtenemos los países disponibles desde los eventos recibidos
   const countries = useMemo(() => {
     return [...new Set(events.map((event) => event.country))];
   }, [events]);
 
-  // Obtenemos ligas únicas desde los datos mock
+  // Obtenemos las ligas disponibles desde los eventos recibidos
   const leagues = useMemo(() => {
     return [...new Set(events.map((event) => event.league))];
   }, [events]);
