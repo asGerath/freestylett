@@ -1,6 +1,6 @@
 # FreeStyle Total — Database Schema
 
-Status: approved and implemented through the Supabase Storage foundation
+Status: approved and implemented through the Supabase foundation and public event repository
 Last updated: October 2026
 
 ## 1. Purpose
@@ -747,6 +747,23 @@ The current pgTAP suite contains ten files and 226 passing tests covering
 schema integrity and RLS allow/deny cases through editorial categories, posts,
 the public media bucket, editorial media paths, and user-owned profile media.
 
+The canonical `supabase/seed.sql` contains only the six country catalog rows
+required by local resets and pgTAP tests. Optional fictional application data
+lives in `supabase/seeds/development.sql` and is loaded manually after the
+test suite. Keeping demonstration organizations, leagues, seasons, venues,
+freestylers, events, and participants outside the canonical seed preserves the
+deterministic row counts expected by database tests.
+
+On Windows, the optional UTF-8 seed should be streamed without PowerShell text
+conversion:
+
+```powershell
+cmd /c "docker exec -i supabase_db_freestylett psql -U postgres -d postgres < supabase\seeds\development.sql"
+```
+
+The development seed is idempotent and uses fixed UUIDs with conflict updates,
+so it can be reapplied without duplicating its records.
+
 Each migration should be small enough to review and reproduce in local,
 preview, and production environments. Dashboard-only manual changes are not a
 source of truth.
@@ -769,8 +786,29 @@ Supabase row
     -> UI
 ```
 
-Components must not contain Supabase queries. The existing event repository
-boundary is the reference pattern for the remaining features.
+Components must not contain Supabase queries. The event repository boundary is
+the reference pattern for the remaining features.
+
+`SupabaseEventRepository` is now the active provider selected by the event
+service. It is server-only and powers both the public event list and event
+detail page. Its public query:
+
+- explicitly requests only rows with `editorial_status = 'published'`;
+- relies on RLS as the authorization boundary;
+- joins the event country, venue, league, freestyler, and participant data;
+- selects the primary league, with a deterministic fallback;
+- sorts participants by `display_order`;
+- converts relative `poster_path` values into public `public-media` URLs;
+- maps database `scheduled` status to the UI domain status `upcoming`;
+- maps snake_case database values into the existing `Event` domain model.
+
+Country, league, and status filters continue to use the repository contract.
+They are currently applied to the mapped public result set. Filtering can move
+into the database query when pagination or larger production datasets require
+it, without changing components or service consumers.
+
+The mock event repository remains temporarily available as development
+reference data, but it is no longer selected by `event.service.ts`.
 
 ## 14. Deferred modules
 
@@ -803,4 +841,4 @@ The database foundation is complete when:
 - RLS tests cover allow and deny cases for every exposed table;
 - event queries support country, league, status, and date filters;
 - published entity queries support metadata and sitemap generation;
-- the current mock repository can be replaced without changing UI components.
+- the Supabase event repository powers list and detail pages without changes to UI components.
