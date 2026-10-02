@@ -1,5 +1,5 @@
-// Definimos la estructura base de un evento.
-// Esto nos ayuda a saber qué datos necesita la UI antes de conectar una base real.
+// Modelo de dominio consumido por la interfaz.
+// Los repositorios transforman sus fuentes de datos a esta estructura.
 
 export type EventStatus =
   | "draft"
