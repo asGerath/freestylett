@@ -6,14 +6,16 @@ export type EventStatus =
   | "upcoming"
   | "live"
   | "finished"
-  | "cancelled";
+  | "cancelled"
+  | "postponed";
 
 export type EventParticipantRole =
   | "competitor"
   | "host"
   | "judge"
   | "dj"
-  | "guest";
+  | "guest"
+  | "caster";
 
 export type EventParticipant = {
   id: string;
