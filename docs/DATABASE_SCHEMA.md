@@ -1,6 +1,6 @@
 # FreeStyle Total — Database Schema
 
-Status: approved design for the Supabase V1 foundation  
+Status: approved and implemented through the Supabase Storage foundation
 Last updated: October 2026
 
 ## 1. Purpose
@@ -584,7 +584,8 @@ the browser.
 ## 8. Storage model
 
 V1 uses a public bucket named `public-media`. Database columns store object
-paths rather than full URLs.
+paths rather than full URLs. The bucket accepts JPEG, PNG, WebP, and AVIF
+images with a maximum object size of 5 MiB.
 
 ```text
 organizations/{organizationId}/logo.webp
@@ -596,13 +597,31 @@ profiles/{userId}/avatar.webp
 ```
 
 Public visitors can read these objects. Only editors and administrators can
-upload, replace, or remove editorial media. Profile avatar policies, when user
-accounts are implemented, will be scoped to the authenticated user's folder.
+upload, replace, or remove editorial media. Authenticated users can manage only
+objects inside `profiles/{auth.uid()}/`; they cannot read or modify another
+user's profile folder.
+
+Editorial object paths are accepted only when their first folder is one of
+`organizations`, `leagues`, `events`, `freestylers`, or `posts`, the second
+folder is a valid UUID, and that UUID identifies an existing row in the
+corresponding table. This prevents editors from creating orphaned media paths
+or writing to arbitrary folders.
+
+The bucket is public for asset delivery, but anonymous clients are not granted
+SQL enumeration access to `storage.objects`. Authenticated select policies
+exist so authorized updates and upserts can evaluate existing objects safely.
+
+Objects must be removed through the Supabase Storage API, not with direct SQL
+against `storage.objects`. Supabase protects direct deletion to prevent the
+stored file and its metadata from becoming inconsistent. SQL pgTAP tests
+therefore verify the delete policies themselves; application integration tests
+will cover physical deletion through `storage.from('public-media').remove()`.
 
 Image validation must limit MIME types and file size before upload. The
-application should generate optimized WebP assets and meaningful alt text must
-live in entity data or a future media metadata table when one image can have
-several editorial contexts.
+database bucket repeats those limits as a final boundary. The application
+should generate optimized WebP assets, and meaningful alt text must live in
+entity data or a future media metadata table when one image can have several
+editorial contexts.
 
 ## 9. Referential actions
 
@@ -693,6 +712,13 @@ Migrations must enforce at least:
 - post cover images use relative Storage paths;
 - optional post SEO overrides cannot be blank;
 - post source URLs use HTTP or HTTPS;
+- Storage uploads use the `public-media` bucket;
+- Storage objects are limited to JPEG, PNG, WebP, and AVIF images of at most
+  5 MiB;
+- editorial Storage paths reference an existing organization, league, event,
+  freestyler, or post;
+- profile media paths are scoped to the authenticated user's UUID folder;
+- Storage objects are deleted through the Storage API instead of direct SQL;
 
 ## 12. Migration plan
 
@@ -716,9 +742,10 @@ The schema will be implemented incrementally:
 015_rls_tests.sql
 ```
 
-Implementation is complete and locally validated through `011_posts.sql`. The
-current pgTAP suite contains nine files and 192 passing tests covering schema
-integrity and RLS allow/deny cases through editorial categories and posts.
+Implementation is complete and locally validated through `012_storage.sql`.
+The current pgTAP suite contains ten files and 226 passing tests covering
+schema integrity and RLS allow/deny cases through editorial categories, posts,
+the public media bucket, editorial media paths, and user-owned profile media.
 
 Each migration should be small enough to review and reproduce in local,
 preview, and production environments. Dashboard-only manual changes are not a
