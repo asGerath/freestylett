@@ -1,8 +1,7 @@
-import { mockEventRepository } from "../repositories/mock-event.repository";
+import { supabaseEventRepository } from "../repositories/supabase-event.repository";
 import type { EventFilters } from "../types/event.types";
 
-// Change the selected provider at this boundary when Supabase is ready.
-const eventRepository = mockEventRepository;
+const eventRepository = supabaseEventRepository;
 
 export function getEvents(filters?: EventFilters) {
   return eventRepository.getAll(filters);
