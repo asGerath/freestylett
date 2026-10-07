@@ -1,12 +1,26 @@
+import type { Metadata } from "next";
+import type { EventStatus } from "@/features/events/types/event.types";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/ui/Container";
 import { getEventBySlug } from "@/features/events/services/event.service";
 import { formatEventDate, formatEventTime } from "@/features/events/utils/event-date";
-import type { Metadata } from "next";
 
 type EventDetailPageProps = { params: Promise<{ slug: string }> };
+
+const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+).replace(/\/$/, "");
+
+const eventStatusUrls: Record<EventStatus, string> = {
+  draft: "https://schema.org/EventScheduled",
+  upcoming: "https://schema.org/EventScheduled",
+  live: "https://schema.org/EventScheduled",
+  finished: "https://schema.org/EventCompleted",
+  cancelled: "https://schema.org/EventCancelled",
+  postponed: "https://schema.org/EventPostponed",
+};
 
 export async function generateMetadata({
   params,
@@ -71,8 +85,63 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
 
   if (!event) notFound();
 
+  const eventUrl = `${siteUrl}/eventos/${event.slug}`;
+  const image =
+    event.posterUrl ?? `${siteUrl}/images/brand/logo-primary.webp`;
+
+  const performers = event.participants
+    .filter((participant) => participant.role === "competitor")
+    .map((participant) => ({
+      "@type": "Person",
+      name: participant.name,
+      ...(participant.slug && {
+        url: `${siteUrl}/freestylers/${participant.slug}`,
+      }),
+    }));
+
+  const eventJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.title,
+    description:
+      event.description ??
+      `${event.title} en ${event.city}, ${event.country}.`,
+    startDate: event.startsAt,
+    eventStatus: eventStatusUrls[event.status],
+    eventAttendanceMode:
+      "https://schema.org/OfflineEventAttendanceMode",
+    url: eventUrl,
+    image: [image],
+    location: {
+      "@type": "Place",
+      name: event.venue,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: event.city,
+        addressCountry: event.country,
+      },
+    },
+    organizer: {
+      "@type": "Organization",
+      name: event.league,
+    },
+    ...(event.officialUrl && {
+      sameAs: event.officialUrl,
+    }),
+    ...(performers.length > 0 && {
+      performer: performers,
+    }),
+  };
+
   return (
     <main className="py-10">
+            <script type="application/ld+json" dangerouslySetInnerHTML=
+              {
+                {
+                  __html: JSON.stringify(eventJsonLd).replace(/</g, "\\u003c"),
+                }
+              }
+            />
       <Container>
         {event.posterUrl && (
           <div className="mb-8 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
