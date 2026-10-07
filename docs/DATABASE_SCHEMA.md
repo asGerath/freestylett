@@ -533,8 +533,18 @@ create index posts_publication_idx
   where editorial_status = 'published';
 ```
 
-The application still needs `metadataBase`, `generateMetadata`, `sitemap.ts`,
-`robots.ts`, and canonical URL handling after the public domain is selected.
+The application now defines a global `metadataBase` from
+`NEXT_PUBLIC_SITE_URL`, with `http://localhost:3000` as the local fallback.
+The event listing exposes static title, description, canonical, Open Graph, and
+Twitter metadata. Event detail pages use `generateMetadata` to derive those
+values from the published event returned by the Supabase repository.
+
+Unknown or non-public event slugs return non-indexable metadata and the existing
+not-found flow. Event lookups are wrapped with React `cache` so metadata and
+page rendering can reuse the same repository request during a server render.
+
+Sitemap and `robots.ts` generation remain pending until the public production
+domain and deployment rules are selected.
 
 ## 7. RLS and access model
 
@@ -807,8 +817,9 @@ They are currently applied to the mapped public result set. Filtering can move
 into the database query when pagination or larger production datasets require
 it, without changing components or service consumers.
 
-The mock event repository remains temporarily available as development
-reference data, but it is no longer selected by `event.service.ts`.
+The event mock data and mock repository have been removed. Optional fictional
+records now live exclusively in `supabase/seeds/development.sql`, while
+`event.service.ts` uses the Supabase repository for all public event reads.
 
 ## 14. Deferred modules
 
