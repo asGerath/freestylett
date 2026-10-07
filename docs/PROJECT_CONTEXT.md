@@ -1,7 +1,7 @@
 # FreeStyle Total (FT) — Project Context
 
 > Documento maestro de contexto para ChatGPT Work, Codex y sesiones nuevas de desarrollo.
-> Última consolidación: septiembre de 2026.
+> Última consolidación: octubre de 2026.
 
 ---
 
@@ -588,30 +588,32 @@ No mostrar todos los registros directamente en Home.
 
 El proyecto comenzó con datos mock para construir primero la UX y arquitectura.
 
-Existen o existieron mocks para:
+Estado actual de la migración:
 
-- Eventos.
-- Freestylers.
-- Ligas.
-- Blog.
+- Eventos: migrados a Supabase; el mock fue eliminado.
+- Ligas: migradas a Supabase; el mock fue eliminado.
+- Freestylers: todavía usan mock.
+- Blog: todavía usa mock.
 
-Regla:
+Eventos y ligas acceden a datos mediante repositorios y servicios dentro de cada
+feature. Los componentes no consultan Supabase directamente.
 
-> No eliminar los mocks hasta que la integración de datos real esté estable.
-
-La transición debe poder hacerse mediante una capa clara de datos o servicios, evitando acoplar componentes directamente al proveedor.
-
-Ejemplo deseado:
+Flujo vigente:
 
 ```text
 UI
  ↓
 feature / service
  ↓
-data source
-     ├── mock
-     └── Supabase
+repository
+ ↓
+Supabase
 ```
+
+Regla:
+
+> Eliminar cada mock únicamente después de conectar listado, detalle y previews,
+> agregar estados de carga/error/vacío, validar SEO y confirmar el build.
 
 ---
 
@@ -1182,67 +1184,53 @@ Mientras se usan mocks:
 
 # 28. Estado conocido del proyecto
 
-Último contexto consolidado: septiembre de 2026, después de la auditoría y la
-integración del paquete de marca azul.
+Último contexto consolidado: octubre de 2026, después de completar la base de
+datos, seguridad RLS y la migración de Eventos y Ligas a Supabase.
 
-### Ya definido
+### Infraestructura y datos implementados
 
-- Nombre FreeStyle Total.
-- Branding principal.
-- Logo Dark.
-- Stack.
-- Arquitectura modular.
-- App Router.
-- Rutas principales.
-- Sistema de previews en Home.
-- Datos mock.
-- Eventos.
-- Freestylers.
-- Ligas.
-- Blog.
-- Azul cyan como color principal de marca.
-- Amarillo como color secundario.
-- Assets de marca optimizados en WebP.
+- Supabase local mediante Docker.
+- Esquema PostgreSQL versionado mediante migraciones.
+- Datos reproducibles mediante `seed.sql` y seeds de desarrollo.
+- Supabase Auth y autorización por roles.
+- Bucket público de medios y políticas de Storage.
+- Políticas RLS para las entidades principales.
+- Suite pgTAP con 226 pruebas aprobadas.
+- Tipos TypeScript generados desde la base de datos.
 
-### Implementado o parcialmente implementado en alguna etapa
+### Eventos completados
 
-- Home.
-- `/eventos`.
-- `/eventos/[slug]`.
-- `/freestylers`.
-- `/freestylers/[slug]`.
-- `/ligas`.
-- `/ligas/[slug]`.
-- `/blog`.
-- `/blog/[slug]`.
-- `EventsPreview`.
-- `FreestylersPreview`.
-- `LeaguesPreview`.
-- `BlogPreview`.
-- Cards y componentes UI base.
-- Logo horizontal integrado en la navegación.
-- Isotipo configurado para iconos y favicon.
-- Logo principal configurado para Open Graph.
-- `AGENTS.md` con instrucciones persistentes del repositorio.
+- Listado, detalle y preview de Home consumen Supabase.
+- Repositorio y servicio desacoplan la UI del proveedor.
+- Filtros por país y liga.
+- Participantes y relaciones cargados desde la base.
+- Estados loading, error, empty y not-found.
+- Metadata estática y dinámica.
+- Open Graph, Twitter cards, canonical y robots.
+- JSON-LD de tipo `Event`.
+- Rutas públicas incluidas en el sitemap.
+- Mock de eventos eliminado.
+
+### Ligas completadas
+
+- Listado, detalle y preview de Home consumen Supabase.
+- Repositorio y servicio propios del dominio.
+- País principal y logo público mapeados desde la base.
+- Estados loading, error, empty y not-found.
+- Metadata estática y dinámica.
+- Open Graph, Twitter cards, canonical y robots.
+- Rutas públicas incluidas en el sitemap.
+- Mock de ligas eliminado.
 
 ### Pendiente / siguiente etapa
 
-- Completar navegación móvil y footer.
-- Consolidar la Home como portada del producto.
-- Añadir metadata específica por entidad pública.
-- Completar rankings.
-- Batallas.
-- Creadores.
-- Integración con Supabase.
-- Diseño del esquema definitivo.
-- Admin.
-- Auth.
-- Dashboard.
-- Favoritos.
-- Datos reales.
-- Integración con YouTube.
-- SEO completo.
-- Deployment productivo.
+1. Migrar Freestylers de mocks a Supabase.
+2. Migrar Blog de mocks a Supabase.
+3. Consolidar la Home con todos los módulos reales.
+4. Completar Auth y experiencia por roles en frontend.
+5. Construir el panel de administración.
+6. Completar rankings, batallas y creadores.
+7. Preparar deployment productivo en Vercel.
 
 ---
 
@@ -1340,17 +1328,18 @@ o una solución equivalente compatible con el repo real.
 
 ## Paso 6 — Supabase
 
-Implementar progresivamente:
+Estado de migración por módulo:
 
-1. Countries.
-2. Leagues.
-3. Freestylers.
-4. Events.
-5. Blog.
-6. Rankings.
-7. Battles.
+1. Countries: implementado como catálogo base.
+2. Events: integrado en frontend.
+3. Leagues: integrado en frontend.
+4. Freestylers: siguiente módulo.
+5. Blog: pendiente.
+6. Rankings: pendiente.
+7. Battles: pendiente.
 
-Migrar mocks módulo por módulo.
+Mantener la migración módulo por módulo y eliminar cada mock solamente después
+de validar toda su integración.
 
 ---
 
@@ -1417,25 +1406,26 @@ Al comenzar una sesión nueva, usar una instrucción similar:
 
 # 33. Objetivo inmediato al retomar FT
 
-La auditoría inicial ya fue completada. El objetivo inmediato es cerrar la
-estructura visual global del MVP.
+La base de datos, RLS y la integración completa de Eventos y Ligas ya están
+terminadas.
 
-El objetivo es:
+El objetivo inmediato es:
 
 ```text
-navbar responsive y footer
+migrar Freestylers a Supabase
       ↓
-rediseñar la Home
+migrar Blog a Supabase
       ↓
-consolidar módulos existentes
+consolidar la Home con datos reales
       ↓
-crear frontera de datos
+completar Auth y roles en frontend
       ↓
-migrar progresivamente a Supabase
+construir el panel administrativo
 ```
 
-El trabajo visual debe continuar en `develop` y validarse antes de integrarse a
-`main`.
+El trabajo debe continuar en ramas pequeñas basadas en `develop`, validarse
+con lint, build y pruebas relevantes, y después integrarse nuevamente a
+`develop`.
 
 ---
 
@@ -1443,4 +1433,4 @@ El trabajo visual debe continuar en `develop` y validarse antes de integrarse a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Centraliza eventos, ligas, freestylers, rankings, batallas, noticias/blog y creadores. Usa Next.js, React, TypeScript y Tailwind; la arquitectura es modular por features y actualmente consume mocks. Se planea Supabase (PostgreSQL/Auth/Storage/RLS), Vercel y YouTube API/embeds. El branding principal es oscuro, competitivo y urbano, con logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento secundario. Ya están implementados Home, eventos, ligas, freestylers y blog con previews y rutas por slug, además de los assets de marca en WebP. La prioridad actual es cerrar la estructura visual global y la Home, consolidar los módulos existentes y después migrar progresivamente los mocks hacia Supabase.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos y Ligas consumen Supabase mediante repositorios y servicios, incluyendo listados, detalles, previews de Home, estados de interfaz, metadata y sitemap; sus mocks ya fueron eliminados. Freestylers y Blog todavía usan mocks. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento. La siguiente prioridad es migrar Freestylers a Supabase, continuar con Blog, consolidar la Home con datos reales y después avanzar con Auth, roles y admin.
