@@ -1,13 +1,17 @@
 import type { MetadataRoute } from "next";
 
 import { getEvents } from "@/features/events/services/event.service";
+import { getLeagues } from "@/features/leagues/services/league.service";
 
 const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
 ).replace(/\/$/, "");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const events = await getEvents();
+  const [events, leagues] = await Promise.all([
+    getEvents(),
+    getLeagues(),
+  ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -20,6 +24,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 0.9,
     },
+    {
+      url: `${siteUrl}/ligas`,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
   ];
 
   const eventRoutes: MetadataRoute.Sitemap = events.map((event) => ({
@@ -28,5 +37,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...eventRoutes];
+  const leagueRoutes: MetadataRoute.Sitemap = leagues.map((league) => ({
+    url: `${siteUrl}/ligas/${league.slug}`,
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...eventRoutes, ...leagueRoutes];
 }
