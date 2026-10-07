@@ -135,12 +135,11 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
 
   return (
     <main className="py-10">
-            <script type="application/ld+json" dangerouslySetInnerHTML=
-              {
-                {
-                  __html: JSON.stringify(eventJsonLd).replace(/</g, "\\u003c"),
-                }
-              }
+            <script 
+            type="application/ld+json" 
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(eventJsonLd).replace(/</g, "\\u003c"),
+             }}
             />
       <Container>
         {event.posterUrl && (
