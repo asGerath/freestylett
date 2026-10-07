@@ -543,8 +543,18 @@ Unknown or non-public event slugs return non-indexable metadata and the existing
 not-found flow. Event lookups are wrapped with React `cache` so metadata and
 page rendering can reuse the same repository request during a server render.
 
-Sitemap and `robots.ts` generation remain pending until the public production
-domain and deployment rules are selected.
+The application now exposes a dynamic `sitemap.xml` containing the Home,
+the event listing, and detail URLs for published events returned by the
+Supabase repository. `robots.txt` allows public content, references the
+sitemap, and excludes API, authentication, dashboard, and future admin routes.
+
+Event detail pages also emit Schema.org `Event` JSON-LD with the canonical
+URL, schedule, status, attendance mode, image, venue, address, league
+organizer, official URL when available, and competitor performers. The JSON
+payload escapes less-than characters before being inserted into the page.
+
+The production deployment must replace the local `NEXT_PUBLIC_SITE_URL`
+fallback with the final public domain.
 
 ## 7. RLS and access model
 
