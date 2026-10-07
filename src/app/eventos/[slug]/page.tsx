@@ -4,8 +4,66 @@ import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/ui/Container";
 import { getEventBySlug } from "@/features/events/services/event.service";
 import { formatEventDate, formatEventTime } from "@/features/events/utils/event-date";
+import type { Metadata } from "next";
 
 type EventDetailPageProps = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({
+  params,
+}: EventDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const event = await getEventBySlug(slug);
+
+  if (!event) {
+    return {
+      title: "Evento no encontrado",
+      description: "El evento solicitado no está disponible.",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const description =
+    event.description ??
+    `${event.title} en ${event.city}, ${event.country}. Consulta los detalles del evento en Freestyle Total.`;
+
+  const image =
+    event.posterUrl ?? "/images/brand/logo-primary.webp";
+
+  const canonicalPath = `/eventos/${event.slug}`;
+
+  return {
+    title: event.title,
+    description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+    openGraph: {
+      type: "website",
+      title: `${event.title} | Freestyle Total`,
+      description,
+      url: canonicalPath,
+      images: [
+        {
+          url: image,
+          alt: event.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${event.title} | Freestyle Total`,
+      description,
+      images: [image],
+    },
+  };
+}
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
   const { slug } = await params;

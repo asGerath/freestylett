@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { supabaseEventRepository } from "../repositories/supabase-event.repository";
 import type { EventFilters } from "../types/event.types";
 
@@ -7,9 +9,9 @@ export function getEvents(filters?: EventFilters) {
   return eventRepository.getAll(filters);
 }
 
-export function getEventBySlug(slug: string) {
+export const getEventBySlug = cache((slug: string) => {
   return eventRepository.getBySlug(slug);
-}
+});
 
 export function getFeaturedEvents(limit = 3) {
   return eventRepository.getFeatured(limit);
