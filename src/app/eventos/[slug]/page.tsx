@@ -1,11 +1,11 @@
+import type { Metadata } from "next";
+import type { EventStatus } from "@/features/events/types/event.types";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/ui/Container";
 import { getEventBySlug } from "@/features/events/services/event.service";
 import { formatEventDate, formatEventTime } from "@/features/events/utils/event-date";
-import type { Metadata } from "next";
-import type { EventStatus } from "@/features/events/types/event.types";
 
 type EventDetailPageProps = { params: Promise<{ slug: string }> };
 
@@ -135,12 +135,13 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
 
   return (
     <main className="py-10">
-            <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(eventJsonLd).replace(/</g, "\\u003c"),
-        }}
-      />
+            <script type="application/ld+json" dangerouslySetInnerHTML=
+              {
+                {
+                  __html: JSON.stringify(eventJsonLd).replace(/</g, "\\u003c"),
+                }
+              }
+            />
       <Container>
         {event.posterUrl && (
           <div className="mb-8 overflow-hidden rounded-2xl border border-[var(--color-border)] bg-white shadow-sm">
