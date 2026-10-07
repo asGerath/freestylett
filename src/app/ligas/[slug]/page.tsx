@@ -1,20 +1,77 @@
-// Página de detalle de una liga.
-// Next obtiene el slug desde la URL: /ligas/fms-mexico
-
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
 import { Container } from "@/components/ui/Container";
-import { leaguesMock } from "@/features/leagues/data/leagues.mock";
+import { getLeagueBySlug } from "@/features/leagues/services/league.service";
 
 type LeagueDetailPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
-export default async function LeagueDetailPage({ params }: LeagueDetailPageProps) {
+export async function generateMetadata({
+  params,
+}: LeagueDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
+  const league = await getLeagueBySlug(slug);
 
-  const league = leaguesMock.find((league) => league.slug === slug);
+  if (!league) {
+    return {
+      title: "Liga no encontrada",
+      description: "La liga solicitada no está disponible.",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const description =
+    league.description ??
+    `Consulta información, eventos y temporadas de ${league.name}.`;
+
+  const image =
+    league.logoUrl ?? "/images/brand/logo-primary.webp";
+
+  const canonicalPath = `/ligas/${league.slug}`;
+
+  return {
+    title: league.name,
+    description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+    openGraph: {
+      type: "website",
+      title: `${league.name} | Freestyle Total`,
+      description,
+      url: canonicalPath,
+      images: [
+        {
+          url: image,
+          alt: league.name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${league.name} | Freestyle Total`,
+      description,
+      images: [image],
+    },
+  };
+}
+
+export default async function LeagueDetailPage({
+  params,
+}: LeagueDetailPageProps) {
+  const { slug } = await params;
+  const league = await getLeagueBySlug(slug);
 
   if (!league) {
     notFound();
@@ -29,16 +86,16 @@ export default async function LeagueDetailPage({ params }: LeagueDetailPageProps
 
         <h1 className="mt-3 text-4xl font-bold">{league.name}</h1>
 
-        <p className="mt-4 max-w-2xl text-gray-400">
+        <p className="mt-4 max-w-2xl text-[var(--color-muted)]">
           {league.description}
         </p>
 
-        <section className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6">
+        <section className="mt-8 rounded-2xl border border-[var(--color-border)] bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-bold">Ranking y temporadas</h2>
 
-          <p className="mt-3 text-gray-400">
-            Aquí mostraremos ranking, tabla de posiciones, eventos de la liga y
-            temporadas disponibles.
+          <p className="mt-3 text-[var(--color-muted)]">
+            Próximamente mostraremos las temporadas, eventos y tablas de
+            posiciones de esta liga.
           </p>
         </section>
       </Container>
