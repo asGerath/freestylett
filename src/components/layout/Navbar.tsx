@@ -1,22 +1,41 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Container } from "@/components/ui/Container";
 
-const navItems = [
+const publicNavItems = [
   { label: "Eventos", href: "/eventos" },
   { label: "Freestylers", href: "/freestylers" },
   { label: "Ligas", href: "/ligas" },
   { label: "Blog", href: "/blog" },
 ];
 
-export function Navbar() {
+type NavbarProps = {
+  isAuthenticated: boolean;
+  canAccessAdmin: boolean;
+};
+
+export function Navbar({
+  isAuthenticated,
+  canAccessAdmin,
+}: NavbarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const navItems = [
+    ...publicNavItems,
+    ...(canAccessAdmin
+      ? [{ label: "Admin", href: "/admin" }]
+      : []),
+    {
+      label: isAuthenticated ? "Dashboard" : "Iniciar sesión",
+      href: isAuthenticated ? "/dashboard" : "/login",
+    },
+  ];
 
   useEffect(() => {
     const updateNavbar = () => setIsScrolled(window.scrollY > 16);
@@ -65,7 +84,8 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 aria-current={isActive(item.href) ? "page" : undefined}
-                className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] transition ${isActive(item.href)
+                className={`rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] transition ${
+                  isActive(item.href)
                     ? "bg-[var(--color-primary-bright)] text-[var(--color-text-dark)]"
                     : "text-[var(--color-muted)] hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-text)]"
                 }`}
@@ -101,7 +121,8 @@ export function Navbar() {
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   onClick={() => setIsOpen(false)}
-                  className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${isActive(item.href)
+                  className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                    isActive(item.href)
                       ? "bg-[var(--color-primary-bright)] text-[var(--color-text-dark)]"
                       : "text-[var(--color-muted)] hover:bg-white/80 hover:text-[var(--color-text)]"
                   }`}
