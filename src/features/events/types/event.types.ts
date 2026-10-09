@@ -1,5 +1,5 @@
-// Modelo de dominio consumido por la interfaz.
-// Los repositorios transforman sus fuentes de datos a esta estructura.
+// Modelos de dominio consumidos por la interfaz.
+// Los repositorios transforman sus fuentes de datos a estas estructuras.
 
 export type EventStatus =
   | "draft"
@@ -9,6 +9,11 @@ export type EventStatus =
   | "cancelled"
   | "postponed";
 
+export type EventEditorialStatus =
+  | "draft"
+  | "published"
+  | "archived";
+
 export type EventParticipantRole =
   | "competitor"
   | "host"
@@ -16,6 +21,40 @@ export type EventParticipantRole =
   | "dj"
   | "guest"
   | "caster";
+
+
+export type AdminEventType =
+  | "league_round"
+  | "qualifier"
+  | "regional"
+  | "national_final"
+  | "international_final"
+  | "tournament"
+  | "exhibition"
+  | "other";
+
+export type AdminEventStatus =
+  | "scheduled"
+  | "live"
+  | "finished"
+  | "cancelled"
+  | "postponed";
+
+export type AdminEventFormValues = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  countryId: string;
+  city: string;
+  venueName: string;
+  startsAt: string;
+  timeZone: string;
+  eventType: AdminEventType;
+  eventStatus: AdminEventStatus;
+  editorialStatus: EventEditorialStatus;
+  officialUrl: string;
+};
 
 export type EventParticipant = {
   id: string;
@@ -41,6 +80,26 @@ export type Event = {
   status: EventStatus;
   participants: EventParticipant[];
 };
+
+export type AdminEventSummary = {
+  id: string;
+  title: string;
+  slug: string;
+  country: string;
+  city: string;
+  startsAt: string;
+  eventStatus: Exclude<EventStatus, "draft">;
+  editorialStatus: EventEditorialStatus;
+  updatedAt: string;
+};
+
+export type AdminEventFormOptions = {
+  countries: Array<{
+    id: string;
+    name: string;
+  }>;
+};
+
 
 export type EventFilters = {
   country?: string;
