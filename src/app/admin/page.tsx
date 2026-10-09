@@ -2,6 +2,26 @@ import Link from "next/link";
 
 import { getCurrentUser } from "@/features/auth/services/auth.service";
 
+const adminSections = [
+  {
+    label: "Eventos",
+    href: "/admin/eventos",
+    description: "Consulta y administra los eventos.",
+  },
+  {
+    label: "Ligas",
+    description: "Administración próximamente.",
+  },
+  {
+    label: "Freestylers",
+    description: "Administración próximamente.",
+  },
+  {
+    label: "Artículos",
+    description: "Administración próximamente.",
+  },
+];
+
 export default async function AdminPage() {
   const user = await getCurrentUser();
 
@@ -22,19 +42,38 @@ export default async function AdminPage() {
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {["Eventos", "Ligas", "Freestylers", "Artículos"].map(
-            (section) => (
+          {adminSections.map((section) => {
+            const content = (
+              <>
+                <h2 className="font-bold">{section.label}</h2>
+
+                <p className="mt-2 text-sm text-[var(--color-muted)]">
+                  {section.description}
+                </p>
+              </>
+            );
+
+            if (section.href) {
+              return (
+                <Link
+                  key={section.label}
+                  href={section.href}
+                  className="rounded-2xl border border-[var(--color-border)] p-5 transition hover:border-[var(--color-primary)] hover:shadow-sm"
+                >
+                  {content}
+                </Link>
+              );
+            }
+
+            return (
               <div
-                key={section}
+                key={section.label}
                 className="rounded-2xl border border-[var(--color-border)] p-5"
               >
-                <h2 className="font-bold">{section}</h2>
-                <p className="mt-2 text-sm text-[var(--color-muted)]">
-                  Administración próximamente.
-                </p>
+                {content}
               </div>
-            ),
-          )}
+            );
+          })}
         </div>
 
         <Link
