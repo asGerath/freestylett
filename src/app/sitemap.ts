@@ -3,16 +3,19 @@ import type { MetadataRoute } from "next";
 import { getEvents } from "@/features/events/services/event.service";
 import { getFreestylers } from "@/features/freestylers/services/freestyler.service";
 import { getLeagues } from "@/features/leagues/services/league.service";
+import { getBlogPosts } from "@/features/blog/services/blog.service";
 
 const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
 ).replace(/\/$/, "");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [events, leagues, freestylers] = await Promise.all([
+
+  const [events, leagues, freestylers, posts] = await Promise.all([
     getEvents(),
     getLeagues(),
     getFreestylers(),
+    getBlogPosts(),
   ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -34,6 +37,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${siteUrl}/freestylers`,
       changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/blog`,
+      changeFrequency: "daily",
       priority: 0.9,
     },
   ];
@@ -58,10 +66,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   );
 
+  const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${siteUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.publishedAt),
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
+
+
   return [
     ...staticRoutes,
     ...eventRoutes,
     ...leagueRoutes,
     ...freestylerRoutes,
+    ...blogRoutes,
   ];
 }
