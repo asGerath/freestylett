@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { getEvents } from "@/features/events/services/event.service";
+import { getFreestylers } from "@/features/freestylers/services/freestyler.service";
 import { getLeagues } from "@/features/leagues/services/league.service";
 
 const siteUrl = (
@@ -8,9 +9,10 @@ const siteUrl = (
 ).replace(/\/$/, "");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [events, leagues] = await Promise.all([
+  const [events, leagues, freestylers] = await Promise.all([
     getEvents(),
     getLeagues(),
+    getFreestylers(),
   ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -29,6 +31,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${siteUrl}/freestylers`,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
   ];
 
   const eventRoutes: MetadataRoute.Sitemap = events.map((event) => ({
@@ -43,5 +50,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...eventRoutes, ...leagueRoutes];
+  const freestylerRoutes: MetadataRoute.Sitemap = freestylers.map(
+    (freestyler) => ({
+      url: `${siteUrl}/freestylers/${freestyler.slug}`,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    }),
+  );
+
+  return [
+    ...staticRoutes,
+    ...eventRoutes,
+    ...leagueRoutes,
+    ...freestylerRoutes,
+  ];
 }
