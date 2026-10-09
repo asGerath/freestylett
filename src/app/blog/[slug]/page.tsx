@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/ui/Container";
@@ -8,6 +9,58 @@ type BlogDetailPageProps = {
     slug: string;
   }>;
 };
+
+export async function generateMetadata({
+  params,
+}: BlogDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getBlogPostBySlug(slug);
+
+  if (!post) {
+    return {
+      title: "Artículo no encontrado",
+      description: "El artículo solicitado no está disponible.",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
+  }
+
+  const canonicalPath = `/blog/${post.slug}`;
+  const image = "/images/brand/logo-primary.webp";
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+    openGraph: {
+      type: "article",
+      title: `${post.title} | Freestyle Total`,
+      description: post.excerpt,
+      url: canonicalPath,
+      publishedTime: post.publishedAt,
+      images: [
+        {
+          url: image,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} | Freestyle Total`,
+      description: post.excerpt,
+      images: [image],
+    },
+  };
+}
 
 export default async function BlogDetailPage({
   params,
