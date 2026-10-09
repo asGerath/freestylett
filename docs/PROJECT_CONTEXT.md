@@ -289,25 +289,36 @@ Debe poder filtrarse y vincular contenido relevante.
 
 ---
 
-## 5.9 Login y dashboard
+## 5.9 Login, dashboard y autorización
 
-Se planteó login y dashboard de usuario.
+Supabase Auth ya está conectado al frontend.
 
-Rutas posibles:
+Rutas vigentes:
 
 ```text
 /login
+/registro
 /dashboard
+/admin
 ```
 
-Funciones iniciales planteadas:
+Comportamiento implementado:
+
+- Las rutas de autenticación redirigen al dashboard cuando ya existe una sesión.
+- El dashboard requiere una sesión válida.
+- El usuario actual se resuelve desde claims, perfil y roles de Supabase.
+- Los roles `admin` y `editor` habilitan el acceso al panel editorial.
+- Los usuarios sin permisos editoriales son redirigidos desde `/admin` al dashboard.
+- La navegación muestra `Iniciar sesión`, `Dashboard` y `Admin` según la sesión y los roles.
+- El panel y el dashboard se mantienen como Server Components.
+- La autorización visual complementa las políticas RLS; no las reemplaza.
+
+Funciones de cuenta todavía pendientes:
 
 - Favoritos.
 - Eventos guardados.
 - Preferencias.
 - Seguimiento de contenido.
-
-Estas funciones pueden implementarse después del núcleo informativo si afectan el ritmo del MVP.
 
 ---
 
@@ -507,6 +518,15 @@ Actualmente se han trabajado o definido las siguientes rutas:
     └── [slug]
 ```
 
+Rutas adicionales implementadas:
+
+```text
+/login
+/registro
+/dashboard
+/admin
+```
+
 También forman parte del roadmap:
 
 ```text
@@ -515,11 +535,6 @@ También forman parte del roadmap:
 
 /creadores
 /creadores/[slug]
-
-/login
-/dashboard
-
-/admin
 ```
 
 ---
@@ -699,7 +714,10 @@ Funciones futuras del panel:
 - Gestión de países, venues y marcas.
 - Subida de imágenes.
 
-Debe protegerse mediante autenticación y roles.
+La ruta base `/admin` ya está protegida mediante autenticación y roles. Los
+roles `admin` y `editor` pueden acceder; los demás usuarios regresan al
+dashboard. Actualmente existe el shell inicial del panel y quedan pendientes
+los CRUD y flujos editoriales de cada dominio.
 
 ---
 
@@ -1248,11 +1266,22 @@ Supabase.
 - Seed de desarrollo incluye una categoría y un artículo ficticios.
 - Mock del blog eliminado.
 
+### Auth y autorización frontend completados
+
+- Servicio central para resolver usuario, perfil y roles desde Supabase.
+- Dashboard protegido con información básica de cuenta y roles.
+- Redirección de usuarios autenticados fuera de login y registro.
+- Ruta `/admin` protegida para roles `admin` y `editor`.
+- Shell inicial del panel editorial.
+- Navbar sensible a sesión y permisos.
+- Metadata `noindex` para el área administrativa.
+- Validación completada con lint, build y revisión de whitespace.
+
 ### Pendiente / siguiente etapa
 
-1. Completar Auth y experiencia por roles en frontend.
-2. Construir el panel de administración.
-3. Completar rankings, batallas y creadores.
+1. Construir los CRUD del panel de administración.
+2. Completar rankings, batallas y creadores.
+3. Incorporar funciones de cuenta como favoritos y seguimientos.
 4. Preparar deployment productivo en Vercel.
 
 ---
@@ -1435,13 +1464,13 @@ Freestylers y Blog ya están terminadas.
 El objetivo inmediato es:
 
 ```text
-completar Auth y roles en frontend
-      ↓
-construir el panel administrativo
+construir los CRUD del panel administrativo
       ↓
 completar rankings, batallas y creadores
       ↓
-construir el panel administrativo
+incorporar favoritos y seguimientos
+      ↓
+preparar deployment productivo
 ```
 
 El trabajo debe continuar en ramas pequeñas basadas en `develop`, validarse
@@ -1454,4 +1483,4 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. La siguiente prioridad es completar Auth y la experiencia por roles en frontend. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento. La siguiente prioridad es migrar Blog a Supabase, consolidar la Home con datos reales y después avanzar con Auth, roles y admin.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. La prioridad actual es construir los CRUD del panel editorial y después avanzar con rankings, batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
