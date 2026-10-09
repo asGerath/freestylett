@@ -1,26 +1,34 @@
-// Preview de freestylers para Home
-
-import { freestylersMock } from "../data/freestylers.mock";
-import { FreestylerCard } from "./FreestylerCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
-export function FreestylersPreview() {
-  const preview = freestylersMock.slice(0, 3);
+import { getFeaturedFreestylers } from "../services/freestyler.service";
+import { FreestylerCard } from "./FreestylerCard";
+
+export async function FreestylersPreview() {
+  const freestylers = await getFeaturedFreestylers(3);
 
   return (
     <section className="mt-16">
-        <SectionHeader
-          title="Freestylers"
-          description="Perfiles destacados del circuito."
-          href="/freestylers"
-          linkLabel="Ver todos los freestylers →"
-        />
+      <SectionHeader
+        title="Freestylers"
+        description="Perfiles destacados del circuito."
+        href="/freestylers"
+        linkLabel="Ver todos los freestylers"
+      />
 
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {preview.map((f) => (
-          <FreestylerCard key={f.id} freestyler={f} />
-        ))}
-      </div>
+      {freestylers.length > 0 ? (
+        <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {freestylers.map((freestyler) => (
+            <FreestylerCard
+              key={freestyler.id}
+              freestyler={freestyler}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="mt-6 text-[var(--color-muted)]">
+          Todavía no hay freestylers publicados.
+        </p>
+      )}
     </section>
   );
 }

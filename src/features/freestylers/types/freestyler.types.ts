@@ -1,5 +1,4 @@
 // Modelo base de un freestyler.
-// Más adelante crecerá con stats, ligas, ranking, etc.
 
 export type FreestylerItem = {
   id: string;
@@ -8,5 +7,6 @@ export type FreestylerItem = {
   slug: string;
   country: string;
   city?: string;
+  bio?: string;
   photoUrl?: string;
 };
