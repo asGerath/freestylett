@@ -1235,24 +1235,25 @@ Supabase.
 - Rutas públicas incluidas en el sitemap.
 - Mock de freestylers eliminado.
 
-### Blog integrado
+### Blog completado
 
 - Listado, detalle y preview de Home consumen Supabase.
 - Repositorio y servicio propios del dominio.
 - Categoría, contenido editorial, fecha y portada se mapean desde la base.
 - El detalle resuelve artículos publicados mediante slug.
+- Estados loading, error, empty y not-found.
+- Metadata estática y dinámica.
+- Open Graph, Twitter cards, canonical y robots.
+- Rutas públicas incluidas en el sitemap.
 - Seed de desarrollo incluye una categoría y un artículo ficticios.
 - Mock del blog eliminado.
 
 ### Pendiente / siguiente etapa
 
-1. Completar estados loading, error, empty y not-found del Blog.
-2. Agregar metadata dinámica, canonical, Open Graph y sitemap para Blog.
-3. Consolidar la Home con todos los módulos reales.
-4. Completar Auth y experiencia por roles en frontend.
-5. Construir el panel de administración.
-6. Completar rankings, batallas y creadores.
-7. Preparar deployment productivo en Vercel.
+1. Completar Auth y experiencia por roles en frontend.
+2. Construir el panel de administración.
+3. Completar rankings, batallas y creadores.
+4. Preparar deployment productivo en Vercel.
 
 ---
 
@@ -1356,7 +1357,7 @@ Estado de migración por módulo:
 2. Events: integrado en frontend.
 3. Leagues: integrado en frontend.
 4. Freestylers: integrado en frontend.
-5. Blog: integrado en frontend mediante repositorio y servicio; hardening SEO y estados pendiente.
+5. Blog: integrado completamente en frontend, con estados, metadata y sitemap.
 6. Rankings: pendiente.
 7. Battles: pendiente.
 
@@ -1434,11 +1435,11 @@ Freestylers y Blog ya están terminadas.
 El objetivo inmediato es:
 
 ```text
-completar estados y SEO del Blog
-      ↓
-consolidar la Home con datos reales
-      ↓
 completar Auth y roles en frontend
+      ↓
+construir el panel administrativo
+      ↓
+completar rankings, batallas y creadores
       ↓
 construir el panel administrativo
 ```
@@ -1453,4 +1454,4 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home ya usan datos reales y sus mocks fueron eliminados. Eventos, Ligas y Freestylers también cuentan con estados de interfaz, metadata y sitemap; el hardening equivalente del Blog es la siguiente prioridad. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento. La siguiente prioridad es migrar Blog a Supabase, consolidar la Home con datos reales y después avanzar con Auth, roles y admin.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. La siguiente prioridad es completar Auth y la experiencia por roles en frontend. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento. La siguiente prioridad es migrar Blog a Supabase, consolidar la Home con datos reales y después avanzar con Auth, roles y admin.
