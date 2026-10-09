@@ -1,10 +1,13 @@
 // Página completa del blog.
 
+import { getBlogPosts } from "@/features/blog/services/blog.service";
 import { Container } from "@/components/ui/Container";
-import { blogMock } from "@/features/blog/data/blog.mock";
 import { BlogCard } from "@/features/blog/components/BlogCard";
 
-export default function BlogPage() {
+
+ export default async function BlogPage() {
+  const posts = await getBlogPosts();
+
   return (
     <main className="py-10">
       <Container>
@@ -16,7 +19,7 @@ export default function BlogPage() {
         </p>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {blogMock.map((post) => (
+          {posts.map((post) => (
             <BlogCard key={post.id} post={post} />
           ))}
         </div>

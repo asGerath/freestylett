@@ -359,4 +359,66 @@ set
   role = excluded.role,
   seed = excluded.seed,
   display_order = excluded.display_order;
-  
+
+  -- =========================================================
+-- Categoría editorial de demostración
+-- =========================================================
+
+insert into public.post_categories (
+  id,
+  name,
+  slug,
+  description
+)
+values (
+  '90000000-0000-0000-0000-000000000001',
+  'Actualidad Demo',
+  'actualidad-demo',
+  'Categoría ficticia utilizada exclusivamente para desarrollo local.'
+)
+on conflict (id) do update
+set
+  name = excluded.name,
+  slug = excluded.slug,
+  description = excluded.description;
+
+
+-- =========================================================
+-- Artículo de demostración
+-- =========================================================
+
+insert into public.posts (
+  id,
+  category_id,
+  title,
+  slug,
+  excerpt,
+  content_markdown,
+  editorial_status,
+  published_at,
+  seo_title,
+  seo_description
+)
+values (
+  'a0000000-0000-0000-0000-000000000001',
+  '90000000-0000-0000-0000-000000000001',
+  'El circuito demo inicia una nueva temporada',
+  'circuito-demo-nueva-temporada',
+  'Artículo ficticio para validar el listado, detalle y SEO del blog.',
+  'Este es un artículo ficticio creado exclusivamente para probar el módulo editorial de FreeStyle Total durante el desarrollo local.',
+  'published',
+  '2026-01-06 12:00:00+00',
+  'El circuito demo inicia una nueva temporada',
+  'Artículo ficticio para validar la integración del blog con Supabase.'
+)
+on conflict (id) do update
+set
+  category_id = excluded.category_id,
+  title = excluded.title,
+  slug = excluded.slug,
+  excerpt = excluded.excerpt,
+  content_markdown = excluded.content_markdown,
+  editorial_status = excluded.editorial_status,
+  published_at = excluded.published_at,
+  seo_title = excluded.seo_title,
+  seo_description = excluded.seo_description;

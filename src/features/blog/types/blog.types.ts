@@ -1,11 +1,10 @@
-// Modelo base de un post del blog.
-// Más adelante vendrá desde Supabase o CMS.
-
 export type BlogPost = {
   id: string;
   title: string;
   slug: string;
   excerpt: string;
+  contentMarkdown: string | null;
   category: string;
   publishedAt: string;
+  coverPath: string | null;
 };

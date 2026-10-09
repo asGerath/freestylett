@@ -20,4 +20,3 @@ set
   flag_emoji = excluded.flag_emoji,
   display_order = excluded.display_order,
   is_active = true;
-  
