@@ -592,7 +592,7 @@ Estado actual de la migración:
 
 - Eventos: migrados a Supabase; el mock fue eliminado.
 - Ligas: migradas a Supabase; el mock fue eliminado.
-- Freestylers: todavía usan mock.
+- Freestylers: migrados a Supabase; el mock fue eliminado.
 - Blog: todavía usa mock.
 
 Eventos y ligas acceden a datos mediante repositorios y servicios dentro de cada
@@ -1185,7 +1185,7 @@ Mientras se usan mocks:
 # 28. Estado conocido del proyecto
 
 Último contexto consolidado: octubre de 2026, después de completar la base de
-datos, seguridad RLS y la migración de Eventos y Ligas a Supabase.
+datos, seguridad RLS y la migración de Eventos, Ligas y Freestylers a Supabase.
 
 ### Infraestructura y datos implementados
 
@@ -1222,15 +1222,25 @@ datos, seguridad RLS y la migración de Eventos y Ligas a Supabase.
 - Rutas públicas incluidas en el sitemap.
 - Mock de ligas eliminado.
 
+### Freestylers completados
+
+- Listado, detalle y preview de Home consumen Supabase.
+- Repositorio y servicio propios del dominio.
+- País, ciudad, alias, biografía y foto pública mapeados desde la base.
+- Estados loading, error, empty y not-found.
+- Metadata estática y dinámica.
+- Open Graph de tipo profile, Twitter cards, canonical y robots.
+- Rutas públicas incluidas en el sitemap.
+- Mock de freestylers eliminado.
+
 ### Pendiente / siguiente etapa
 
-1. Migrar Freestylers de mocks a Supabase.
-2. Migrar Blog de mocks a Supabase.
-3. Consolidar la Home con todos los módulos reales.
-4. Completar Auth y experiencia por roles en frontend.
-5. Construir el panel de administración.
-6. Completar rankings, batallas y creadores.
-7. Preparar deployment productivo en Vercel.
+1. Migrar Blog de mocks a Supabase.
+2. Consolidar la Home con todos los módulos reales.
+3. Completar Auth y experiencia por roles en frontend.
+4. Construir el panel de administración.
+5. Completar rankings, batallas y creadores.
+6. Preparar deployment productivo en Vercel.
 
 ---
 
@@ -1333,8 +1343,8 @@ Estado de migración por módulo:
 1. Countries: implementado como catálogo base.
 2. Events: integrado en frontend.
 3. Leagues: integrado en frontend.
-4. Freestylers: siguiente módulo.
-5. Blog: pendiente.
+4. Freestylers: integrado en frontend.
+5. Blog: siguiente módulo.
 6. Rankings: pendiente.
 7. Battles: pendiente.
 
@@ -1406,14 +1416,12 @@ Al comenzar una sesión nueva, usar una instrucción similar:
 
 # 33. Objetivo inmediato al retomar FT
 
-La base de datos, RLS y la integración completa de Eventos y Ligas ya están
-terminadas.
+La base de datos, RLS y la integración completa de Eventos, Ligas y
+Freestylers ya están terminadas.
 
 El objetivo inmediato es:
 
 ```text
-migrar Freestylers a Supabase
-      ↓
 migrar Blog a Supabase
       ↓
 consolidar la Home con datos reales
@@ -1433,4 +1441,4 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos y Ligas consumen Supabase mediante repositorios y servicios, incluyendo listados, detalles, previews de Home, estados de interfaz, metadata y sitemap; sus mocks ya fueron eliminados. Freestylers y Blog todavía usan mocks. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento. La siguiente prioridad es migrar Freestylers a Supabase, continuar con Blog, consolidar la Home con datos reales y después avanzar con Auth, roles y admin.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos, Ligas y Freestylers consumen Supabase mediante repositorios y servicios, incluyendo listados, detalles, previews de Home, estados de interfaz, metadata y sitemap; sus mocks ya fueron eliminados. Blog todavía usa mock. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento. La siguiente prioridad es migrar Blog a Supabase, consolidar la Home con datos reales y después avanzar con Auth, roles y admin.
