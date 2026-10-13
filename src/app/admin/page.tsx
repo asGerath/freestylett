@@ -20,7 +20,8 @@ const adminSections = [
   },
   {
     label: "Artículos",
-    description: "Administración próximamente.",
+    href: "/admin/articulos",
+    description: "Consulta y administra el contenido editorial.",
   },
 ];
 
