@@ -706,7 +706,7 @@ Funciones del panel:
 
 - CRUD de eventos: implementado.
 - CRUD de ligas: implementado.
-- CRUD de freestylers.
+- CRUD de freestylers: implementado.
 - CRUD de artículos.
 - Gestión de rankings.
 - Gestión de batallas.
@@ -717,7 +717,8 @@ Funciones del panel:
 La ruta base `/admin` está protegida mediante autenticación y roles. Los
 roles `admin` y `editor` pueden acceder; los demás usuarios regresan al
 dashboard. El panel cuenta con un shell inicial y con los CRUD editoriales de
-eventos y ligas. Los demás dominios administrativos continúan pendientes.
+eventos, ligas y freestylers. Los demás dominios administrativos continúan
+pendientes.
 
 ---
 
@@ -1204,8 +1205,8 @@ Mientras se usan mocks:
 # 28. Estado conocido del proyecto
 
 Último contexto consolidado: octubre de 2026, después de completar la base de
-datos, seguridad RLS y la migración de Eventos, Ligas, Freestylers y Blog a
-Supabase.
+datos, seguridad RLS, la migración de Eventos, Ligas, Freestylers y Blog a
+Supabase, y los CRUD administrativos de eventos, ligas y freestylers.
 
 ### Infraestructura y datos implementados
 
@@ -1311,9 +1312,27 @@ Supabase.
 - Validación manual de crear, editar, publicar, archivar y restaurar.
 - Validación completada con lint, build y revisión de whitespace.
 
+### CRUD administrativo de freestylers completado
+
+- Ruta de gestión `/admin/freestylers` para roles `admin` y `editor`.
+- Listado administrativo independiente del contenido público.
+- Creación y edición mediante formulario reutilizable.
+- Catálogo activo de países cargado desde Supabase.
+- Campos editoriales para nombre artístico, nombre real, AKA, biografía,
+  nacimiento, ciudad, foto y redes oficiales.
+- Validación de campos obligatorios, slug, fecha de nacimiento y estado
+  editorial en Server Actions.
+- Estados editoriales `draft`, `published` y `archived`.
+- Archivado lógico con confirmación y restauración mediante edición.
+- Revalidación de Home, listado, detalle público y panel después de cada cambio.
+- Restricción de acciones editoriales mediante sesión y roles.
+- Manejo de errores, mensajes de éxito y detección de slugs duplicados.
+- Validación manual de crear, editar, publicar, archivar y restaurar.
+- Validación completada con lint, build y revisión de whitespace.
+
 ### Pendiente / siguiente etapa
 
-1. Construir los CRUD administrativos de freestylers y artículos.
+1. Construir el CRUD administrativo de artículos.
 2. Completar rankings, batallas y creadores.
 3. Incorporar funciones de cuenta como favoritos y seguimientos.
 4. Preparar deployment productivo en Vercel.
