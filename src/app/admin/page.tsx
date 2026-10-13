@@ -10,7 +10,8 @@ const adminSections = [
   },
   {
     label: "Ligas",
-    description: "Administración próximamente.",
+    href: "/admin/ligas",
+    description: "Consulta y administra las ligas.",
   },
   {
     label: "Freestylers",
