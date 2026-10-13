@@ -705,7 +705,7 @@ Ruta prevista:
 Funciones del panel:
 
 - CRUD de eventos: implementado.
-- CRUD de ligas: pendiente.
+- CRUD de ligas: implementado.
 - CRUD de freestylers.
 - CRUD de artículos.
 - Gestión de rankings.
@@ -716,8 +716,8 @@ Funciones del panel:
 
 La ruta base `/admin` está protegida mediante autenticación y roles. Los
 roles `admin` y `editor` pueden acceder; los demás usuarios regresan al
-dashboard. El panel cuenta con un shell inicial y con el CRUD editorial de
-eventos. Los demás dominios administrativos continúan pendientes.
+dashboard. El panel cuenta con un shell inicial y con los CRUD editoriales de
+eventos y ligas. Los demás dominios administrativos continúan pendientes.
 
 ---
 
@@ -1294,13 +1294,29 @@ Supabase.
 - Validación manual de crear, editar, publicar, archivar y restaurar.
 - Validación completada con lint, build y revisión de whitespace.
 
+### CRUD administrativo de ligas completado
+
+- Ruta de gestión `/admin/ligas` para roles `admin` y `editor`.
+- Listado administrativo independiente del contenido público.
+- Creación y edición mediante formulario reutilizable.
+- País principal administrado mediante la relación `league_countries`.
+- Catálogo activo de países cargado desde Supabase.
+- Validación de campos, slug y estado editorial en Server Actions.
+- Campos editoriales para nombre corto, descripción, logo y enlaces oficiales.
+- Estados editoriales `draft`, `published` y `archived`.
+- Archivado lógico con confirmación y restauración mediante edición.
+- Revalidación de Home, listado, detalle público y panel después de cada cambio.
+- Restricción de acciones editoriales mediante sesión y roles.
+- Manejo de errores, mensajes de éxito y detección de slugs duplicados.
+- Validación manual de crear, editar, publicar, archivar y restaurar.
+- Validación completada con lint, build y revisión de whitespace.
+
 ### Pendiente / siguiente etapa
 
-1. Construir el CRUD administrativo de ligas.
-2. Construir los CRUD de freestylers y artículos.
-3. Completar rankings, batallas y creadores.
-4. Incorporar funciones de cuenta como favoritos y seguimientos.
-5. Preparar deployment productivo en Vercel.
+1. Construir los CRUD administrativos de freestylers y artículos.
+2. Completar rankings, batallas y creadores.
+3. Incorporar funciones de cuenta como favoritos y seguimientos.
+4. Preparar deployment productivo en Vercel.
 
 ---
 
@@ -1482,8 +1498,6 @@ Freestylers y Blog ya están terminadas.
 El objetivo inmediato es:
 
 ```text
-construir el CRUD administrativo de ligas
-      ↓
 construir los CRUD de freestylers y artículos
       ↓
 completar rankings, batallas y creadores
@@ -1493,8 +1507,8 @@ incorporar favoritos y seguimientos
 preparar deployment productivo
 ```
 
-El CRUD administrativo de eventos ya está completado y debe utilizarse como
-referencia de arquitectura y UX para los siguientes módulos.
+Los CRUD administrativos de eventos y ligas ya están completados y deben
+utilizarse como referencia de arquitectura y UX para los siguientes módulos.
 
 El trabajo debe continuar en ramas pequeñas basadas en `develop`, validarse
 con lint, build y pruebas relevantes, y después integrarse nuevamente a
@@ -1506,4 +1520,4 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite listar, crear, editar, publicar, archivar y restaurar eventos con Server Actions, validación de permisos y persistencia en Supabase. La prioridad actual es construir el CRUD administrativo de ligas, continuar con freestylers y artículos, y después avanzar con rankings, batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite listar, crear, editar, publicar, archivar y restaurar eventos y ligas con Server Actions, validación de permisos y persistencia en Supabase. La prioridad actual es construir los CRUD administrativos de freestylers y artículos, y después avanzar con rankings, batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
