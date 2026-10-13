@@ -15,7 +15,8 @@ const adminSections = [
   },
   {
     label: "Freestylers",
-    description: "Administración próximamente.",
+    href: "/admin/freestylers",
+    description: "Consulta y administra los perfiles.",
   },
   {
     label: "Artículos",
