@@ -1,6 +1,6 @@
 # FreeStyle Total — Database Schema
 
-Status: approved and implemented through the rankings database foundation
+Status: approved and implemented through the public rankings integration
 Last updated: October 2026
 
 ## 1. Purpose
@@ -10,9 +10,9 @@ version of FreeStyle Total. It is the source of truth for the initial SQL
 migrations, generated database types, repositories, Row Level Security (RLS),
 Storage paths, and editorial workflows.
 
-The schema supports the current informational MVP and the implemented rankings
-database foundation. Battles, favorites, and community features remain outside
-the current schema and will be introduced only after their product rules are
+The schema supports the current informational MVP and the implemented public
+Rankings module. Battles, favorites, and community features remain outside the
+current schema and will be introduced only after their product rules are
 defined.
 
 ## 2. Approved product decisions
@@ -538,6 +538,13 @@ snapshots.
 
 The complete domain decisions, snapshot workflow, and FMS field mapping are
 documented in `docs/RANKINGS_SCHEMA.md`.
+
+The application reads current published snapshots through the Rankings
+repository and service layer. The public `/rankings` route renders all current
+classifications, and league detail pages reuse the same service to show the
+current table for that league. Draft and archived snapshots remain hidden by
+RLS. The development seed includes an explicitly fictional published
+classification for local UI validation.
 
 ## 6. SEO contract
 
