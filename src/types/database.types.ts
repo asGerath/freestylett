@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -404,6 +404,57 @@ export type Database = {
           },
         ]
       }
+      league_season_participants: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          freestyler_id: string
+          id: string
+          is_active: boolean
+          season_id: string
+          seed: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          freestyler_id: string
+          id?: string
+          is_active?: boolean
+          season_id: string
+          seed?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          freestyler_id?: string
+          id?: string
+          is_active?: boolean
+          season_id?: string
+          seed?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "league_season_participants_freestyler_id_fkey"
+            columns: ["freestyler_id"]
+            isOneToOne: false
+            referencedRelation: "freestylers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "league_season_participants_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "league_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       league_seasons: {
         Row: {
           created_at: string
@@ -718,6 +769,144 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      ranking_entries: {
+        Row: {
+          battle_losses: number
+          battle_losses_after_replica: number
+          battle_wins: number
+          battle_wins_after_replica: number
+          created_at: string
+          created_by: string | null
+          id: string
+          matches_played: number
+          participant_id: string
+          penalty_points: number
+          points: number
+          position: number
+          ranking_group: string
+          score_total: number
+          snapshot_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          battle_losses?: number
+          battle_losses_after_replica?: number
+          battle_wins?: number
+          battle_wins_after_replica?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          matches_played?: number
+          participant_id: string
+          penalty_points?: number
+          points?: number
+          position: number
+          ranking_group?: string
+          score_total?: number
+          snapshot_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          battle_losses?: number
+          battle_losses_after_replica?: number
+          battle_wins?: number
+          battle_wins_after_replica?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          matches_played?: number
+          participant_id?: string
+          penalty_points?: number
+          points?: number
+          position?: number
+          ranking_group?: string
+          score_total?: number
+          snapshot_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranking_entries_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "league_season_participants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_entries_snapshot_id_fkey"
+            columns: ["snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "ranking_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ranking_snapshots: {
+        Row: {
+          captured_at: string
+          created_at: string
+          created_by: string | null
+          editorial_status: Database["public"]["Enums"]["editorial_status"]
+          event_id: string | null
+          id: string
+          is_current: boolean
+          name: string
+          published_at: string | null
+          season_id: string
+          source_url: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          captured_at: string
+          created_at?: string
+          created_by?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          event_id?: string | null
+          id?: string
+          is_current?: boolean
+          name: string
+          published_at?: string | null
+          season_id: string
+          source_url: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          captured_at?: string
+          created_at?: string
+          created_by?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          event_id?: string | null
+          id?: string
+          is_current?: boolean
+          name?: string
+          published_at?: string | null
+          season_id?: string
+          source_url?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranking_snapshots_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_snapshots_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "league_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
