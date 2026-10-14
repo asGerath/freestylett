@@ -1349,26 +1349,29 @@ artículos.
 - Validación manual de crear, editar, publicar, archivar y restaurar.
 - Validación completada con lint, build y revisión de whitespace.
 
-### Fundación de Rankings completada
+### Rankings público completado
 
 - Modelo relacional documentado en `docs/RANKINGS_SCHEMA.md`.
 - Migración `013_rankings.sql` integrada en `develop`.
-- Participantes asociados históricamente a temporadas mediante
-  `league_season_participants`.
-- Clasificaciones históricas modeladas mediante `ranking_snapshots`.
-- Posiciones y métricas modeladas mediante `ranking_entries`.
+- Participantes, snapshots históricos y posiciones persistidos en Supabase.
 - Un solo snapshot actual permitido por temporada.
 - Validación automática para impedir participantes de otra temporada.
 - RLS para visitantes, usuarios regulares, editores y administradores.
-- 30 pruebas pgTAP específicas aprobadas.
-- Tipos TypeScript regenerados desde la base local.
+- Repositorio y servicio propios del dominio.
+- Ruta pública `/rankings` con metadata y canonical.
+- Tabla responsive y accesible con métricas de clasificación.
+- Estados loading, error y empty.
+- Ranking actual integrado en el detalle público de cada liga.
+- Enlace de navegación y ruta estática en el sitemap.
+- Seed ficticio reproducible para desarrollo local.
+- 30 pruebas pgTAP aisladas de los datos existentes y aprobadas.
 - Validación completada con lint, build y revisión de whitespace.
-- La integración pública y administrativa de Rankings queda como siguiente
-  etapa de aplicación.
+- La gestión administrativa de participantes, snapshots y posiciones queda
+  pendiente.
 
 ### Pendiente / siguiente etapa
 
-1. Integrar Rankings en repositorios, servicios, páginas públicas y panel administrativo.
+1. Construir la gestión administrativa de Rankings.
 2. Completar batallas y creadores.
 3. Incorporar funciones de cuenta como favoritos y seguimientos.
 4. Preparar deployment productivo en Vercel.
@@ -1476,7 +1479,7 @@ Estado de migración por módulo:
 3. Leagues: integrado en frontend.
 4. Freestylers: integrado en frontend.
 5. Blog: integrado completamente en frontend, con estados, metadata y sitemap.
-6. Rankings: esquema, migración, RLS, pruebas y tipos implementados; integración frontend pendiente.
+6. Rankings: esquema, RLS, repositorio, servicio, listado público, integración con ligas y estados de interfaz implementados; administración pendiente.
 7. Battles: pendiente.
 
 Mantener la migración módulo por módulo y eliminar cada mock solamente después
@@ -1553,19 +1556,19 @@ Freestylers y Blog ya están terminadas.
 El objetivo inmediato es:
 
 ```text
-integrar Rankings en repositorios y servicios
+construir la gestión administrativa de Rankings
       ↓
-construir listado y detalle público
+administrar participantes de temporada
       ↓
-incorporar gestión editorial de rankings
+crear y publicar snapshots y posiciones
       ↓
 continuar con batallas y creadores
 ```
 
 Los CRUD administrativos de eventos, ligas, freestylers y artículos ya están
-completados. La fundación de base de datos de Rankings también está terminada y
-debe utilizar las mismas fronteras de repositorio, servicio, autorización y UX
-que los módulos existentes.
+completados. Rankings también cuenta con base de datos e integración pública;
+su siguiente etapa debe reutilizar los mismos patrones de Server Actions,
+autorización, validación, archivado y UX editorial.
 
 El trabajo debe continuar en ramas pequeñas basadas en `develop`, validarse
 con lint, build y pruebas relevantes, y después integrarse nuevamente a
@@ -1577,4 +1580,4 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite listar, crear, editar, publicar, archivar y restaurar eventos y ligas con Server Actions, validación de permisos y persistencia en Supabase. La prioridad actual es integrar Rankings en la aplicación pública y administrativa, y después avanzar con batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. Rankings también consume Supabase mediante repositorio y servicio, ofrece una tabla pública responsive en `/rankings`, se integra en el detalle de las ligas y cuenta con metadata, estados de interfaz, navegación y sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite listar, crear, editar, publicar, archivar y restaurar eventos y ligas con Server Actions, validación de permisos y persistencia en Supabase. La prioridad actual es construir la administración de Rankings y después avanzar con batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
