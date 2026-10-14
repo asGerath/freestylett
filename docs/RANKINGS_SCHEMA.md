@@ -26,8 +26,20 @@ Validation includes:
 - Generated TypeScript definitions in `src/types/database.types.ts`.
 - Successful lint, production build, and whitespace validation.
 
-The database foundation is complete. Public repositories, services, pages, and
-administrative ranking workflows remain separate application-layer work.
+The database foundation and public application integration are complete.
+
+Implemented application behavior:
+
+- Repository and service boundaries under `src/features/rankings`.
+- Public `/rankings` route with metadata, empty, loading, and error states.
+- Accessible responsive table for current published snapshots.
+- Rankings navigation and sitemap entry.
+- Current ranking embedded in league detail pages.
+- Fictional development seed for repeatable local validation.
+- RLS tests isolated from existing development data.
+
+Administrative creation, editing, publishing, and historical snapshot management
+remain separate application-layer work.
 
 ## Tables
 
