@@ -1,6 +1,6 @@
 # FreeStyle Total — Database Schema
 
-Status: approved and implemented through the Supabase foundation and public event repository
+Status: approved and implemented through the rankings database foundation
 Last updated: October 2026
 
 ## 1. Purpose
@@ -10,10 +10,10 @@ version of FreeStyle Total. It is the source of truth for the initial SQL
 migrations, generated database types, repositories, Row Level Security (RLS),
 Storage paths, and editorial workflows.
 
-The schema must support the current informational MVP without prematurely
-building rankings, battles, favorites, or community features. Those modules
-are considered in the relationships, but their tables will be introduced only
-when their product rules are defined.
+The schema supports the current informational MVP and the implemented rankings
+database foundation. Battles, favorites, and community features remain outside
+the current schema and will be introduced only after their product rules are
+defined.
 
 ## 2. Approved product decisions
 
@@ -495,6 +495,49 @@ profile but do not require a row in this table.
 | `created_at` | `timestamptz` | Default `now()` |
 
 Primary key: `(user_id, role)`. Users cannot grant or modify their own roles.
+
+### 5.15 `league_season_participants`
+
+Relates a freestyler to a specific league season and preserves the historical
+participant roster independently from the public freestyler profile.
+
+A freestyler can appear only once per season. Optional seeds must be positive,
+and `is_active` allows historical participants to remain recorded without
+being treated as part of the active roster.
+
+Public reads require the season, parent league, and freestyler to be published.
+Editors can create and update participants, while hard deletion is restricted
+to administrators.
+
+### 5.16 `ranking_snapshots`
+
+Stores a classification captured at a specific moment. A season may have
+multiple historical snapshots, but a partial unique index allows only one
+current snapshot per season.
+
+Snapshots include the season, an optional related event, a descriptive name,
+capture date, official source URL, editorial status, publication date, and
+audit fields. A current snapshot must be published.
+
+Anonymous and regular authenticated users can only read published snapshots
+whose season and parent league are also published. Editors can manage all
+editorial states, while hard deletion is restricted to administrators.
+
+### 5.17 `ranking_entries`
+
+Stores one participant's position and metrics inside a ranking snapshot.
+
+The model supports ranking groups, position, matches played, direct and replica
+wins and losses, points, total score, and penalty points. Metrics cannot be
+negative, positions must be positive, participants cannot be duplicated inside
+a snapshot, and positions cannot repeat within the same snapshot and group.
+
+A database trigger guarantees that the snapshot and participant belong to the
+same season. Public access is limited to entries belonging to published
+snapshots.
+
+The complete domain decisions, snapshot workflow, and FMS field mapping are
+documented in `docs/RANKINGS_SCHEMA.md`.
 
 ## 6. SEO contract
 
