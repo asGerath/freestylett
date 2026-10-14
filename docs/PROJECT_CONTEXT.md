@@ -1217,7 +1217,7 @@ artículos.
 - Supabase Auth y autorización por roles.
 - Bucket público de medios y políticas de Storage.
 - Políticas RLS para las entidades principales.
-- Suite pgTAP con 226 pruebas aprobadas.
+- Suite pgTAP base con 226 pruebas aprobadas y 30 pruebas específicas de rankings aprobadas.
 - Tipos TypeScript generados desde la base de datos.
 
 ### Eventos completados
@@ -1349,11 +1349,29 @@ artículos.
 - Validación manual de crear, editar, publicar, archivar y restaurar.
 - Validación completada con lint, build y revisión de whitespace.
 
+### Fundación de Rankings completada
+
+- Modelo relacional documentado en `docs/RANKINGS_SCHEMA.md`.
+- Migración `013_rankings.sql` integrada en `develop`.
+- Participantes asociados históricamente a temporadas mediante
+  `league_season_participants`.
+- Clasificaciones históricas modeladas mediante `ranking_snapshots`.
+- Posiciones y métricas modeladas mediante `ranking_entries`.
+- Un solo snapshot actual permitido por temporada.
+- Validación automática para impedir participantes de otra temporada.
+- RLS para visitantes, usuarios regulares, editores y administradores.
+- 30 pruebas pgTAP específicas aprobadas.
+- Tipos TypeScript regenerados desde la base local.
+- Validación completada con lint, build y revisión de whitespace.
+- La integración pública y administrativa de Rankings queda como siguiente
+  etapa de aplicación.
+
 ### Pendiente / siguiente etapa
 
-1. Completar rankings, batallas y creadores.
-2. Incorporar funciones de cuenta como favoritos y seguimientos.
-3. Preparar deployment productivo en Vercel.
+1. Integrar Rankings en repositorios, servicios, páginas públicas y panel administrativo.
+2. Completar batallas y creadores.
+3. Incorporar funciones de cuenta como favoritos y seguimientos.
+4. Preparar deployment productivo en Vercel.
 
 ---
 
@@ -1458,7 +1476,7 @@ Estado de migración por módulo:
 3. Leagues: integrado en frontend.
 4. Freestylers: integrado en frontend.
 5. Blog: integrado completamente en frontend, con estados, metadata y sitemap.
-6. Rankings: pendiente.
+6. Rankings: esquema, migración, RLS, pruebas y tipos implementados; integración frontend pendiente.
 7. Battles: pendiente.
 
 Mantener la migración módulo por módulo y eliminar cada mock solamente después
@@ -1535,17 +1553,19 @@ Freestylers y Blog ya están terminadas.
 El objetivo inmediato es:
 
 ```text
-construir los CRUD de freestylers y artículos
+integrar Rankings en repositorios y servicios
       ↓
-completar rankings, batallas y creadores
+construir listado y detalle público
       ↓
-incorporar favoritos y seguimientos
+incorporar gestión editorial de rankings
       ↓
-preparar deployment productivo
+continuar con batallas y creadores
 ```
 
-Los CRUD administrativos de eventos y ligas ya están completados y deben
-utilizarse como referencia de arquitectura y UX para los siguientes módulos.
+Los CRUD administrativos de eventos, ligas, freestylers y artículos ya están
+completados. La fundación de base de datos de Rankings también está terminada y
+debe utilizar las mismas fronteras de repositorio, servicio, autorización y UX
+que los módulos existentes.
 
 El trabajo debe continuar en ramas pequeñas basadas en `develop`, validarse
 con lint, build y pruebas relevantes, y después integrarse nuevamente a
@@ -1557,4 +1577,4 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP de 226 pruebas ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite listar, crear, editar, publicar, archivar y restaurar eventos y ligas con Server Actions, validación de permisos y persistencia en Supabase. La prioridad actual es construir los CRUD administrativos de freestylers y artículos, y después avanzar con rankings, batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite listar, crear, editar, publicar, archivar y restaurar eventos y ligas con Server Actions, validación de permisos y persistencia en Supabase. La prioridad actual es integrar Rankings en la aplicación pública y administrativa, y después avanzar con batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
