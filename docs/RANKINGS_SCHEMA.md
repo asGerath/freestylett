@@ -1,6 +1,6 @@
 # FreeStyle Total — Rankings Schema
 
-Status: approved for implementation  
+Status: implemented and validated  
 Last updated: October 2026
 
 ## Purpose
@@ -13,6 +13,21 @@ Define the relational model required to:
 - Support different ranking groups.
 - Record official sources and verification dates.
 - Prevent duplicate participants and positions.
+
+## Implementation status
+
+Implemented in `supabase/migrations/013_rankings.sql`.
+
+Validation includes:
+
+- 30 pgTAP tests covering schema constraints and RLS behavior.
+- Anonymous, regular authenticated, editor, and administrator access.
+- Cross-season participant protection through a database trigger.
+- Generated TypeScript definitions in `src/types/database.types.ts`.
+- Successful lint, production build, and whitespace validation.
+
+The database foundation is complete. Public repositories, services, pages, and
+administrative ranking workflows remain separate application-layer work.
 
 ## Tables
 
