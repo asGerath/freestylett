@@ -466,6 +466,11 @@ select results_eq(
   $$
     select count(*)::bigint
     from public.league_season_participants
+    where id in (
+    'a5000000-0000-0000-0000-000000000001'::uuid,
+    'a5000000-0000-0000-0000-000000000002'::uuid,
+    'a5000000-0000-0000-0000-000000000003'::uuid
+    )
   $$,
   $$values (3::bigint)$$,
   'anon can read participants of published seasons'
@@ -475,6 +480,10 @@ select results_eq(
   $$
     select count(*)::bigint
     from public.ranking_snapshots
+    where id in (
+    'a6000000-0000-0000-0000-000000000001'::uuid,
+    'a6000000-0000-0000-0000-000000000002'::uuid
+    )
   $$,
   $$values (1::bigint)$$,
   'anon can only read published ranking snapshots'
@@ -484,6 +493,10 @@ select results_eq(
   $$
     select count(*)::bigint
     from public.ranking_entries
+    where id in (
+    'a7000000-0000-0000-0000-000000000001'::uuid,
+    'a7000000-0000-0000-0000-000000000002'::uuid
+    )
   $$,
   $$values (1::bigint)$$,
   'anon can only read entries from published rankings'
@@ -520,6 +533,11 @@ select results_eq(
   $$
     select count(*)::bigint
     from public.league_season_participants
+    where id in (
+    'a5000000-0000-0000-0000-000000000001'::uuid,
+    'a5000000-0000-0000-0000-000000000002'::uuid,
+    'a5000000-0000-0000-0000-000000000003'::uuid
+    )
   $$,
   $$values (3::bigint)$$,
   'regular user can only read public season participants'
@@ -561,6 +579,11 @@ select results_eq(
   $$
     select count(*)::bigint
     from public.league_season_participants
+    where id in (
+    'a5000000-0000-0000-0000-000000000001'::uuid,
+    'a5000000-0000-0000-0000-000000000002'::uuid,
+    'a5000000-0000-0000-0000-000000000003'::uuid
+    )
   $$,
   $$values (3::bigint)$$,
   'editor can read all season participants'
@@ -570,6 +593,10 @@ select results_eq(
   $$
     select count(*)::bigint
     from public.ranking_snapshots
+    where id in (
+    'a6000000-0000-0000-0000-000000000001'::uuid,
+    'a6000000-0000-0000-0000-000000000002'::uuid
+    )
   $$,
   $$values (2::bigint)$$,
   'editor can read published and draft snapshots'
@@ -579,6 +606,10 @@ select results_eq(
   $$
     select count(*)::bigint
     from public.ranking_entries
+    where id in (
+    'a7000000-0000-0000-0000-000000000001'::uuid,
+    'a7000000-0000-0000-0000-000000000002'::uuid
+    )
   $$,
   $$values (2::bigint)$$,
   'editor can read entries from published and draft rankings'

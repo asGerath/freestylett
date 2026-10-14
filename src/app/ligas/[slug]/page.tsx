@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { Container } from "@/components/ui/Container";
 import { getLeagueBySlug } from "@/features/leagues/services/league.service";
+import { RankingTable } from "@/features/rankings/components/RankingTable";
+import { getCurrentRankingByLeagueSlug } from "@/features/rankings/services/ranking.service";
 
 type LeagueDetailPageProps = {
   params: Promise<{
@@ -71,7 +73,11 @@ export default async function LeagueDetailPage({
   params,
 }: LeagueDetailPageProps) {
   const { slug } = await params;
-  const league = await getLeagueBySlug(slug);
+
+  const [league, ranking] = await Promise.all([
+    getLeagueBySlug(slug),
+    getCurrentRankingByLeagueSlug(slug),
+  ]);
 
   if (!league) {
     notFound();
@@ -90,13 +96,24 @@ export default async function LeagueDetailPage({
           {league.description}
         </p>
 
-        <section className="mt-8 rounded-2xl border border-[var(--color-border)] bg-white p-6 shadow-sm">
-          <h2 className="text-2xl font-bold">Ranking y temporadas</h2>
+        <section className="mt-10">
+          <h2 className="text-2xl font-bold">
+            Ranking y temporadas
+          </h2>
 
-          <p className="mt-3 text-[var(--color-muted)]">
-            Próximamente mostraremos las temporadas, eventos y tablas de
-            posiciones de esta liga.
+          <p className="mt-2 text-[var(--color-muted)]">
+            Consulta la clasificación vigente de esta liga.
           </p>
+
+          <div className="mt-6">
+            {ranking ? (
+              <RankingTable ranking={ranking} />
+            ) : (
+              <p className="rounded-2xl border border-[var(--color-border)] bg-white p-6 text-[var(--color-muted)] shadow-sm">
+                Esta liga todavía no tiene una clasificación publicada.
+              </p>
+            )}
+          </div>
         </section>
       </Container>
     </main>

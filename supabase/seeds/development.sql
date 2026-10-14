@@ -422,3 +422,143 @@ set
   published_at = excluded.published_at,
   seo_title = excluded.seo_title,
   seo_description = excluded.seo_description;
+
+
+  -- =========================================================
+-- Participantes de temporada para rankings de demostración
+-- =========================================================
+
+insert into public.league_season_participants (
+  id,
+  season_id,
+  freestyler_id,
+  seed,
+  is_active
+)
+values
+  (
+    'b1000000-0000-0000-0000-000000000001',
+    '40000000-0000-0000-0000-000000000001',
+    '60000000-0000-0000-0000-000000000001',
+    1,
+    true
+  ),
+  (
+    'b1000000-0000-0000-0000-000000000002',
+    '40000000-0000-0000-0000-000000000001',
+    '60000000-0000-0000-0000-000000000002',
+    2,
+    true
+  )
+on conflict (id) do update
+set
+  season_id = excluded.season_id,
+  freestyler_id = excluded.freestyler_id,
+  seed = excluded.seed,
+  is_active = excluded.is_active;
+
+
+-- =========================================================
+-- Snapshot publicado de ranking de demostración
+-- =========================================================
+
+update public.ranking_snapshots
+set is_current = false
+where season_id = '40000000-0000-0000-0000-000000000001'
+  and id <> 'b2000000-0000-0000-0000-000000000001';
+
+insert into public.ranking_snapshots (
+  id,
+  season_id,
+  name,
+  captured_at,
+  source_url,
+  is_current,
+  editorial_status,
+  published_at
+)
+values (
+  'b2000000-0000-0000-0000-000000000001',
+  '40000000-0000-0000-0000-000000000001',
+  'Clasificación Demo — Jornada 1',
+  '2026-11-16 12:00:00+00',
+  'https://example.com/freestyle-total-demo-ranking',
+  true,
+  'published',
+  '2026-11-16 12:00:00+00'
+)
+on conflict (id) do update
+set
+  season_id = excluded.season_id,
+  name = excluded.name,
+  captured_at = excluded.captured_at,
+  source_url = excluded.source_url,
+  is_current = excluded.is_current,
+  editorial_status = excluded.editorial_status,
+  published_at = excluded.published_at;
+
+
+-- =========================================================
+-- Posiciones ficticias del ranking
+-- =========================================================
+
+insert into public.ranking_entries (
+  id,
+  snapshot_id,
+  participant_id,
+  ranking_group,
+  position,
+  matches_played,
+  battle_wins,
+  battle_wins_after_replica,
+  battle_losses_after_replica,
+  battle_losses,
+  points,
+  score_total,
+  penalty_points
+)
+values
+  (
+    'b3000000-0000-0000-0000-000000000001',
+    'b2000000-0000-0000-0000-000000000001',
+    'b1000000-0000-0000-0000-000000000001',
+    'general',
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    3,
+    275.50,
+    0
+  ),
+  (
+    'b3000000-0000-0000-0000-000000000002',
+    'b2000000-0000-0000-0000-000000000001',
+    'b1000000-0000-0000-0000-000000000002',
+    'general',
+    2,
+    1,
+    0,
+    0,
+    0,
+    1,
+    0,
+    248.25,
+    0
+  )
+on conflict (id) do update
+set
+  snapshot_id = excluded.snapshot_id,
+  participant_id = excluded.participant_id,
+  ranking_group = excluded.ranking_group,
+  position = excluded.position,
+  matches_played = excluded.matches_played,
+  battle_wins = excluded.battle_wins,
+  battle_wins_after_replica = excluded.battle_wins_after_replica,
+  battle_losses_after_replica = excluded.battle_losses_after_replica,
+  battle_losses = excluded.battle_losses,
+  points = excluded.points,
+  score_total = excluded.score_total,
+  penalty_points = excluded.penalty_points;
