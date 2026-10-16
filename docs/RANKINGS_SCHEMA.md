@@ -42,14 +42,18 @@ Implemented application behavior:
 - Creation, editing, publication, current-snapshot selection, and logical
   archiving through validated Server Actions.
 - Season participant enrollment, activation, and deactivation.
-- Ranking position creation with duplicate, numeric, and cross-season
-  validation.
+- Ranking position creation and editing with duplicate, numeric, and
+  cross-season validation.
+- Ranking position removal with confirmation while preserving season
+  enrollment.
+- Reusable entry form for creation and editing.
 - Administrative views for participants and ranking entries.
 - Public and administrative paths revalidated after editorial changes.
 
-Editing and removing individual ranking entries remain follow-up application
-work; the database already supports those operations under the existing RLS
-policies.
+Individual ranking entries can be created, edited, and removed through the
+administrative interface. These operations enforce editorial authorization,
+snapshot ownership, active season participation, uniqueness constraints, and
+public and administrative route revalidation.
 
 ## Tables
 
