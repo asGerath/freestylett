@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -34,6 +34,147 @@ export type Database = {
   }
   public: {
     Tables: {
+      battle_participants: {
+        Row: {
+          battle_id: string
+          created_at: string
+          created_by: string | null
+          freestyler_id: string
+          id: string
+          score: number | null
+          side_number: number
+          slot_number: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          battle_id: string
+          created_at?: string
+          created_by?: string | null
+          freestyler_id: string
+          id?: string
+          score?: number | null
+          side_number: number
+          slot_number: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          battle_id?: string
+          created_at?: string
+          created_by?: string | null
+          freestyler_id?: string
+          id?: string
+          score?: number | null
+          side_number?: number
+          slot_number?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battle_participants_battle_id_fkey"
+            columns: ["battle_id"]
+            isOneToOne: false
+            referencedRelation: "battles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "battle_participants_freestyler_id_fkey"
+            columns: ["freestyler_id"]
+            isOneToOne: false
+            referencedRelation: "freestylers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      battles: {
+        Row: {
+          battle_format: Database["public"]["Enums"]["battle_format"]
+          battle_order: number
+          battle_status: Database["public"]["Enums"]["event_status"]
+          created_at: string
+          created_by: string | null
+          decision_type:
+            | Database["public"]["Enums"]["battle_decision_type"]
+            | null
+          editorial_status: Database["public"]["Enums"]["editorial_status"]
+          event_id: string
+          id: string
+          published_at: string | null
+          season_id: string | null
+          slug: string
+          source_url: string
+          stage: Database["public"]["Enums"]["battle_stage"]
+          title: string
+          updated_at: string
+          updated_by: string | null
+          video_url: string | null
+          winner_side: number | null
+        }
+        Insert: {
+          battle_format: Database["public"]["Enums"]["battle_format"]
+          battle_order: number
+          battle_status?: Database["public"]["Enums"]["event_status"]
+          created_at?: string
+          created_by?: string | null
+          decision_type?:
+            | Database["public"]["Enums"]["battle_decision_type"]
+            | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          event_id: string
+          id?: string
+          published_at?: string | null
+          season_id?: string | null
+          slug: string
+          source_url: string
+          stage: Database["public"]["Enums"]["battle_stage"]
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+          video_url?: string | null
+          winner_side?: number | null
+        }
+        Update: {
+          battle_format?: Database["public"]["Enums"]["battle_format"]
+          battle_order?: number
+          battle_status?: Database["public"]["Enums"]["event_status"]
+          created_at?: string
+          created_by?: string | null
+          decision_type?:
+            | Database["public"]["Enums"]["battle_decision_type"]
+            | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          event_id?: string
+          id?: string
+          published_at?: string | null
+          season_id?: string | null
+          slug?: string
+          source_url?: string
+          stage?: Database["public"]["Enums"]["battle_stage"]
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+          video_url?: string | null
+          winner_side?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "battles_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "battles_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "league_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       countries: {
         Row: {
           created_at: string
@@ -994,6 +1135,31 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "editor"
+      battle_decision_type:
+        | "direct"
+        | "replica"
+        | "jury"
+        | "technical"
+        | "walkover"
+        | "draw"
+      battle_format:
+        | "one_vs_one"
+        | "two_vs_two"
+        | "three_vs_three"
+        | "crew"
+        | "other"
+      battle_stage:
+        | "group_stage"
+        | "play_in"
+        | "round_of_32"
+        | "round_of_16"
+        | "quarterfinal"
+        | "semifinal"
+        | "third_place"
+        | "final"
+        | "regular_round"
+        | "exhibition"
+        | "other"
       editorial_status: "draft" | "published" | "archived"
       event_status:
         | "scheduled"
@@ -1148,6 +1314,34 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "editor"],
+      battle_decision_type: [
+        "direct",
+        "replica",
+        "jury",
+        "technical",
+        "walkover",
+        "draw",
+      ],
+      battle_format: [
+        "one_vs_one",
+        "two_vs_two",
+        "three_vs_three",
+        "crew",
+        "other",
+      ],
+      battle_stage: [
+        "group_stage",
+        "play_in",
+        "round_of_32",
+        "round_of_16",
+        "quarterfinal",
+        "semifinal",
+        "third_place",
+        "final",
+        "regular_round",
+        "exhibition",
+        "other",
+      ],
       editorial_status: ["draft", "published", "archived"],
       event_status: ["scheduled", "live", "finished", "cancelled", "postponed"],
       event_type: [

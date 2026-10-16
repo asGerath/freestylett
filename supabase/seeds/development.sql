@@ -562,3 +562,117 @@ set
   points = excluded.points,
   score_total = excluded.score_total,
   penalty_points = excluded.penalty_points;
+
+  -- =========================================================
+-- Batallas ficticias de desarrollo
+-- =========================================================
+
+insert into public.battles (
+  id,
+  event_id,
+  season_id,
+  title,
+  slug,
+  battle_order,
+  stage,
+  battle_format,
+  battle_status,
+  video_url,
+  source_url,
+  editorial_status,
+  published_at
+)
+values
+  (
+    'c1000000-0000-0000-0000-000000000001',
+    '70000000-0000-0000-0000-000000000001',
+    '40000000-0000-0000-0000-000000000001',
+    'MC Demo Norte vs MC Demo Sur',
+    'mc-demo-norte-vs-mc-demo-sur',
+    1,
+    'regular_round',
+    'one_vs_one',
+    'scheduled',
+    'https://www.youtube.com/watch?v=demo-battle',
+    'https://example.com/freestyle-total-demo-battle',
+    'published',
+    '2026-11-15 23:00:00+00'
+  ),
+  (
+    'c1000000-0000-0000-0000-000000000002',
+    '70000000-0000-0000-0000-000000000001',
+    '40000000-0000-0000-0000-000000000001',
+    'Batalla Demo Pendiente',
+    'batalla-demo-pendiente',
+    2,
+    'regular_round',
+    'one_vs_one',
+    'scheduled',
+    null,
+    'https://example.com/freestyle-total-demo-battle-draft',
+    'draft',
+    null
+  )
+on conflict (id) do update
+set
+  event_id = excluded.event_id,
+  season_id = excluded.season_id,
+  title = excluded.title,
+  slug = excluded.slug,
+  battle_order = excluded.battle_order,
+  stage = excluded.stage,
+  battle_format = excluded.battle_format,
+  video_url = excluded.video_url,
+  source_url = excluded.source_url,
+  editorial_status = excluded.editorial_status,
+  published_at = excluded.published_at;
+
+
+-- =========================================================
+-- Participantes de la batalla publicada
+-- =========================================================
+
+insert into public.battle_participants (
+  id,
+  battle_id,
+  freestyler_id,
+  side_number,
+  slot_number,
+  score
+)
+values
+  (
+    'c2000000-0000-0000-0000-000000000001',
+    'c1000000-0000-0000-0000-000000000001',
+    '60000000-0000-0000-0000-000000000001',
+    1,
+    1,
+    275.50
+  ),
+  (
+    'c2000000-0000-0000-0000-000000000002',
+    'c1000000-0000-0000-0000-000000000001',
+    '60000000-0000-0000-0000-000000000002',
+    2,
+    1,
+    248.25
+  )
+on conflict (id) do update
+set
+  battle_id = excluded.battle_id,
+  freestyler_id = excluded.freestyler_id,
+  side_number = excluded.side_number,
+  slot_number = excluded.slot_number,
+  score = excluded.score;
+
+
+-- =========================================================
+-- Resultado de la batalla publicada
+-- =========================================================
+
+update public.battles
+set
+  battle_status = 'finished',
+  decision_type = 'direct',
+  winner_side = 1
+where id = 'c1000000-0000-0000-0000-000000000001';
