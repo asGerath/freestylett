@@ -1,6 +1,6 @@
 # FreeStyle Total — Database Schema
 
-Status: approved and implemented through the administrative rankings integration
+Status: approved and implemented through the complete administrative rankings workflow
 Last updated: October 2026
 
 ## 1. Purpose
@@ -10,8 +10,8 @@ version of FreeStyle Total. It is the source of truth for the initial SQL
 migrations, generated database types, repositories, Row Level Security (RLS),
 Storage paths, and editorial workflows.
 
-The schema supports the current informational MVP and the implemented public and administrative
-Rankings module. Battles, favorites, and community features remain outside the
+The schema supports the current informational MVP and the implemented public and
+administrative Rankings module, including entry creation, editing, and removal. Battles, favorites, and community features remain outside the
 current schema and will be introduced only after their product rules are
 defined.
 
