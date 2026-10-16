@@ -2,13 +2,21 @@
 
 import Link from "next/link";
 
-import { createRankingEntry } from "../actions/admin-ranking.actions";
-import type { AdminRankingParticipantOption } from "../types/ranking.types";
+import {
+  createRankingEntry,
+  updateRankingEntry,
+} from "../actions/admin-ranking.actions";
+
+import type {
+  AdminRankingEntryFormValues,
+  AdminRankingParticipantOption,
+} from "../types/ranking.types";
 
 type AdminRankingEntryFormProps = {
   rankingId: string;
   participants: AdminRankingParticipantOption[];
-  defaultPosition: number;
+  defaultPosition?: number;
+  initialValues?: AdminRankingEntryFormValues;
 };
 
 const inputStyles =
@@ -17,12 +25,18 @@ const inputStyles =
 export function AdminRankingEntryForm({
   rankingId,
   participants,
-  defaultPosition,
+  defaultPosition = 1,
+  initialValues,
 }: AdminRankingEntryFormProps) {
-  const formAction = createRankingEntry.bind(
-    null,
-    rankingId,
-  );
+  const isEditing = Boolean(initialValues);
+
+  const formAction = initialValues
+    ? updateRankingEntry.bind(
+        null,
+        rankingId,
+        initialValues.id,
+      )
+    : createRankingEntry.bind(null, rankingId);
 
   return (
     <form
@@ -38,7 +52,9 @@ export function AdminRankingEntryForm({
           <select
             name="participantId"
             required
-            defaultValue=""
+            defaultValue={
+              initialValues?.participantId ?? ""
+            }
             className={inputStyles}
           >
             <option value="" disabled>
@@ -57,7 +73,9 @@ export function AdminRankingEntryForm({
         </label>
 
         <label className="block">
-          <span className="font-bold">Posición *</span>
+          <span className="font-bold">
+            Posición *
+          </span>
 
           <input
             type="number"
@@ -65,20 +83,28 @@ export function AdminRankingEntryForm({
             required
             min="1"
             step="1"
-            defaultValue={defaultPosition}
+            defaultValue={
+              initialValues?.position ??
+              defaultPosition
+            }
             className={inputStyles}
           />
         </label>
 
         <label className="block">
-          <span className="font-bold">Grupo *</span>
+          <span className="font-bold">
+            Grupo *
+          </span>
 
           <input
             type="text"
             name="rankingGroup"
             required
             pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-            defaultValue="general"
+            defaultValue={
+              initialValues?.rankingGroup ??
+              "general"
+            }
             className={inputStyles}
           />
 
@@ -98,7 +124,9 @@ export function AdminRankingEntryForm({
             required
             min="0"
             step="1"
-            defaultValue="0"
+            defaultValue={
+              initialValues?.matchesPlayed ?? 0
+            }
             className={inputStyles}
           />
         </label>
@@ -114,7 +142,9 @@ export function AdminRankingEntryForm({
             required
             min="0"
             step="1"
-            defaultValue="0"
+            defaultValue={
+              initialValues?.battleWins ?? 0
+            }
             className={inputStyles}
           />
         </label>
@@ -130,7 +160,10 @@ export function AdminRankingEntryForm({
             required
             min="0"
             step="1"
-            defaultValue="0"
+            defaultValue={
+              initialValues
+                ?.battleWinsAfterReplica ?? 0
+            }
             className={inputStyles}
           />
         </label>
@@ -146,7 +179,10 @@ export function AdminRankingEntryForm({
             required
             min="0"
             step="1"
-            defaultValue="0"
+            defaultValue={
+              initialValues
+                ?.battleLossesAfterReplica ?? 0
+            }
             className={inputStyles}
           />
         </label>
@@ -162,13 +198,17 @@ export function AdminRankingEntryForm({
             required
             min="0"
             step="1"
-            defaultValue="0"
+            defaultValue={
+              initialValues?.battleLosses ?? 0
+            }
             className={inputStyles}
           />
         </label>
 
         <label className="block">
-          <span className="font-bold">Puntos</span>
+          <span className="font-bold">
+            Puntos
+          </span>
 
           <input
             type="number"
@@ -176,7 +216,9 @@ export function AdminRankingEntryForm({
             required
             min="0"
             step="0.01"
-            defaultValue="0"
+            defaultValue={
+              initialValues?.points ?? 0
+            }
             className={inputStyles}
           />
         </label>
@@ -192,7 +234,9 @@ export function AdminRankingEntryForm({
             required
             min="0"
             step="0.01"
-            defaultValue="0"
+            defaultValue={
+              initialValues?.scoreTotal ?? 0
+            }
             className={inputStyles}
           />
         </label>
@@ -208,7 +252,9 @@ export function AdminRankingEntryForm({
             required
             min="0"
             step="0.01"
-            defaultValue="0"
+            defaultValue={
+              initialValues?.penaltyPoints ?? 0
+            }
             className={inputStyles}
           />
         </label>
@@ -219,7 +265,9 @@ export function AdminRankingEntryForm({
           type="submit"
           className="cursor-pointer rounded-full bg-[var(--color-primary)] px-6 py-3 font-bold text-white transition hover:opacity-90"
         >
-          Agregar posición
+          {isEditing
+            ? "Guardar cambios"
+            : "Agregar posición"}
         </button>
 
         <Link

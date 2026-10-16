@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { RemoveRankingEntryButton } from "@/features/rankings/components/RemoveRankingEntryButton";
+
 import { getAdminRankingEntriesData } from "@/features/rankings/services/admin-ranking.service";
 
 type RankingPositionsPageProps = {
@@ -11,6 +13,7 @@ type RankingPositionsPageProps = {
     created?: string;
     updated?: string;
     removed?: string;
+    error?: string;
   }>;
 };
 
@@ -45,53 +48,53 @@ export default async function RankingPositionsPage({
       </Link>
 
       <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-  <header>
-    <p className="text-sm font-bold uppercase tracking-[0.15em] text-[var(--color-primary)]">
-      Panel editorial
-    </p>
+        <header>
+          <p className="text-sm font-bold uppercase tracking-[0.15em] text-[var(--color-primary)]">
+            Panel editorial
+          </p>
 
-    <h1 className="mt-2 text-3xl font-black">
-      {data.ranking.name}
-    </h1>
+          <h1 className="mt-2 text-3xl font-black">
+            {data.ranking.name}
+          </h1>
 
-    <p className="mt-2 text-[var(--color-muted)]">
-      {data.ranking.leagueName} —{" "}
-      {data.ranking.seasonName}
-    </p>
+          <p className="mt-2 text-[var(--color-muted)]">
+            {data.ranking.leagueName} —{" "}
+            {data.ranking.seasonName}
+          </p>
 
-    <div className="mt-4 flex flex-wrap gap-3">
-      <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">
-        {data.entries.length} posiciones
-      </span>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-bold text-slate-700">
+              {data.entries.length} posiciones
+            </span>
 
-      <span className="rounded-full bg-sky-100 px-3 py-1 text-sm font-bold text-sky-800">
-        {data.participants.length} participantes
-      </span>
+            <span className="rounded-full bg-sky-100 px-3 py-1 text-sm font-bold text-sky-800">
+              {data.participants.length} participantes
+            </span>
 
-      {data.ranking.isCurrent && (
-        <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-bold text-emerald-800">
-          Clasificación vigente
-        </span>
-      )}
-    </div>
-  </header>
+            {data.ranking.isCurrent && (
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-bold text-emerald-800">
+                Clasificación vigente
+              </span>
+            )}
+          </div>
+        </header>
 
-  <div className="flex flex-wrap gap-3">
-  <Link
-    href={`/admin/rankings/${id}/participantes`}
-    className="inline-flex items-center justify-center rounded-full border border-[var(--color-primary)] px-6 py-3 font-bold text-[var(--color-primary)] transition hover:bg-sky-50"
-  >
-    Participantes
-  </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href={`/admin/rankings/${id}/participantes`}
+            className="inline-flex items-center justify-center rounded-full border border-[var(--color-primary)] px-6 py-3 font-bold text-[var(--color-primary)] transition hover:bg-sky-50"
+          >
+            Participantes
+          </Link>
 
-  <Link
-    href={`/admin/rankings/${id}/posiciones/nueva`}
-    className="inline-flex items-center justify-center rounded-full bg-[var(--color-primary)] px-6 py-3 font-bold text-white transition hover:opacity-90"
-  >
-    Agregar posición
-  </Link>
-</div>
-</div>
+          <Link
+            href={`/admin/rankings/${id}/posiciones/nueva`}
+            className="inline-flex items-center justify-center rounded-full bg-[var(--color-primary)] px-6 py-3 font-bold text-white transition hover:opacity-90"
+          >
+            Agregar posición
+          </Link>
+        </div>
+      </div>
 
       {query.created === "1" && (
         <div
@@ -117,6 +120,15 @@ export default async function RankingPositionsPage({
           className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-emerald-800"
         >
           La posición se eliminó correctamente.
+        </div>
+      )}
+
+      {query.error && (
+        <div
+          role="alert"
+          className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-red-700"
+        >
+          {query.error}
         </div>
       )}
 
@@ -185,6 +197,9 @@ export default async function RankingPositionsPage({
                 <th scope="col" className="px-4 py-4">
                   Penalización
                 </th>
+                <th scope="col" className="px-4 py-4">
+                  Acciones
+                </th>
               </tr>
             </thead>
 
@@ -239,6 +254,23 @@ export default async function RankingPositionsPage({
 
                   <td className="px-4 py-4">
                     {formatNumber(entry.penaltyPoints)}
+                  </td>
+
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-3">
+                      <Link
+                        href={`/admin/rankings/${id}/posiciones/${entry.id}/editar`}
+                        className="text-sm font-bold text-[var(--color-primary)] hover:underline"
+                      >
+                        Editar
+                      </Link>
+
+                      <RemoveRankingEntryButton
+                        rankingId={id}
+                        entryId={entry.id}
+                        participantName={entry.stageName}
+                      />
+                    </div>
                   </td>
                 </tr>
               ))}
