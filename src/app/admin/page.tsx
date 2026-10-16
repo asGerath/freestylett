@@ -19,6 +19,11 @@ const adminSections = [
     description: "Consulta y administra los perfiles.",
   },
   {
+    label: "Rankings",
+    href: "/admin/rankings",
+    description: "Consulta y administra las clasificaciones.",
+  },
+  {
     label: "Artículos",
     href: "/admin/articulos",
     description: "Consulta y administra el contenido editorial.",
@@ -41,7 +46,7 @@ export default async function AdminPage() {
 
         <p className="mt-3 max-w-2xl text-[var(--color-muted)]">
           Hola, {user?.displayName}. Desde este panel podrás administrar
-          eventos, ligas, freestylers y artículos.
+          eventos, ligas, freestylers, rankings y artículos.
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
