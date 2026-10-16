@@ -22,17 +22,17 @@ export function EventsFilters({
     <div className="mb-6 grid gap-4 md:grid-cols-2">
       {/* Filtro por país */}
       <label className="flex flex-col gap-2">
-        <span className="text-sm font-medium text-gray-300">País</span>
+        <span className="text-sm font-medium text-[var(--color-text)]">País</span>
 
         <select
           value={selectedCountry}
           onChange={(event) => onCountryChange(event.target.value)}
-          className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none"
+          className="rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 text-[var(--color-text)] outline-none transition focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
         >
           <option value="all">Todos los países</option>
 
           {countries.map((country) => (
-            <option key={country} value={country} className="text-black">
+            <option key={country} value={country}>
               {country}
             </option>
           ))}
@@ -41,17 +41,17 @@ export function EventsFilters({
 
       {/* Filtro por liga */}
       <label className="flex flex-col gap-2">
-        <span className="text-sm font-medium text-gray-300">Liga</span>
+        <span className="text-sm font-medium text-[var(--color-text)]">Liga</span>
 
         <select
           value={selectedLeague}
           onChange={(event) => onLeagueChange(event.target.value)}
-          className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none"
+          className="rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 text-[var(--color-text)] outline-none transition focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20"
         >
           <option value="all">Todas las ligas</option>
 
           {leagues.map((league) => (
-            <option key={league} value={league} className="text-black">
+            <option key={league} value={league}>
               {league}
             </option>
           ))}

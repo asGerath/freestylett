@@ -1,15 +1,49 @@
 import type { Metadata } from "next";
+import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
+import {
+  canAccessEditorialPanel,
+  getCurrentUser,
+} from "@/features/auth/services/auth.service";
 import "./globals.css";
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "Freestyle Total",
-  description: "Eventos, ligas, rankings y freestylers del ecosistema freestyle.",
+  metadataBase: new URL(siteUrl),
+
+  title: {
+    default: "Freestyle Total",
+    template: "%s | Freestyle Total",
+  },
+
+  description:
+    "Eventos, ligas, rankings y freestylers del ecosistema freestyle.",
+
   icons: {
     icon: "/images/brand/logo-mark.webp",
     apple: "/images/brand/logo-mark.webp",
   },
+
   openGraph: {
+    type: "website",
+    locale: "es_MX",
+    siteName: "Freestyle Total",
+    title: "Freestyle Total",
+    description:
+      "Eventos, ligas, rankings y freestylers del ecosistema freestyle.",
+    url: "/",
+    images: [
+      {
+        url: "/images/brand/logo-primary.webp",
+        alt: "Freestyle Total",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
     title: "Freestyle Total",
     description:
       "Eventos, ligas, rankings y freestylers del ecosistema freestyle.",
@@ -17,19 +51,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getCurrentUser();
+
   return (
     <html lang="es">
-      <body>
-        {/* Navbar global disponible en todas las páginas */}
-        <Navbar />
+      <body className="flex min-h-screen flex-col">
+        <Navbar
+          isAuthenticated={Boolean(user)}
+          canAccessAdmin={canAccessEditorialPanel(user)}
+        />
 
-        {/* Contenido de cada página */}
-        {children}
+        <div className="flex-1">{children}</div>
+
+        <Footer />
       </body>
     </html>
   );
