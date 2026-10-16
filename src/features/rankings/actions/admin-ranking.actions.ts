@@ -82,6 +82,111 @@ function getNonnegativeNumber(
   return value;
 }
 
+function getRankingEntryFormValues(
+  formData: FormData,
+  errorPath: string,
+) {
+  const participantId = getRequiredString(
+    formData,
+    "participantId",
+  );
+
+  const rankingGroup =
+    getRequiredString(formData, "rankingGroup") ??
+    "general";
+
+  const position = getNonnegativeInteger(
+    formData,
+    "position",
+  );
+
+  const matchesPlayed = getNonnegativeInteger(
+    formData,
+    "matchesPlayed",
+  );
+
+  const battleWins = getNonnegativeInteger(
+    formData,
+    "battleWins",
+  );
+
+  const battleWinsAfterReplica =
+    getNonnegativeInteger(
+      formData,
+      "battleWinsAfterReplica",
+    );
+
+  const battleLossesAfterReplica =
+    getNonnegativeInteger(
+      formData,
+      "battleLossesAfterReplica",
+    );
+
+  const battleLosses = getNonnegativeInteger(
+    formData,
+    "battleLosses",
+  );
+
+  const points = getNonnegativeNumber(
+    formData,
+    "points",
+  );
+
+  const scoreTotal = getNonnegativeNumber(
+    formData,
+    "scoreTotal",
+  );
+
+  const penaltyPoints = getNonnegativeNumber(
+    formData,
+    "penaltyPoints",
+  );
+
+  if (
+    !participantId ||
+    position === null ||
+    position < 1 ||
+    matchesPlayed === null ||
+    battleWins === null ||
+    battleWinsAfterReplica === null ||
+    battleLossesAfterReplica === null ||
+    battleLosses === null ||
+    points === null ||
+    scoreTotal === null ||
+    penaltyPoints === null
+  ) {
+    redirectWithError(
+      errorPath,
+      "Completa correctamente todos los campos.",
+    );
+  }
+
+  if (
+    !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(
+      rankingGroup,
+    )
+  ) {
+    redirectWithError(
+      errorPath,
+      "El grupo solo puede contener letras minúsculas, números y guiones.",
+    );
+  }
+
+  return {
+    participantId,
+    rankingGroup,
+    position,
+    matchesPlayed,
+    battleWins,
+    battleWinsAfterReplica,
+    battleLossesAfterReplica,
+    battleLosses,
+    points,
+    scoreTotal,
+    penaltyPoints,
+  };
+}
+
 function redirectWithError(
   path: string,
   message: string,
@@ -743,6 +848,239 @@ export async function createRankingEntry(
     `/admin/rankings/${rankingId}/posiciones?created=1`,
   );
 }
+
+export async function updateRankingEntry(
+  rankingId: string,
+  entryId: string,
+  formData: FormData,
+) {
+  const user = await requireEditorialUser();
+  const errorPath =
+    `/admin/rankings/${rankingId}/posiciones/${entryId}/editar`;
+
+  const values = getRankingEntryFormValues(
+    formData,
+    errorPath,
+  );
+
+  const supabase = await createClient();
+
+  const { data: ranking, error: rankingError } =
+    await supabase
+      .from("ranking_snapshots")
+      .select(`
+        season_id,
+        season:league_seasons!ranking_snapshots_season_id_fkey (
+          league:leagues!league_seasons_league_id_fkey (
+            slug
+          )
+        )
+      `)
+      .eq("id", rankingId)
+      .maybeSingle();
+
+  if (rankingError) {
+    redirectWithError(
+      errorPath,
+      `No fue posible consultar la clasificación: ${rankingError.message}`,
+    );
+  }
+
+  if (!ranking) {
+    redirectWithError(
+      errorPath,
+      "La clasificación no existe.",
+    );
+  }
+
+  const { data: currentEntry, error: entryError } =
+    await supabase
+      .from("ranking_entries")
+      .select("id, snapshot_id")
+      .eq("id", entryId)
+      .eq("snapshot_id", rankingId)
+      .maybeSingle();
+
+  if (entryError) {
+    redirectWithError(
+      errorPath,
+      `No fue posible consultar la posición: ${entryError.message}`,
+    );
+  }
+
+  if (!currentEntry) {
+    redirectWithError(
+      errorPath,
+      "La posición no existe en esta clasificación.",
+    );
+  }
+
+  const {
+    data: participant,
+    error: participantError,
+  } = await supabase
+    .from("league_season_participants")
+    .select("id, season_id, is_active")
+    .eq("id", values.participantId)
+    .maybeSingle();
+
+  if (participantError) {
+    redirectWithError(
+      errorPath,
+      `No fue posible consultar el participante: ${participantError.message}`,
+    );
+  }
+
+  if (
+    !participant ||
+    participant.season_id !== ranking.season_id ||
+    !participant.is_active
+  ) {
+    redirectWithError(
+      errorPath,
+      "El participante no pertenece a esta temporada o está inactivo.",
+    );
+  }
+
+  const { error } = await supabase
+    .from("ranking_entries")
+    .update({
+      participant_id: values.participantId,
+      ranking_group: values.rankingGroup,
+      position: values.position,
+      matches_played: values.matchesPlayed,
+      battle_wins: values.battleWins,
+      battle_wins_after_replica:
+        values.battleWinsAfterReplica,
+      battle_losses_after_replica:
+        values.battleLossesAfterReplica,
+      battle_losses: values.battleLosses,
+      points: values.points,
+      score_total: values.scoreTotal,
+      penalty_points: values.penaltyPoints,
+      updated_by: user.id,
+    })
+    .eq("id", entryId)
+    .eq("snapshot_id", rankingId);
+
+  if (error) {
+    if (error.code === "23505") {
+      redirectWithError(
+        errorPath,
+        "El participante o la posición ya están registrados en esta clasificación.",
+      );
+    }
+
+    redirectWithError(
+      errorPath,
+      `No fue posible actualizar la posición: ${error.message}`,
+    );
+  }
+
+  const season = ranking.season as {
+    league: {
+      slug: string;
+    } | null;
+  } | null;
+
+  revalidatePath(
+    `/admin/rankings/${rankingId}/posiciones`,
+  );
+
+  revalidatePath(errorPath);
+  revalidateRankingPaths(season?.league?.slug);
+
+  redirect(
+    `/admin/rankings/${rankingId}/posiciones?updated=1`,
+  );
+}
+
+export async function removeRankingEntry(
+  rankingId: string,
+  entryId: string,
+) {
+  await requireEditorialUser();
+
+  const errorPath =
+    `/admin/rankings/${rankingId}/posiciones`;
+
+  const supabase = await createClient();
+
+  const { data: ranking, error: rankingError } =
+    await supabase
+      .from("ranking_snapshots")
+      .select(`
+        id,
+        season:league_seasons!ranking_snapshots_season_id_fkey (
+          league:leagues!league_seasons_league_id_fkey (
+            slug
+          )
+        )
+      `)
+      .eq("id", rankingId)
+      .maybeSingle();
+
+  if (rankingError) {
+    redirectWithError(
+      errorPath,
+      `No fue posible consultar la clasificación: ${rankingError.message}`,
+    );
+  }
+
+  if (!ranking) {
+    redirectWithError(
+      errorPath,
+      "La clasificación no existe.",
+    );
+  }
+
+  const { data: entry, error: entryError } =
+    await supabase
+      .from("ranking_entries")
+      .select("id")
+      .eq("id", entryId)
+      .eq("snapshot_id", rankingId)
+      .maybeSingle();
+
+  if (entryError) {
+    redirectWithError(
+      errorPath,
+      `No fue posible consultar la posición: ${entryError.message}`,
+    );
+  }
+
+  if (!entry) {
+    redirectWithError(
+      errorPath,
+      "La posición no existe en esta clasificación.",
+    );
+  }
+
+  const { error } = await supabase
+    .from("ranking_entries")
+    .delete()
+    .eq("id", entryId)
+    .eq("snapshot_id", rankingId);
+
+  if (error) {
+    redirectWithError(
+      errorPath,
+      `No fue posible eliminar la posición: ${error.message}`,
+    );
+  }
+
+  const season = ranking.season as {
+    league: {
+      slug: string;
+    } | null;
+  } | null;
+
+  revalidatePath(errorPath);
+  revalidateRankingPaths(season?.league?.slug);
+
+  redirect(`${errorPath}?removed=1`);
+}
+
 
 export async function addSeasonParticipant(
   rankingId: string,
