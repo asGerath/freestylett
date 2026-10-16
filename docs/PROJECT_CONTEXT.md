@@ -708,7 +708,7 @@ Funciones del panel:
 - CRUD de ligas: implementado.
 - CRUD de freestylers: implementado.
 - CRUD de artículos: implementado.
-- Gestión de rankings.
+- Gestión de rankings: implementada.
 - Gestión de batallas.
 - Gestión de creadores.
 - Gestión de países, venues y marcas.
@@ -717,8 +717,8 @@ Funciones del panel:
 La ruta base `/admin` está protegida mediante autenticación y roles. Los
 roles `admin` y `editor` pueden acceder; los demás usuarios regresan al
 dashboard. El panel cuenta con un shell inicial y con los CRUD editoriales de
-eventos, ligas, freestylers y artículos. Los demás dominios administrativos
-continúan pendientes.
+eventos, ligas, freestylers, artículos y rankings. Los demás dominios
+administrativos continúan pendientes.
 
 ---
 
@@ -1366,12 +1366,31 @@ artículos.
 - Seed ficticio reproducible para desarrollo local.
 - 30 pruebas pgTAP aisladas de los datos existentes y aprobadas.
 - Validación completada con lint, build y revisión de whitespace.
-- La gestión administrativa de participantes, snapshots y posiciones queda
-  pendiente.
+
+### Administración de Rankings completada
+
+- Ruta protegida `/admin/rankings` para roles editoriales.
+- Listado de snapshots con liga, temporada, estado, vigencia y número de
+  posiciones.
+- Creación, edición, publicación y archivado lógico mediante Server Actions.
+- Validación de temporada, fecha de captura, fuente oficial y estado editorial.
+- Reemplazo controlado del snapshot vigente de cada temporada.
+- Gestión de participantes por temporada sin duplicar perfiles de freestylers.
+- Inscripción, activación y desactivación de participantes.
+- Protección para impedir desactivar participantes con posición registrada.
+- Alta de posiciones y métricas con validaciones numéricas, de duplicados y de
+  pertenencia a la misma temporada.
+- Pantallas administrativas separadas para snapshots, participantes y
+  posiciones.
+- Revalidación de rutas públicas y administrativas después de los cambios.
+- Validación manual de creación, edición, archivado, inscripción y alta de
+  posiciones.
+- Integración realizada mediante el PR #30 y merge commit
+  `6370515cf32dc0d375e43262f164ae279893c992`.
 
 ### Pendiente / siguiente etapa
 
-1. Construir la gestión administrativa de Rankings.
+1. Completar edición y eliminación administrativa de posiciones.
 2. Completar batallas y creadores.
 3. Incorporar funciones de cuenta como favoritos y seguimientos.
 4. Preparar deployment productivo en Vercel.
@@ -1479,7 +1498,7 @@ Estado de migración por módulo:
 3. Leagues: integrado en frontend.
 4. Freestylers: integrado en frontend.
 5. Blog: integrado completamente en frontend, con estados, metadata y sitemap.
-6. Rankings: esquema, RLS, repositorio, servicio, listado público, integración con ligas y estados de interfaz implementados; administración pendiente.
+6. Rankings: esquema, RLS, repositorios, servicios, listado público, integración con ligas y administración de snapshots, participantes y altas de posiciones implementados.
 7. Battles: pendiente.
 
 Mantener la migración módulo por módulo y eliminar cada mock solamente después
@@ -1556,19 +1575,18 @@ Freestylers y Blog ya están terminadas.
 El objetivo inmediato es:
 
 ```text
-construir la gestión administrativa de Rankings
+completar edición y eliminación de posiciones
       ↓
-administrar participantes de temporada
-      ↓
-crear y publicar snapshots y posiciones
+cerrar validación integral de Rankings
       ↓
 continuar con batallas y creadores
 ```
 
-Los CRUD administrativos de eventos, ligas, freestylers y artículos ya están
-completados. Rankings también cuenta con base de datos e integración pública;
-su siguiente etapa debe reutilizar los mismos patrones de Server Actions,
-autorización, validación, archivado y UX editorial.
+Los CRUD administrativos de eventos, ligas, freestylers, artículos y rankings
+ya están completados. Rankings cuenta con base de datos, integración pública,
+gestión de snapshots, participantes de temporada y alta de posiciones. Su
+siguiente etapa es completar la edición y eliminación de posiciones antes de
+avanzar con batallas y creadores.
 
 El trabajo debe continuar en ramas pequeñas basadas en `develop`, validarse
 con lint, build y pruebas relevantes, y después integrarse nuevamente a
@@ -1580,4 +1598,4 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. Rankings también consume Supabase mediante repositorio y servicio, ofrece una tabla pública responsive en `/rankings`, se integra en el detalle de las ligas y cuenta con metadata, estados de interfaz, navegación y sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite listar, crear, editar, publicar, archivar y restaurar eventos y ligas con Server Actions, validación de permisos y persistencia en Supabase. La prioridad actual es construir la administración de Rankings y después avanzar con batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. Rankings también consume Supabase mediante repositorio y servicio, ofrece una tabla pública responsive en `/rankings`, se integra en el detalle de las ligas y cuenta con metadata, estados de interfaz, navegación y sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite gestionar eventos, ligas, freestylers, artículos y rankings con Server Actions, validación de permisos y persistencia en Supabase. Rankings incluye snapshots, vigencia, participantes de temporada y alta de posiciones. La prioridad actual es completar la edición y eliminación de posiciones y después avanzar con batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
