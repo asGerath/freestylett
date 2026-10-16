@@ -26,7 +26,8 @@ Validation includes:
 - Generated TypeScript definitions in `src/types/database.types.ts`.
 - Successful lint, production build, and whitespace validation.
 
-The database foundation and public application integration are complete.
+The database foundation and the public and administrative application
+integrations are complete.
 
 Implemented application behavior:
 
@@ -37,9 +38,18 @@ Implemented application behavior:
 - Current ranking embedded in league detail pages.
 - Fictional development seed for repeatable local validation.
 - RLS tests isolated from existing development data.
+- Protected administrative listing under `/admin/rankings`.
+- Creation, editing, publication, current-snapshot selection, and logical
+  archiving through validated Server Actions.
+- Season participant enrollment, activation, and deactivation.
+- Ranking position creation with duplicate, numeric, and cross-season
+  validation.
+- Administrative views for participants and ranking entries.
+- Public and administrative paths revalidated after editorial changes.
 
-Administrative creation, editing, publishing, and historical snapshot management
-remain separate application-layer work.
+Editing and removing individual ranking entries remain follow-up application
+work; the database already supports those operations under the existing RLS
+policies.
 
 ## Tables
 
