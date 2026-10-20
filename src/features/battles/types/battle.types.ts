@@ -88,3 +88,58 @@ export type BattleFilters = {
   stage?: BattleStage;
   freestyler?: string;
 };
+
+export type BattleEditorialStatus =
+  | "draft"
+  | "published"
+  | "archived";
+
+export type AdminBattleSummary = {
+  id: string;
+  title: string;
+  slug: string;
+  battleOrder: number;
+  stage: BattleStage;
+  format: BattleFormat;
+  status: BattleStatus;
+  editorialStatus: BattleEditorialStatus;
+  eventTitle: string;
+  eventSlug: string;
+  participantNames: string[];
+  updatedAt: string;
+};
+
+export type AdminBattleFormValues = {
+  id: string;
+  eventId: string;
+  seasonId: string | null;
+  title: string;
+  slug: string;
+  battleOrder: number;
+  stage: BattleStage;
+  format: BattleFormat;
+  status: BattleStatus;
+  winnerSide: number | null;
+  decisionType: BattleDecisionType | null;
+  videoUrl: string;
+  sourceUrl: string;
+  editorialStatus: BattleEditorialStatus;
+};
+
+export type AdminBattleEventOption = {
+  id: string;
+  title: string;
+  slug: string;
+};
+
+export type AdminBattleSeasonOption = {
+  id: string;
+  name: string;
+  leagueName: string;
+  eventIds: string[];
+};
+
+export type AdminBattleFormOptions = {
+  events: AdminBattleEventOption[];
+  seasons: AdminBattleSeasonOption[];
+};

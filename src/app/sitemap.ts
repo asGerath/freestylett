@@ -4,6 +4,8 @@ import { getEvents } from "@/features/events/services/event.service";
 import { getFreestylers } from "@/features/freestylers/services/freestyler.service";
 import { getLeagues } from "@/features/leagues/services/league.service";
 import { getBlogPosts } from "@/features/blog/services/blog.service";
+import { getPublishedBattles } from "@/features/battles/services/battle.service";
+
 
 const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
@@ -11,11 +13,12 @@ const siteUrl = (
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
-  const [events, leagues, freestylers, posts] = await Promise.all([
+  const [events, leagues, freestylers, posts, battles] = await Promise.all([
     getEvents(),
     getLeagues(),
     getFreestylers(),
     getBlogPosts(),
+    getPublishedBattles(),
   ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -49,6 +52,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 0.9,
     },
+    {
+      url: `${siteUrl}/batallas`,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
   ];
 
   const eventRoutes: MetadataRoute.Sitemap = events.map((event) => ({
@@ -78,12 +86,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  const battleRoutes: MetadataRoute.Sitemap = battles.map((battle) => ({
+    url: `${siteUrl}/batallas/${battle.slug}`,
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
 
   return [
     ...staticRoutes,
     ...eventRoutes,
     ...leagueRoutes,
     ...freestylerRoutes,
+    ...battleRoutes,
     ...blogRoutes,
   ];
 }

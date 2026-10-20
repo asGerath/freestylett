@@ -6,6 +6,8 @@ const footerLinks = [
   { label: "Eventos", href: "/eventos" },
   { label: "Freestylers", href: "/freestylers" },
   { label: "Ligas", href: "/ligas" },
+  { label: "Rankings", href: "/rankings" },
+  { label: "Batallas", href: "/batallas" },
   { label: "Blog", href: "/blog" },
 ];
 
