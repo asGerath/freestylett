@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(30);
+select plan(32);
 
 select has_table(
   'public',
@@ -20,6 +20,20 @@ select has_table(
   'public',
   'ranking_entries',
   'ranking_entries table exists'
+);
+
+select has_column(
+  'public',
+  'ranking_entries',
+  'mvp_count',
+  'ranking_entries stores official MVP counts'
+);
+
+select col_not_null(
+  'public',
+  'ranking_entries',
+  'mvp_count',
+  'ranking entry MVP count is required'
 );
 
 select ok(
