@@ -1,8 +1,8 @@
 # Ficha de investigación — FMS Colombia 2026/27
 
-Estado de investigación: `in_review`  
+Estado de investigación: `approved_for_controlled_import`  
 Fecha de verificación: 2026-10-20  
-Responsable de revisión editorial: pendiente  
+Responsable de revisión editorial: asGerath  
 Alcance: liga, temporada 5, roster, Jornada 1, clasificación posterior y próxima Jornada 2
 
 ## 1. Resumen ejecutivo
@@ -202,9 +202,9 @@ El orden oficial coloca a Visionario por encima de Pandora pese a tener menor
 PTB porque Visionario tiene tres puntos. El snapshot debe conservar exactamente
 el orden publicado y no recalcularlo solo con PTB.
 
-La columna MVP existe en la fuente, pero el esquema actual de
-`ranking_entries` no la almacena. Debemos decidir si se agrega antes de la
-importación o si se omite explícitamente en V1.
+La columna MVP existe en la fuente y se conservará. La decisión fue aprobada
+el 2026-10-20 y quedó implementada con `mvp_count integer not null default 0`
+en la migración `018_fms_colombia_model_adjustments.sql`.
 
 ## 8. Próxima Jornada 2
 
@@ -219,8 +219,10 @@ importación o si se omite explícitamente en V1.
 | Batallas | todavía no confirmadas en fuentes consultadas | pendiente |
 | Participantes invitados | pendiente | pendiente |
 
-Esta jornada debe revisarse antes de publicarla porque fecha, venue y horarios
-futuros pueden cambiar.
+La Jornada 2 queda aprobada para el inventario y la importación controlada como
+evento `scheduled`. Los cruces permanecen vacíos hasta que una fuente oficial
+los publique. Al ser un evento futuro, fecha, venue y hora deben volver a
+verificarse inmediatamente antes de publicarlo en producción.
 
 ## 9. Mapeo propuesto a la base
 
@@ -239,45 +241,49 @@ futuros pueden cambiar.
 | Participantes de batallas | 22 |
 | Snapshot de ranking | 1 |
 | Posiciones | 10 |
-| Evento futuro Jornada 2 | 1, después de confirmar hora |
+| Evento futuro Jornada 2 | 1, aprobado como programado; cruces pendientes |
 
-## 10. Ajustes de datos/UX detectados
+## 10. Decisiones editoriales y de modelo ejecutadas
 
-### Bloqueante de modelo: participantes de Vida o Muerte
+### 1. Participantes históricos de Vida o Muerte
 
-La validación actual de `battle_participants` exige que un freestyler sea
-participante activo de la temporada cuando la batalla tiene `season_id`.
-Urko y Vilardy participaron oficialmente en batallas de la temporada, pero no
-quedaron en el roster activo.
+Aprobado e implementado: una batalla con etapa `play_in` puede conservar a un
+freestyler inscrito en la temporada aunque actualmente esté inactivo. Las demás
+etapas continúan exigiendo participación activa. El participante siempre debe
+estar registrado como competidor del evento.
 
-Antes de cargar debemos elegir una solución:
+Implementación: `018_fms_colombia_model_adjustments.sql` y prueba pgTAP de
+regresión en `battles_rls.test.sql`.
 
-1. Recomendada: permitir participantes inscritos pero inactivos cuando la
-   batalla tenga etapa `play_in`.
-2. Alternativa temporal: dejar `season_id = null` en esas dos batallas.
-3. No recomendada: marcarlos activos para insertar y desactivarlos después.
+### 2. MVP en rankings
 
-La primera opción conserva mejor la semántica histórica.
+Aprobado e implementado de extremo a extremo mediante `mvp_count`: migración,
+tipos generados, repositorios, formulario administrativo, acciones y tabla
+pública. El valor no puede ser negativo y por defecto es cero.
 
-### MVP en rankings
+### 3. Jornada 2 de Cali
 
-La fuente oficial incluye MVP, pero nuestra tabla no tiene este campo.
-Recomendación: agregar `mvp_count integer not null default 0` si queremos
-mostrar fielmente la tabla FMS.
+Aprobada para importación controlada con estos datos:
 
-### UX de la liga
+- inicio: 2026-11-14 18:00 en `America/Bogota`;
+- ciudad: Cali;
+- venue: Teatro Calima;
+- estado: `scheduled`;
+- cruces: pendientes; no crear batallas hasta anuncio oficial.
 
-La página de liga debería mostrar:
+El registro de inventario `FT-RES-0009` queda verificado. Antes de producción
+se exige una reverificación por tratarse de información futura.
 
-- temporada activa;
-- próximo evento;
-- roster vigente;
-- ranking con explicación de PJ, VG, VR, DR, DG y PTB;
-- calendario con jornadas finalizadas y programadas;
-- fecha de última verificación;
-- enlace a fuente oficial.
+### 4. Hora de la Jornada 1 de Bogotá
 
-### Datos que no deben inventarse
+Se revisaron Urban Roosters, FMS, Canal Trece y la ticketera. Las fuentes
+primarias consultadas confirman fecha y venue, pero no permiten acreditar una
+hora exacta de inicio. La hora permanece nula: no se inventa ni se aplica una
+convención silenciosa. El evento se importará cuando exista una fuente fiable
+o cuando el modelo soporte explícitamente eventos con fecha confirmada y hora
+desconocida.
+
+### Datos que siguen bloqueados
 
 - hora de la Jornada 1;
 - seeds del roster;
@@ -320,3 +326,13 @@ La página de liga debería mostrar:
 - [ ] Cambiar estado de esta ficha de `in_review` a `verified`.
 - [ ] Preparar migración de ajustes, si se aprueban.
 - [ ] Preparar importación idempotente en una rama separada.
+
+
+## 12. Registro de decisiones
+
+| Fecha | Decisión | Resultado |
+|---|---|---|
+| 2026-10-20 | Permitir inactivos históricos solo en `play_in` | implementada y cubierta por prueba |
+| 2026-10-20 | Conservar MVP oficial | implementada de base de datos a interfaz |
+| 2026-10-20 | Registrar Jornada 2 de Cali | verificada para importación controlada, sin cruces |
+| 2026-10-20 | Investigar hora exacta de Jornada 1 | sin evidencia primaria suficiente; campo vacío |
