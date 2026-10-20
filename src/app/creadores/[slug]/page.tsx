@@ -82,13 +82,16 @@ export default async function CreatorDetailPage({
     .join(", ");
 
   const links = [
-    ["Sitio oficial", creator.links.website],
-    ["YouTube", creator.links.youtube],
-    ["Instagram", creator.links.instagram],
-    ["TikTok", creator.links.tiktok],
-    ["Twitch", creator.links.twitch],
-    ["X / Twitter", creator.links.x],
-  ].filter((item): item is [string, string] => Boolean(item[1]));
+    { label: "Sitio oficial", href: creator.links.website },
+    { label: "YouTube", href: creator.links.youtube },
+    { label: "Instagram", href: creator.links.instagram },
+    { label: "TikTok", href: creator.links.tiktok },
+    { label: "Twitch", href: creator.links.twitch },
+    { label: "X / Twitter", href: creator.links.x },
+  ].filter(
+    (item): item is { label: string; href: string } =>
+      Boolean(item.href),
+  );
 
   return (
     <main className="py-10">
@@ -180,7 +183,7 @@ export default async function CreatorDetailPage({
 
             {links.length > 0 ? (
               <div className="mt-4 flex flex-col gap-3">
-                {links.map(([label, href]) => (
+                {links.map(({ label, href }) => (
                   <a
                     key={label}
                     href={href}
