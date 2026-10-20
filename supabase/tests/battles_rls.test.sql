@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(33);
+select plan(38);
 
 -- =========================================================
 -- Schema
@@ -544,9 +544,163 @@ values
     null
   );
 
+--------------------------------------------------------
+-- Battles used to validate participant limits by format
+--------------------------------------------------------
+
+insert into public.battles (
+  id,
+  event_id,
+  season_id,
+  title,
+  slug,
+  battle_order,
+  stage,
+  battle_format,
+  source_url
+)
+values
+  (
+    'b7000000-0000-0000-0000-000000000010',
+    'b6000000-0000-0000-0000-000000000001',
+    'b3000000-0000-0000-0000-000000000001',
+    'One Versus One Limit Test',
+    'one-versus-one-limit-test',
+    10,
+    'regular_round',
+    'one_vs_one',
+    'https://example.com/battles/one-versus-one-limit'
+  ),
+  (
+    'b7000000-0000-0000-0000-000000000011',
+    'b6000000-0000-0000-0000-000000000001',
+    'b3000000-0000-0000-0000-000000000001',
+    'Two Versus Two Limit Test',
+    'two-versus-two-limit-test',
+    11,
+    'regular_round',
+    'two_vs_two',
+    'https://example.com/battles/two-versus-two-limit'
+  ),
+  (
+    'b7000000-0000-0000-0000-000000000012',
+    'b6000000-0000-0000-0000-000000000001',
+    'b3000000-0000-0000-0000-000000000001',
+    'Three Versus Three Limit Test',
+    'three-versus-three-limit-test',
+    12,
+    'regular_round',
+    'three_vs_three',
+    'https://example.com/battles/three-versus-three-limit'
+  );
+
 -- =========================================================
 -- Participant constraints
 -- =========================================================
+
+select throws_ok(
+  $$
+    insert into public.battle_participants (
+      battle_id,
+      freestyler_id,
+      side_number,
+      slot_number
+    )
+    values (
+      'b7000000-0000-0000-0000-000000000010',
+      'b4000000-0000-0000-0000-000000000001',
+      3,
+      1
+    )
+  $$,
+  '23514',
+  null,
+  'battle participant side cannot exceed two'
+);
+
+select throws_ok(
+  $$
+    insert into public.battle_participants (
+      battle_id,
+      freestyler_id,
+      side_number,
+      slot_number
+    )
+    values (
+      'b7000000-0000-0000-0000-000000000010',
+      'b4000000-0000-0000-0000-000000000001',
+      1,
+      2
+    )
+  $$,
+  '23514',
+  null,
+  'one versus one only accepts slot one'
+);
+
+select throws_ok(
+  $$
+    insert into public.battle_participants (
+      battle_id,
+      freestyler_id,
+      side_number,
+      slot_number
+    )
+    values (
+      'b7000000-0000-0000-0000-000000000011',
+      'b4000000-0000-0000-0000-000000000001',
+      1,
+      3
+    )
+  $$,
+  '23514',
+  null,
+  'two versus two only accepts slots one and two'
+);
+
+select throws_ok(
+  $$
+    insert into public.battle_participants (
+      battle_id,
+      freestyler_id,
+      side_number,
+      slot_number
+    )
+    values (
+      'b7000000-0000-0000-0000-000000000012',
+      'b4000000-0000-0000-0000-000000000001',
+      1,
+      4
+    )
+  $$,
+  '23514',
+  null,
+  'three versus three only accepts slots one through three'
+);
+
+insert into public.battle_participants (
+  battle_id,
+  freestyler_id,
+  side_number,
+  slot_number
+)
+values (
+  'b7000000-0000-0000-0000-000000000011',
+  'b4000000-0000-0000-0000-000000000001',
+  1,
+  2
+);
+
+select throws_ok(
+  $$
+    update public.battles
+    set battle_format = 'one_vs_one'
+    where id = 'b7000000-0000-0000-0000-000000000011'
+  $$,
+  '23514',
+  null,
+  'battle format cannot be reduced when participant slots exceed its limit'
+);
 
 select throws_ok(
   $$
@@ -641,10 +795,10 @@ select throws_ok(
       slot_number
     )
     values (
-      'b7000000-0000-0000-0000-000000000001',
+      'b7000000-0000-0000-0000-000000000011',
       'b4000000-0000-0000-0000-000000000001',
       2,
-      2
+      1
     )
   $$,
   '23505',
