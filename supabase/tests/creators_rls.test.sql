@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(20);
+select plan(21);
 
 select has_table('public', 'creators', 'creators table exists');
 
@@ -92,7 +92,7 @@ select lives_ok(
       published_at
     )
     values (
-      'd1000000-0000-0000-0000-000000000001',
+      'd1000000-0000-4000-8000-000000000001',
       'd0000000-0000-0000-0000-000000000001',
       'Published Creator',
       'published-creator',
@@ -128,14 +128,14 @@ select lives_ok(
 
 select ok(
   private.is_valid_editorial_media_path(
-    'creators/d1000000-0000-0000-0000-000000000001/profile.webp'
+    'creators/d1000000-0000-4000-8000-000000000001/profile.webp'
   ),
   'creator media path is valid'
 );
 
 select ok(
   not private.is_valid_editorial_media_path(
-    'creators/d1000000-0000-0000-0000-000000000099/profile.webp'
+    'creators/d1000000-0000-4000-8000-000000000099/profile.webp'
   ),
   'unknown creator media path is invalid'
 );
