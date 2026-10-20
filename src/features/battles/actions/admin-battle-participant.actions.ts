@@ -294,6 +294,13 @@ export async function addBattleParticipant(
     const { supabase, battle } =
         await getBattleContext(battleId);
 
+    validateParticipantPlacement(
+        battleId,
+        battle.battle_format,
+        values.sideNumber,
+        values.slotNumber,
+    );
+
     const { error } = await supabase
         .from("battle_participants")
         .insert({
@@ -305,14 +312,6 @@ export async function addBattleParticipant(
             created_by: user.id,
             updated_by: user.id,
         });
-
-
-    validateParticipantPlacement(
-        battleId,
-        battle.battle_format,
-        values.sideNumber,
-        values.slotNumber,
-    );
 
     if (error) {
         redirectWithError(
