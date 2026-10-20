@@ -1010,6 +1010,7 @@ export type Database = {
           created_by: string | null
           id: string
           matches_played: number
+          mvp_count: number
           participant_id: string
           penalty_points: number
           points: number
@@ -1029,6 +1030,7 @@ export type Database = {
           created_by?: string | null
           id?: string
           matches_played?: number
+          mvp_count?: number
           participant_id: string
           penalty_points?: number
           points?: number
@@ -1048,6 +1050,7 @@ export type Database = {
           created_by?: string | null
           id?: string
           matches_played?: number
+          mvp_count?: number
           participant_id?: string
           penalty_points?: number
           points?: number
