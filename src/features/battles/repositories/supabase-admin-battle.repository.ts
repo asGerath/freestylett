@@ -5,12 +5,14 @@ import { createClient } from "@/lib/supabase/server";
 import type {
   AdminBattleFormOptions,
   AdminBattleFormValues,
+  AdminBattleParticipantsData,
   AdminBattleSummary,
   BattleEditorialStatus,
   BattleFormat,
   BattleStage,
   BattleStatus,
 } from "../types/battle.types";
+
 
 type AdminBattleQueryRow = {
   id: string;
@@ -89,6 +91,40 @@ type AdminBattleSeasonQueryRow = {
   name: string;
   league: {
     name: string;
+  } | null;
+};
+
+type AdminBattleParticipantsQueryRow = {
+  id: string;
+  title: string;
+  event_id: string;
+  season_id: string | null;
+  battle_format: BattleFormat;
+  battle_status: BattleStatus;
+  event: {
+    title: string;
+  } | null;
+  participants: Array<{
+    id: string;
+    freestyler_id: string;
+    side_number: number;
+    slot_number: number;
+    score: number | null;
+    freestyler: {
+      stage_name: string;
+      slug: string;
+    } | null;
+  }>;
+};
+
+type AdminBattleEventParticipantRow = {
+  freestyler_id: string;
+  freestyler: {
+    stage_name: string;
+    slug: string;
+    country: {
+      name: string;
+    } | null;
   } | null;
 };
 
@@ -272,5 +308,195 @@ export async function getAdminBattleById(
     videoUrl: data.video_url ?? "",
     sourceUrl: data.source_url ?? "",
     editorialStatus: data.editorial_status,
+  };
+}
+
+
+export async function getAdminBattleParticipantsData(
+  battleId: string,
+): Promise<AdminBattleParticipantsData | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("battles")
+    .select(`
+      id,
+      title,
+      event_id,
+      season_id,
+      battle_format,
+      battle_status,
+      event:events!battles_event_id_fkey (
+        title
+      ),
+      participants:battle_participants (
+        id,
+        freestyler_id,
+        side_number,
+        slot_number,
+        score,
+        freestyler:freestylers!battle_participants_freestyler_id_fkey (
+          stage_name,
+          slug
+        )
+      )
+    `)
+    .eq("id", battleId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(
+      `No fue posible consultar los participantes de la batalla: ${error.message}`,
+    );
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  const row =
+    data as unknown as AdminBattleParticipantsQueryRow;
+
+  if (!row.event) {
+    throw new Error(
+      "La batalla no tiene un evento válido.",
+    );
+  }
+
+  const [
+    eventParticipantsResult,
+    seasonParticipantsResult,
+  ] = await Promise.all([
+    supabase
+      .from("event_participants")
+      .select(`
+        freestyler_id,
+        freestyler:freestylers!event_participants_freestyler_id_fkey (
+          stage_name,
+          slug,
+          country:countries!freestylers_country_id_fkey (
+            name
+          )
+        )
+      `)
+      .eq("event_id", row.event_id)
+      .eq("role", "competitor"),
+
+    row.season_id
+      ? supabase
+          .from("league_season_participants")
+          .select("freestyler_id")
+          .eq("season_id", row.season_id)
+          .eq("is_active", true)
+      : Promise.resolve({
+          data: null,
+          error: null,
+        }),
+  ]);
+
+  if (eventParticipantsResult.error) {
+    throw new Error(
+      `No fue posible consultar los competidores del evento: ${eventParticipantsResult.error.message}`,
+    );
+  }
+
+  if (seasonParticipantsResult.error) {
+    throw new Error(
+      `No fue posible consultar los participantes de la temporada: ${seasonParticipantsResult.error.message}`,
+    );
+  }
+
+  const eventParticipantRows =
+    eventParticipantsResult.data as unknown as AdminBattleEventParticipantRow[];
+
+  const seasonFreestylerIds = row.season_id
+    ? new Set(
+        (seasonParticipantsResult.data ?? []).map(
+          (participant) => participant.freestyler_id,
+        ),
+      )
+    : null;
+
+  const registeredFreestylerIds = new Set(
+    row.participants.map(
+      (participant) => participant.freestyler_id,
+    ),
+  );
+
+  const participants = row.participants
+    .filter(
+      (participant) => participant.freestyler !== null,
+    )
+    .map((participant) => ({
+      id: participant.id,
+      freestylerId: participant.freestyler_id,
+      stageName:
+        participant.freestyler?.stage_name ?? "Sin nombre",
+      slug: participant.freestyler?.slug ?? "",
+      sideNumber: participant.side_number,
+      slotNumber: participant.slot_number,
+      score: participant.score,
+    }))
+    .sort((first, second) => {
+      if (first.sideNumber !== second.sideNumber) {
+        return first.sideNumber - second.sideNumber;
+      }
+
+      return first.slotNumber - second.slotNumber;
+    });
+
+  const availableParticipants = eventParticipantRows
+    .filter((participant) => {
+      if (!participant.freestyler) {
+        return false;
+      }
+
+      if (
+        registeredFreestylerIds.has(
+          participant.freestyler_id,
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        seasonFreestylerIds &&
+        !seasonFreestylerIds.has(
+          participant.freestyler_id,
+        )
+      ) {
+        return false;
+      }
+
+      return true;
+    })
+    .map((participant) => ({
+      freestylerId: participant.freestyler_id,
+      stageName:
+        participant.freestyler?.stage_name ?? "Sin nombre",
+      slug: participant.freestyler?.slug ?? "",
+      country:
+        participant.freestyler?.country?.name ??
+        "Internacional",
+    }))
+    .sort((first, second) =>
+      first.stageName.localeCompare(
+        second.stageName,
+        "es",
+      ),
+    );
+
+  return {
+    battle: {
+      id: row.id,
+      title: row.title,
+      eventId: row.event_id,
+      eventTitle: row.event.title,
+      seasonId: row.season_id,
+      format: row.battle_format,
+      status: row.battle_status,
+    },
+    participants,
+    availableParticipants,
   };
 }

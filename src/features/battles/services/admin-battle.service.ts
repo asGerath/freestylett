@@ -4,6 +4,7 @@ import {
   getAdminBattleById as getAdminBattleByIdFromRepository,
   getAdminBattleFormOptions as getAdminBattleFormOptionsFromRepository,
   getAdminBattles as getAdminBattlesFromRepository,
+  getAdminBattleParticipantsData as getAdminBattleParticipantsDataFromRepository,
 } from "../repositories/supabase-admin-battle.repository";
 
 
@@ -17,4 +18,12 @@ export function getAdminBattleById(id: string) {
 
 export function getAdminBattleFormOptions() {
   return getAdminBattleFormOptionsFromRepository();
+}
+
+export function getAdminBattleParticipantsData(
+  battleId: string,
+) {
+  return getAdminBattleParticipantsDataFromRepository(
+    battleId,
+  );
 }

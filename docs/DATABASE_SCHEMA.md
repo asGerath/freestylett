@@ -808,10 +808,11 @@ The schema will be implemented incrementally:
 013_rankings.sql
 014_battles.sql
 015_battles_optional_source.sql
+016_battle_participant_format_limits.sql
 ```
 
-Implementation is versioned through `015_battles_optional_source.sql`.
-The suite includes 226 foundation tests, 30 Rankings tests, and 33 Battles
+Implementation is versioned through `016_battle_participant_format_limits.sql`.
+The suite includes 226 foundation tests, 30 Rankings tests, and 38 Battles
 tests. Battles coverage verifies schema integrity and RLS access for anonymous,
 authenticated, editor, and administrator roles.
 
@@ -887,6 +888,10 @@ the event has a deterministic running order. Public slugs are globally unique.
 
 `battle_participants` relates freestylers to a side and slot, supports team
 formats, scores, and winner flags without embedding participant data in JSON.
+Only sides 1 and 2 are accepted. The database limits slots to 1 for
+`one_vs_one`, 2 for `two_vs_two`, and 3 for `three_vs_three`; crew formats
+remain unrestricted. A battle format cannot be reduced when existing
+participant positions exceed the new limit.
 The database validates that a selected season belongs to the event. Editorial
 content uses draft, published, and archived states, and normal panel operations
 archive instead of deleting.

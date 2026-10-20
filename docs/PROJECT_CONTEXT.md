@@ -1217,7 +1217,7 @@ artículos.
 - Supabase Auth y autorización por roles.
 - Bucket público de medios y políticas de Storage.
 - Políticas RLS para las entidades principales.
-- Suite pgTAP base con 226 pruebas aprobadas y 30 pruebas específicas de rankings aprobadas.
+- Suite pgTAP base con 226 pruebas aprobadas, 30 pruebas específicas de Rankings y 38 pruebas específicas de Batallas.
 - Tipos TypeScript generados desde la base de datos.
 
 ### Eventos completados
@@ -1395,11 +1395,12 @@ artículos.
 
 ### Batallas completadas
 
-- Migraciones `014_battles.sql` y `015_battles_optional_source.sql`.
+- Migraciones `014_battles.sql`, `015_battles_optional_source.sql` y
+  `016_battle_participant_format_limits.sql`.
 - Modelo relacional para batallas y participantes, con orden independiente por
   evento y soporte para formatos individuales, parejas, tríos y crews.
 - RLS para lectura pública de contenido publicado y gestión editorial.
-- 33 pruebas pgTAP específicas de Batallas.
+- 38 pruebas pgTAP específicas de Batallas.
 - Seed ficticio reproducible para desarrollo local.
 - Repositorio y servicio propios para listado y detalle público.
 - Rutas `/batallas` y `/batallas/[slug]`, metadata, estados de interfaz,
@@ -1409,6 +1410,16 @@ artículos.
   evento puede contener múltiples batallas.
 - Validaciones separadas para slug duplicado y orden ocupado.
 - La fuente oficial es opcional y sólo se muestra públicamente cuando existe.
+- Gestión editorial de participantes desde
+  `/admin/batallas/[id]/participantes`, con altas, edición y retiro.
+- Los participantes disponibles se limitan a competidores del evento y, cuando
+  corresponde, a miembros activos de la temporada asociada.
+- Validación de lados, posiciones, puntuación, duplicados y protección del
+  último integrante del lado ganador.
+- Los formatos `one_vs_one`, `two_vs_two` y `three_vs_three` limitan a uno, dos
+  y tres participantes por lado tanto en aplicación como en base de datos.
+- La base impide reducir el formato de una batalla cuando sus posiciones
+  existentes exceden el nuevo límite.
 - Revalidación de rutas públicas y administrativas tras cada cambio.
 - Lint, build de producción y revisión de whitespace aprobados antes del PR.
 - Módulo integrado mediante el PR #32 y merge commit
@@ -1416,7 +1427,7 @@ artículos.
 
 ### Pendiente / siguiente etapa
 
-1. Integrar gestión editorial de participantes de batalla y continuar con creadores.
+1. Continuar con el módulo de creadores.
 2. Incorporar funciones de cuenta como favoritos y seguimientos.
 3. Preparar deployment productivo en Vercel.
 
@@ -1524,7 +1535,7 @@ Estado de migración por módulo:
 4. Freestylers: integrado en frontend.
 5. Blog: integrado completamente en frontend, con estados, metadata y sitemap.
 6. Rankings: esquema, RLS, repositorios, servicios, listado público, integración con ligas y administración completa de snapshots, participantes y posiciones implementados.
-7. Battles: pendiente.
+7. Battles: esquema, RLS, rutas públicas, administración de batallas y gestión editorial de participantes implementados.
 
 Mantener la migración módulo por módulo y eliminar cada mock solamente después
 de validar toda su integración.
@@ -1600,18 +1611,18 @@ Freestylers y Blog ya están terminadas.
 El objetivo inmediato es:
 
 ```text
-cerrar validación integral de Rankings
+cerrar gestión editorial de participantes de batalla
       ↓
-continuar con batallas
+integrar el feature en develop
       ↓
 continuar con creadores
 ```
 
-Los CRUD administrativos de eventos, ligas, freestylers, artículos y rankings
-ya están completados. Rankings cuenta con base de datos, integración pública,
-gestión de snapshots, participantes de temporada y creación, edición y
-eliminación de posiciones. La siguiente etapa es cerrar su validación integral
-y avanzar con batallas y creadores.
+Los CRUD administrativos de eventos, ligas, freestylers, artículos, rankings y
+batallas están completados. Batallas cuenta con base de datos, integración
+pública, creación, edición, archivado y gestión editorial de participantes con
+límites por formato. La siguiente etapa es integrar este feature y avanzar con
+creadores.
 
 El trabajo debe continuar en ramas pequeñas basadas en `develop`, validarse
 con lint, build y pruebas relevantes, y después integrarse nuevamente a
@@ -1623,4 +1634,4 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. Rankings también consume Supabase mediante repositorio y servicio, ofrece una tabla pública responsive en `/rankings`, se integra en el detalle de las ligas y cuenta con metadata, estados de interfaz, navegación y sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite gestionar eventos, ligas, freestylers, artículos y rankings con Server Actions, validación de permisos y persistencia en Supabase. Rankings incluye snapshots, vigencia, participantes de temporada y gestión completa de posiciones. La prioridad actual es cerrar la validación integral de Rankings y después avanzar con batallas y creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. Rankings también consume Supabase mediante repositorio y servicio, ofrece una tabla pública responsive en `/rankings`, se integra en el detalle de las ligas y cuenta con metadata, estados de interfaz, navegación y sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite gestionar eventos, ligas, freestylers, artículos y rankings con Server Actions, validación de permisos y persistencia en Supabase. Rankings incluye snapshots, vigencia, participantes de temporada y gestión completa de posiciones. Batallas también dispone de listado y detalle público, CRUD administrativo y gestión editorial de participantes con límites por formato protegidos en aplicación y base de datos. La prioridad actual es integrar la gestión de participantes y después avanzar con creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.

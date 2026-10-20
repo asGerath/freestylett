@@ -257,6 +257,13 @@ export default async function AdminBattlesPage({
                           )}
 
                         <Link
+                          href={`/admin/batallas/${battle.id}/participantes`}
+                          className="text-sm font-bold text-[var(--color-primary)]"
+                        >
+                          Participantes
+                        </Link>
+
+                        <Link
                           href={`/admin/batallas/${battle.id}/editar`}
                           className="text-sm font-bold text-[var(--color-primary)]"
                         >

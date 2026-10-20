@@ -144,3 +144,35 @@ export type AdminBattleFormOptions = {
   events: AdminBattleEventOption[];
   seasons: AdminBattleSeasonOption[];
 };
+
+
+export type AdminBattleParticipantItem = {
+  id: string;
+  freestylerId: string;
+  stageName: string;
+  slug: string;
+  sideNumber: number;
+  slotNumber: number;
+  score: number | null;
+};
+
+export type AdminBattleParticipantOption = {
+  freestylerId: string;
+  stageName: string;
+  slug: string;
+  country: string;
+};
+
+export type AdminBattleParticipantsData = {
+  battle: {
+    id: string;
+    title: string;
+    eventId: string;
+    eventTitle: string;
+    seasonId: string | null;
+    format: BattleFormat;
+    status: BattleStatus;
+  };
+  participants: AdminBattleParticipantItem[];
+  availableParticipants: AdminBattleParticipantOption[];
+};
