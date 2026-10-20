@@ -8,6 +8,7 @@ const footerLinks = [
   { label: "Ligas", href: "/ligas" },
   { label: "Rankings", href: "/rankings" },
   { label: "Batallas", href: "/batallas" },
+  { label: "Creadores", href: "/creadores" },
   { label: "Blog", href: "/blog" },
 ];
 
