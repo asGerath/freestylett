@@ -1,6 +1,6 @@
 # FreeStyle Total — Database Schema
 
-Status: approved and implemented through the complete administrative rankings workflow
+Status: approved and implemented through the Battles module
 Last updated: October 2026
 
 ## 1. Purpose
@@ -10,10 +10,8 @@ version of FreeStyle Total. It is the source of truth for the initial SQL
 migrations, generated database types, repositories, Row Level Security (RLS),
 Storage paths, and editorial workflows.
 
-The schema supports the current informational MVP and the implemented public and
-administrative Rankings module, including entry creation, editing, and removal. Battles, favorites, and community features remain outside the
-current schema and will be introduced only after their product rules are
-defined.
+The schema supports the informational MVP, the complete Rankings workflow, and
+public/editorial Battles. Favorites and community features remain deferred.
 
 ## 2. Approved product decisions
 
@@ -807,15 +805,15 @@ The schema will be implemented incrementally:
 010_event_relationships.sql
 011_posts.sql
 012_storage.sql
-013_rls.sql
-014_seed_catalogs.sql
-015_rls_tests.sql
+013_rankings.sql
+014_battles.sql
+015_battles_optional_source.sql
 ```
 
-Implementation is complete and locally validated through `012_storage.sql`.
-The current pgTAP suite contains ten files and 226 passing tests covering
-schema integrity and RLS allow/deny cases through editorial categories, posts,
-the public media bucket, editorial media paths, and user-owned profile media.
+Implementation is versioned through `015_battles_optional_source.sql`.
+The suite includes 226 foundation tests, 30 Rankings tests, and 33 Battles
+tests. Battles coverage verifies schema integrity and RLS access for anonymous,
+authenticated, editor, and administrator roles.
 
 The canonical `supabase/seed.sql` contains only the six country catalog rows
 required by local resets and pgTAP tests. Optional fictional application data
@@ -881,13 +879,29 @@ The event mock data and mock repository have been removed. Optional fictional
 records now live exclusively in `supabase/seeds/development.sql`, while
 `event.service.ts` uses the Supabase repository for all public event reads.
 
-## 14. Deferred modules
+## 14. Battles
+
+`battles` stores each confrontation independently. An event can contain any
+number of battles; only the pair `(event_id, battle_order)` must be unique so
+the event has a deterministic running order. Public slugs are globally unique.
+
+`battle_participants` relates freestylers to a side and slot, supports team
+formats, scores, and winner flags without embedding participant data in JSON.
+The database validates that a selected season belongs to the event. Editorial
+content uses draft, published, and archived states, and normal panel operations
+archive instead of deleting.
+
+`source_url` is optional because editors may create a draft before an official
+source is available. When supplied, source and video URLs must use HTTP or
+HTTPS. Public reads expose only published battles and participants belonging to
+published battles; editors can manage all editorial records and only admins may
+hard-delete.
+
+## 15. Deferred modules
 
 The following tables are intentionally deferred until their product rules are
 approved:
 
-- `rankings` and `ranking_entries`;
-- `battles` and `battle_participants`;
 - creators and creator content;
 - favorites and followed entities;
 - comments, predictions, votes, and notifications;
@@ -898,7 +912,7 @@ approved:
 Deferring these modules prevents speculative columns and migrations while the
 core informational product is being validated.
 
-## 15. Implementation acceptance criteria
+## 16. Implementation acceptance criteria
 
 The database foundation is complete when:
 
