@@ -57,15 +57,6 @@ create table public.creators (
   constraint creators_image_relative_path
     check (image_path is null or image_path !~ '^(https?:)?//'),
 
-  constraint creators_specialties_not_blank
-    check (
-      not exists (
-        select 1
-        from unnest(specialties) as specialty
-        where length(trim(specialty)) = 0
-      )
-    ),
-
   constraint creators_website_url_valid
     check (website_url is null or website_url ~ '^https?://'),
 
