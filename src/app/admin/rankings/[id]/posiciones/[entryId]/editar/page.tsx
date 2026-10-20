@@ -54,6 +54,7 @@ export default async function EditRankingEntryPage({
     points: entry.points,
     scoreTotal: entry.scoreTotal,
     penaltyPoints: entry.penaltyPoints,
+    mvpCount: entry.mvpCount,
   };
 
   return (
