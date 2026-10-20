@@ -676,3 +676,64 @@ set
   decision_type = 'direct',
   winner_side = 1
 where id = 'c1000000-0000-0000-0000-000000000001';
+
+
+-- =========================================================
+-- Creador ficticio para desarrollo
+-- =========================================================
+
+insert into public.creators (
+  id,
+  country_id,
+  name,
+  slug,
+  creator_type,
+  handle,
+  description,
+  city,
+  specialties,
+  is_featured,
+  website_url,
+  youtube_url,
+  source_url,
+  editorial_status,
+  published_at
+)
+values (
+  'd3000000-0000-0000-0000-000000000001',
+  (
+    select id
+    from public.countries
+    where slug = 'mexico'
+    limit 1
+  ),
+  'Freestyle Media Demo',
+  'freestyle-media-demo',
+  'media',
+  '@freestylemediademo',
+  'Perfil completamente ficticio para validar el módulo de creadores en desarrollo local.',
+  'Ciudad de México',
+  array['entrevistas', 'análisis', 'noticias'],
+  true,
+  'https://example.com/freestyle-media-demo',
+  'https://www.youtube.com/@freestyle-media-demo',
+  'https://example.com/freestyle-media-demo/source',
+  'published',
+  now()
+)
+on conflict (id) do update
+set
+  country_id = excluded.country_id,
+  name = excluded.name,
+  slug = excluded.slug,
+  creator_type = excluded.creator_type,
+  handle = excluded.handle,
+  description = excluded.description,
+  city = excluded.city,
+  specialties = excluded.specialties,
+  is_featured = excluded.is_featured,
+  website_url = excluded.website_url,
+  youtube_url = excluded.youtube_url,
+  source_url = excluded.source_url,
+  editorial_status = excluded.editorial_status,
+  published_at = excluded.published_at;

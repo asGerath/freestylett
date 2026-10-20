@@ -1425,11 +1425,24 @@ artículos.
 - Módulo integrado mediante el PR #32 y merge commit
   `fc8e1f22422151f55d6c8861d9df471689bc9085`.
 
+### Creadores completados
+
+- Migración `017_creators.sql` con personas, canales y medios.
+- RLS editorial y 21 pruebas pgTAP específicas.
+- Repositorio y servicio propios del dominio.
+- Listado público con filtros por tipo y país.
+- Detalle público con enlaces oficiales, metadata y sitemap.
+- Estados loading, error, empty y not-found.
+- CRUD administrativo con creación, edición, publicación y archivado lógico.
+- Seed ficticio reproducible para desarrollo.
+- Contrato técnico en `docs/CREATORS_SCHEMA.md`.
+
 ### Pendiente / siguiente etapa
 
-1. Continuar con el módulo de creadores.
-2. Incorporar funciones de cuenta como favoritos y seguimientos.
-3. Preparar deployment productivo en Vercel.
+1. Investigar, verificar y cargar información real.
+2. Ajustar UX con base en el volumen y calidad de los datos reales.
+3. Incorporar funciones de cuenta como favoritos y seguimientos.
+4. Preparar deployment productivo en Vercel.
 
 ---
 
@@ -1585,7 +1598,7 @@ Cuando existan dudas sobre qué construir primero, usar esta jerarquía:
 6. Blog
 7. Rankings
 8. Batallas
-9. Creadores
+9. Carga de información real y ajustes UX
 10. Cuenta de usuario
 11. Comunidad
 12. Funciones experimentales
@@ -1615,7 +1628,7 @@ cerrar gestión editorial de participantes de batalla
       ↓
 integrar el feature en develop
       ↓
-continuar con creadores
+iniciar la carga de información real
 ```
 
 Los CRUD administrativos de eventos, ligas, freestylers, artículos, rankings y
@@ -1634,4 +1647,4 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 
 Si solo se dispone de unos segundos de contexto:
 
-> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. Rankings también consume Supabase mediante repositorio y servicio, ofrece una tabla pública responsive en `/rankings`, se integra en el detalle de las ligas y cuenta con metadata, estados de interfaz, navegación y sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite gestionar eventos, ligas, freestylers, artículos y rankings con Server Actions, validación de permisos y persistencia en Supabase. Rankings incluye snapshots, vigencia, participantes de temporada y gestión completa de posiciones. Batallas también dispone de listado y detalle público, CRUD administrativo y gestión editorial de participantes con límites por formato protegidos en aplicación y base de datos. La prioridad actual es integrar la gestión de participantes y después avanzar con creadores. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
+> FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. Rankings también consume Supabase mediante repositorio y servicio, ofrece una tabla pública responsive en `/rankings`, se integra en el detalle de las ligas y cuenta con metadata, estados de interfaz, navegación y sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite gestionar eventos, ligas, freestylers, artículos y rankings con Server Actions, validación de permisos y persistencia en Supabase. Rankings incluye snapshots, vigencia, participantes de temporada y gestión completa de posiciones. Batallas también dispone de listado y detalle público, CRUD administrativo y gestión editorial de participantes con límites por formato protegidos en aplicación y base de datos. La prioridad actual es integrar la gestión de participantes y y el módulo de Creadores está listo para validación. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.

@@ -12,6 +12,7 @@ const publicNavItems = [
   { label: "Ligas", href: "/ligas" },
   { label: "Rankings", href: "/rankings" },
   { label: "Batallas", href: "/batallas" },
+  { label: "Creadores", href: "/creadores" },
   { label: "Blog", href: "/blog" },
 ];
 
@@ -80,7 +81,7 @@ export function Navbar({
             />
           </Link>
 
-          <div className="hidden items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/70 p-1.5 lg:flex">
+          <div className="hidden items-center gap-2 rounded-full border border-[var(--color-border)] bg-white/70 p-1.5 xl:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -103,7 +104,7 @@ export function Navbar({
             aria-expanded={isOpen}
             aria-controls="mobile-navigation"
             onClick={() => setIsOpen((current) => !current)}
-            className="inline-flex size-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-white/70 text-[var(--color-text)] transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] lg:hidden"
+            className="inline-flex size-11 items-center justify-center rounded-full border border-[var(--color-border)] bg-white/70 text-[var(--color-text)] transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)] xl:hidden"
           >
             <span aria-hidden="true" className="text-2xl leading-none">
               {isOpen ? "×" : "☰"}
@@ -114,7 +115,7 @@ export function Navbar({
         {isOpen && (
           <div
             id="mobile-navigation"
-            className="border-t border-[var(--color-border)] py-3 lg:hidden"
+            className="border-t border-[var(--color-border)] py-3 xl:hidden"
           >
             <div className="flex flex-col gap-1">
               {navItems.map((item) => (

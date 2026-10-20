@@ -1,6 +1,6 @@
 # FreeStyle Total — Database Schema
 
-Status: approved and implemented through the Battles module
+Status: approved and implemented through the Creators module
 Last updated: October 2026
 
 ## 1. Purpose
@@ -932,3 +932,20 @@ The database foundation is complete when:
 - event queries support country, league, status, and date filters;
 - published entity queries support metadata and sitemap generation;
 - the Supabase event repository powers list and detail pages without changes to UI components.
+
+
+## Creators module extension (migration 017)
+
+Migration `017_creators.sql` adds `public.creators` for people, channels, and
+media outlets that create editorial content around freestyle. This domain is
+separate from `freestylers`, which models competitors.
+
+The table stores public identity, location, profile image, specialties, official
+links, optional verification source, featured state, editorial lifecycle, and
+audit data. Public reads expose only published rows; editors manage all
+editorial states; hard deletion remains exclusive to administrators.
+
+Creator images use `creators/{creator_id}/...` inside `public-media`.
+The shared protected-media validator recognizes this directory only when the
+UUID belongs to an existing creator. See `docs/CREATORS_SCHEMA.md` for the
+complete contract, routes, workflow, and validation checklist.

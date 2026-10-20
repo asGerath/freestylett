@@ -34,6 +34,95 @@ export type Database = {
   }
   public: {
     Tables: {
+      creators: {
+        Row: {
+          city: string | null
+          country_id: string | null
+          created_at: string
+          created_by: string | null
+          creator_type: string
+          description: string | null
+          editorial_status: Database["public"]["Enums"]["editorial_status"]
+          handle: string | null
+          id: string
+          image_path: string | null
+          instagram_url: string | null
+          is_featured: boolean
+          name: string
+          published_at: string | null
+          slug: string
+          source_url: string | null
+          specialties: string[]
+          tiktok_url: string | null
+          twitch_url: string | null
+          updated_at: string
+          updated_by: string | null
+          website_url: string | null
+          x_url: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          city?: string | null
+          country_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          creator_type?: string
+          description?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          handle?: string | null
+          id?: string
+          image_path?: string | null
+          instagram_url?: string | null
+          is_featured?: boolean
+          name: string
+          published_at?: string | null
+          slug: string
+          source_url?: string | null
+          specialties?: string[]
+          tiktok_url?: string | null
+          twitch_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          website_url?: string | null
+          x_url?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          city?: string | null
+          country_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          creator_type?: string
+          description?: string | null
+          editorial_status?: Database["public"]["Enums"]["editorial_status"]
+          handle?: string | null
+          id?: string
+          image_path?: string | null
+          instagram_url?: string | null
+          is_featured?: boolean
+          name?: string
+          published_at?: string | null
+          slug?: string
+          source_url?: string | null
+          specialties?: string[]
+          tiktok_url?: string | null
+          twitch_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          website_url?: string | null
+          x_url?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creators_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       battle_participants: {
         Row: {
           battle_id: string
