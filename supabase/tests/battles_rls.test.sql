@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(38);
+select plan(39);
 
 -- =========================================================
 -- Schema
@@ -163,26 +163,30 @@ insert into public.league_season_participants (
   id,
   season_id,
   freestyler_id,
-  seed
+  seed,
+  is_active
 )
 values
   (
     'b5000000-0000-0000-0000-000000000001',
     'b3000000-0000-0000-0000-000000000001',
     'b4000000-0000-0000-0000-000000000001',
-    1
+    1,
+    true
   ),
   (
     'b5000000-0000-0000-0000-000000000002',
     'b3000000-0000-0000-0000-000000000001',
     'b4000000-0000-0000-0000-000000000002',
-    2
+    2,
+    true
   ),
   (
     'b5000000-0000-0000-0000-000000000003',
-    'b3000000-0000-0000-0000-000000000002',
+    'b3000000-0000-0000-0000-000000000001',
     'b4000000-0000-0000-0000-000000000003',
-    1
+    3,
+    false
   );
 
 insert into public.events (
@@ -594,6 +598,47 @@ values
     'https://example.com/battles/three-versus-three-limit'
   );
 
+insert into public.battles (
+  id,
+  event_id,
+  season_id,
+  title,
+  slug,
+  battle_order,
+  stage,
+  battle_format,
+  source_url
+)
+values (
+  'b7000000-0000-0000-0000-000000000013',
+  'b6000000-0000-0000-0000-000000000001',
+  'b3000000-0000-0000-0000-000000000001',
+  'Inactive Historical Play-in',
+  'inactive-historical-play-in',
+  13,
+  'play_in',
+  'one_vs_one',
+  'https://example.com/battles/inactive-historical-play-in'
+);
+
+select lives_ok(
+  $
+    insert into public.battle_participants (
+      battle_id,
+      freestyler_id,
+      side_number,
+      slot_number
+    )
+    values (
+      'b7000000-0000-0000-0000-000000000013',
+      'b4000000-0000-0000-0000-000000000003',
+      1,
+      1
+    )
+  $,
+  'inactive season participant can be preserved in a play-in battle'
+);
+
 -- =========================================================
 -- Participant constraints
 -- =========================================================
@@ -738,7 +783,7 @@ select throws_ok(
     )
   $$,
   '23514',
-  'Battle participant must be active in the selected league season',
+  'Battle participant must be active in the selected league season unless the battle is a play-in',
   'participant must belong to the battle season'
 );
 
