@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ArchiveBattleButton } from "@/features/battles/components/ArchiveBattleButton";
 import { getAdminBattles } from "@/features/battles/services/admin-battle.service";
 import type {
   BattleEditorialStatus,
@@ -10,6 +11,8 @@ import type {
 type AdminBattlesPageProps = {
   searchParams: Promise<{
     created?: string;
+    updated?: string;
+    archived?: string;
     error?: string;
   }>;
 };
@@ -106,6 +109,24 @@ export default async function AdminBattlesPage({
           className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-emerald-800"
         >
           La batalla fue creada correctamente.
+        </div>
+      )}
+
+      {params.updated && (
+        <div
+          role="status"
+          className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-emerald-800"
+        >
+          La batalla fue actualizada correctamente.
+        </div>
+      )}
+
+      {params.archived && (
+        <div
+          role="status"
+          className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-emerald-800"
+        >
+          La batalla fue archivada correctamente.
         </div>
       )}
 
@@ -234,6 +255,20 @@ export default async function AdminBattlesPage({
                               Ver
                             </Link>
                           )}
+
+                        <Link
+                          href={`/admin/batallas/${battle.id}/editar`}
+                          className="text-sm font-bold text-[var(--color-primary)]"
+                        >
+                          Editar
+                        </Link>
+
+                        {battle.editorialStatus !== "archived" && (
+                          <ArchiveBattleButton
+                            battleId={battle.id}
+                            battleTitle={battle.title}
+                          />
+                        )}
                       </div>
                     </td>
                   </tr>

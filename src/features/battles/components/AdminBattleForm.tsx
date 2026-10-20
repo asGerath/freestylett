@@ -34,6 +34,13 @@ export function AdminBattleForm({
     initialValues?.seasonId ?? "",
   );
 
+  const [battleOrder, setBattleOrder] = useState(
+    initialValues?.battleOrder ??
+      events.find((event) => event.id === eventId)
+        ?.nextBattleOrder ??
+      1,
+  );
+
   const availableSeasons = useMemo(
     () =>
       seasons.filter((season) =>
@@ -57,6 +64,13 @@ export function AdminBattleForm({
 
     if (!seasonStillAvailable) {
       setSeasonId("");
+    }
+
+    if (!isEditing) {
+      setBattleOrder(
+        events.find((event) => event.id === nextEventId)
+          ?.nextBattleOrder ?? 1,
+      );
     }
   }
 
@@ -158,7 +172,10 @@ export function AdminBattleForm({
             required
             min={1}
             step={1}
-            defaultValue={initialValues?.battleOrder ?? 1}
+            value={battleOrder}
+            onChange={(event) =>
+              setBattleOrder(Number(event.target.value))
+            }
             className={inputStyles}
           />
         </label>
@@ -287,13 +304,12 @@ export function AdminBattleForm({
 
         <label className="block md:col-span-2">
           <span className="font-bold">
-            URL de la fuente *
+            URL de la fuente
           </span>
 
           <input
             type="url"
             name="sourceUrl"
-            required
             defaultValue={initialValues?.sourceUrl}
             className={inputStyles}
             placeholder="https://..."

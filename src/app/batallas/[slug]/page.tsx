@@ -365,14 +365,16 @@ export default async function BattleDetailPage({
                 </a>
               )}
 
-              <a
-                href={battle.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="block rounded-full border border-[var(--color-border)] px-5 py-3 text-center font-bold"
-              >
-                Fuente oficial
-              </a>
+              {battle.sourceUrl && (
+                <a
+                  href={battle.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block rounded-full border border-[var(--color-border)] px-5 py-3 text-center font-bold"
+                >
+                  Fuente oficial
+                </a>
+              )}
             </div>
           </aside>
         </div>

@@ -68,7 +68,7 @@ type BattleQueryRow = {
   winner_side: number | null;
   decision_type: BattleItem["decisionType"];
   video_url: string | null;
-  source_url: string;
+  source_url: string | null;
   event: {
     id: string;
     title: string;

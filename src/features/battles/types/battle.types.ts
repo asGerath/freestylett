@@ -58,7 +58,7 @@ export type BattleItem = {
   winnerSide: number | null;
   decisionType: BattleDecisionType | null;
   videoUrl: string | null;
-  sourceUrl: string;
+  sourceUrl: string | null;
   event: {
     id: string;
     title: string;
@@ -130,6 +130,7 @@ export type AdminBattleEventOption = {
   id: string;
   title: string;
   slug: string;
+  nextBattleOrder: number;
 };
 
 export type AdminBattleSeasonOption = {

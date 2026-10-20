@@ -227,7 +227,7 @@ function getBattleFormValues(
     "decisionType",
   );
 
-  const sourceUrl = getRequiredString(
+  const sourceUrl = getOptionalString(
     formData,
     "sourceUrl",
   );
@@ -245,8 +245,7 @@ function getBattleFormValues(
     !stage ||
     !format ||
     !status ||
-    !editorialStatus ||
-    !sourceUrl
+    !editorialStatus
   ) {
     redirectWithError(
       errorPath,
@@ -307,7 +306,7 @@ function getBattleFormValues(
     );
   }
 
-  if (!isHttpUrl(sourceUrl)) {
+  if (sourceUrl && !isHttpUrl(sourceUrl)) {
     redirectWithError(
       errorPath,
       "La URL de la fuente debe utilizar http o https.",
@@ -377,6 +376,23 @@ function getBattleFormValues(
     sourceUrl,
     videoUrl,
   };
+}
+
+function getUniqueBattleError(error: {
+  message: string;
+  details?: string | null;
+}) {
+  const description = `${error.message} ${error.details ?? ""}`;
+
+  if (description.includes("battles_slug_unique")) {
+    return "Ya existe otra batalla con ese slug.";
+  }
+
+  if (description.includes("battles_event_order_unique")) {
+    return "Ese orden ya está ocupado dentro del evento. Usa el siguiente número disponible.";
+  }
+
+  return "Ya existe una batalla con alguno de esos valores únicos.";
 }
 
 export async function createBattle(
@@ -468,7 +484,7 @@ export async function createBattle(
     if (error.code === "23505") {
       redirectWithError(
         errorPath,
-        "El slug ya está registrado o el orden ya está ocupado dentro del evento.",
+        getUniqueBattleError(error),
       );
     }
 
@@ -485,4 +501,160 @@ export async function createBattle(
   revalidatePath("/admin/batallas");
 
   redirect("/admin/batallas?created=1");
+}
+
+export async function updateBattle(
+  battleId: string,
+  formData: FormData,
+) {
+  const user = await requireEditorialUser();
+  const errorPath = `/admin/batallas/${battleId}/editar`;
+  const values = getBattleFormValues(formData, errorPath);
+  const supabase = await createClient();
+
+  const { data: currentBattle, error: currentBattleError } =
+    await supabase
+      .from("battles")
+      .select("slug, published_at")
+      .eq("id", battleId)
+      .maybeSingle();
+
+  if (currentBattleError) {
+    redirectWithError(
+      errorPath,
+      `No fue posible consultar la batalla: ${currentBattleError.message}`,
+    );
+  }
+
+  if (!currentBattle) {
+    redirectWithError(errorPath, "La batalla ya no existe.");
+  }
+
+  const { data: event, error: eventError } = await supabase
+    .from("events")
+    .select("id")
+    .eq("id", values.eventId)
+    .neq("editorial_status", "archived")
+    .maybeSingle();
+
+  if (eventError) {
+    redirectWithError(
+      errorPath,
+      `No fue posible consultar el evento: ${eventError.message}`,
+    );
+  }
+
+  if (!event) {
+    redirectWithError(
+      errorPath,
+      "El evento seleccionado no existe o está archivado.",
+    );
+  }
+
+  if (values.seasonId) {
+    const { data: eventSeason, error: eventSeasonError } =
+      await supabase
+        .from("event_leagues")
+        .select("event_id")
+        .eq("event_id", values.eventId)
+        .eq("season_id", values.seasonId)
+        .maybeSingle();
+
+    if (eventSeasonError) {
+      redirectWithError(
+        errorPath,
+        `No fue posible validar la temporada: ${eventSeasonError.message}`,
+      );
+    }
+
+    if (!eventSeason) {
+      redirectWithError(
+        errorPath,
+        "La temporada seleccionada no pertenece al evento.",
+      );
+    }
+  }
+
+  const { error } = await supabase
+    .from("battles")
+    .update({
+      event_id: values.eventId,
+      season_id: values.seasonId,
+      title: values.title,
+      slug: values.slug,
+      battle_order: values.battleOrder,
+      stage: values.stage,
+      battle_format: values.format,
+      battle_status: values.status,
+      winner_side: values.winnerSide,
+      decision_type: values.decisionType,
+      video_url: values.videoUrl,
+      source_url: values.sourceUrl,
+      editorial_status: values.editorialStatus,
+      published_at:
+        values.editorialStatus === "published"
+          ? currentBattle.published_at ?? new Date().toISOString()
+          : currentBattle.published_at,
+      updated_by: user.id,
+    })
+    .eq("id", battleId);
+
+  if (error) {
+    if (error.code === "23505") {
+      redirectWithError(errorPath, getUniqueBattleError(error));
+    }
+
+    redirectWithError(
+      errorPath,
+      `No fue posible actualizar la batalla: ${error.message}`,
+    );
+  }
+
+  revalidatePath("/");
+  revalidatePath("/batallas");
+  revalidatePath(`/batallas/${currentBattle.slug}`);
+  revalidatePath(`/batallas/${values.slug}`);
+  revalidatePath("/admin");
+  revalidatePath("/admin/batallas");
+  revalidatePath(errorPath);
+
+  redirect("/admin/batallas?updated=1");
+}
+
+export async function archiveBattle(battleId: string) {
+  const user = await requireEditorialUser();
+  const errorPath = "/admin/batallas";
+  const supabase = await createClient();
+
+  const { data: battle, error } = await supabase
+    .from("battles")
+    .update({
+      editorial_status: "archived",
+      updated_by: user.id,
+    })
+    .eq("id", battleId)
+    .select("slug")
+    .maybeSingle();
+
+  if (error) {
+    redirectWithError(
+      errorPath,
+      `No fue posible archivar la batalla: ${error.message}`,
+    );
+  }
+
+  if (!battle) {
+    redirectWithError(
+      errorPath,
+      "La batalla no existe o no tienes permisos para modificarla.",
+    );
+  }
+
+  revalidatePath("/");
+  revalidatePath("/batallas");
+  revalidatePath(`/batallas/${battle.slug}`);
+  revalidatePath("/admin");
+  revalidatePath("/admin/batallas");
+
+  redirect("/admin/batallas?archived=1");
 }

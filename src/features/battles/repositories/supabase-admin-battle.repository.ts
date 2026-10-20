@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 
 import type {
   AdminBattleFormOptions,
+  AdminBattleFormValues,
   AdminBattleSummary,
   BattleEditorialStatus,
   BattleFormat,
@@ -78,6 +79,9 @@ type AdminBattleEventQueryRow = {
   event_leagues: Array<{
     season_id: string | null;
   }>;
+  battles: Array<{
+    battle_order: number;
+  }>;
 };
 
 type AdminBattleSeasonQueryRow = {
@@ -147,6 +151,9 @@ export async function getAdminBattleFormOptions(): Promise<
         slug,
         event_leagues (
           season_id
+        ),
+        battles (
+          battle_order
         )
       `)
       .neq("editorial_status", "archived")
@@ -187,6 +194,11 @@ export async function getAdminBattleFormOptions(): Promise<
     id: event.id,
     title: event.title,
     slug: event.slug,
+    nextBattleOrder:
+      Math.max(
+        0,
+        ...event.battles.map((battle) => battle.battle_order),
+      ) + 1,
   }));
 
   const seasons = seasonRows.map((season) => ({
@@ -206,5 +218,59 @@ export async function getAdminBattleFormOptions(): Promise<
   return {
     events,
     seasons,
+  };
+}
+
+export async function getAdminBattleById(
+  id: string,
+): Promise<AdminBattleFormValues | null> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("battles")
+    .select(`
+      id,
+      event_id,
+      season_id,
+      title,
+      slug,
+      battle_order,
+      stage,
+      battle_format,
+      battle_status,
+      winner_side,
+      decision_type,
+      video_url,
+      source_url,
+      editorial_status
+    `)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(
+      `No fue posible consultar la batalla administrativa: ${error.message}`,
+    );
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    eventId: data.event_id,
+    seasonId: data.season_id,
+    title: data.title,
+    slug: data.slug,
+    battleOrder: data.battle_order,
+    stage: data.stage,
+    format: data.battle_format,
+    status: data.battle_status,
+    winnerSide: data.winner_side,
+    decisionType: data.decision_type,
+    videoUrl: data.video_url ?? "",
+    sourceUrl: data.source_url ?? "",
+    editorialStatus: data.editorial_status,
   };
 }

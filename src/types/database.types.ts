@@ -104,7 +104,7 @@ export type Database = {
           published_at: string | null
           season_id: string | null
           slug: string
-          source_url: string
+          source_url: string | null
           stage: Database["public"]["Enums"]["battle_stage"]
           title: string
           updated_at: string
@@ -127,7 +127,7 @@ export type Database = {
           published_at?: string | null
           season_id?: string | null
           slug: string
-          source_url: string
+          source_url?: string | null
           stage: Database["public"]["Enums"]["battle_stage"]
           title: string
           updated_at?: string
@@ -150,7 +150,7 @@ export type Database = {
           published_at?: string | null
           season_id?: string | null
           slug?: string
-          source_url?: string
+          source_url?: string | null
           stage?: Database["public"]["Enums"]["battle_stage"]
           title?: string
           updated_at?: string

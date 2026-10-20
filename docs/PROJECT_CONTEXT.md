@@ -1393,9 +1393,28 @@ artículos.
 - Edición y eliminación de posiciones integradas mediante el PR #31 y merge
   commit `3d7380448d495757169867c840f5a76591b59986`.
 
+### Batallas completadas en la rama `feature/battles-schema`
+
+- Migraciones `014_battles.sql` y `015_battles_optional_source.sql`.
+- Modelo relacional para batallas y participantes, con orden independiente por
+  evento y soporte para formatos individuales, parejas, tríos y crews.
+- RLS para lectura pública de contenido publicado y gestión editorial.
+- 33 pruebas pgTAP específicas de Batallas.
+- Seed ficticio reproducible para desarrollo local.
+- Repositorio y servicio propios para listado y detalle público.
+- Rutas `/batallas` y `/batallas/[slug]`, metadata, estados de interfaz,
+  navegación y sitemap.
+- Panel `/admin/batallas` con creación, edición y archivado lógico.
+- El formulario propone el siguiente orden disponible para cada evento; un
+  evento puede contener múltiples batallas.
+- Validaciones separadas para slug duplicado y orden ocupado.
+- La fuente oficial es opcional y sólo se muestra públicamente cuando existe.
+- Revalidación de rutas públicas y administrativas tras cada cambio.
+- Lint, build de producción y revisión de whitespace aprobados antes del PR.
+
 ### Pendiente / siguiente etapa
 
-1. Completar batallas y creadores.
+1. Integrar gestión editorial de participantes de batalla y continuar con creadores.
 2. Incorporar funciones de cuenta como favoritos y seguimientos.
 3. Preparar deployment productivo en Vercel.
 
