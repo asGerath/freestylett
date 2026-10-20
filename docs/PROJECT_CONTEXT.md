@@ -1393,7 +1393,7 @@ artículos.
 - Edición y eliminación de posiciones integradas mediante el PR #31 y merge
   commit `3d7380448d495757169867c840f5a76591b59986`.
 
-### Batallas completadas en la rama `feature/battles-schema`
+### Batallas completadas
 
 - Migraciones `014_battles.sql` y `015_battles_optional_source.sql`.
 - Modelo relacional para batallas y participantes, con orden independiente por
@@ -1411,6 +1411,8 @@ artículos.
 - La fuente oficial es opcional y sólo se muestra públicamente cuando existe.
 - Revalidación de rutas públicas y administrativas tras cada cambio.
 - Lint, build de producción y revisión de whitespace aprobados antes del PR.
+- Módulo integrado mediante el PR #32 y merge commit
+  `fc8e1f22422151f55d6c8861d9df471689bc9085`.
 
 ### Pendiente / siguiente etapa
 
