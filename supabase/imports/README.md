@@ -9,14 +9,25 @@ Requisitos:
 
 1. Supabase local iniciado.
 2. Migraciones 001-018 aplicadas.
-3. Rama `data/fms-colombia-2026-27` actualizada.
+3. Archivo de importación actualizado.
 
-En PowerShell:
+### PowerShell y Windows
+
+Usa siempre el script del repositorio. Copia el archivo directamente al
+contenedor, ejecuta PostgreSQL con `ON_ERROR_STOP` y elimina el temporal sin
+pasar el contenido por una tubería de texto:
 
 ```powershell
-Get-Content -Raw "supabase/imports/001_fms_colombia_2026_27.sql" |
-  docker exec -i supabase_db_freestylett psql -U postgres -d postgres -v ON_ERROR_STOP=1
+./scripts/import-fms-colombia.ps1
 ```
+
+No uses `Get-Content | docker exec`: dependiendo de la versión y configuración
+de PowerShell, la tubería puede convertir caracteres como `É`, `ó` o los
+emojis de banderas antes de que PostgreSQL los reciba.
+
+Además, la validación final del SQL compara textos críticos mediante escapes
+Unicode ASCII. Si detecta corrupción, genera un error antes del `COMMIT` y
+PostgreSQL revierte la transacción completa.
 
 El resultado correcto termina con:
 
@@ -25,7 +36,9 @@ COMMIT
 ```
 
 El archivo puede ejecutarse de nuevo. Utiliza IDs estables y conflictos
-controlados para actualizar los mismos registros sin duplicarlos.
+controlados para actualizar los mismos registros sin duplicarlos. Volver a
+ejecutarlo con el procedimiento anterior también repara textos que hayan sido
+importados previamente con una codificación incorrecta.
 
 ## Verificación rápida
 
