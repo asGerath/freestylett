@@ -13,16 +13,21 @@ Requisitos:
 
 ### PowerShell y Windows
 
-Copia primero el archivo directamente al contenedor para preservar exactamente
-su codificación UTF-8. No uses `Get-Content | docker exec`: dependiendo de la
-versión y configuración de PowerShell, la tubería puede convertir caracteres
-como `É`, `ó` o los emojis de banderas antes de que PostgreSQL los reciba.
+Usa siempre el script del repositorio. Copia el archivo directamente al
+contenedor, ejecuta PostgreSQL con `ON_ERROR_STOP` y elimina el temporal sin
+pasar el contenido por una tubería de texto:
 
 ```powershell
-docker cp "supabase/imports/001_fms_colombia_2026_27.sql" "supabase_db_freestylett:/tmp/001_fms_colombia_2026_27.sql"
-docker exec -i supabase_db_freestylett psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/001_fms_colombia_2026_27.sql
-docker exec supabase_db_freestylett rm /tmp/001_fms_colombia_2026_27.sql
+./scripts/import-fms-colombia.ps1
 ```
+
+No uses `Get-Content | docker exec`: dependiendo de la versión y configuración
+de PowerShell, la tubería puede convertir caracteres como `É`, `ó` o los
+emojis de banderas antes de que PostgreSQL los reciba.
+
+Además, la validación final del SQL compara textos críticos mediante escapes
+Unicode ASCII. Si detecta corrupción, genera un error antes del `COMMIT` y
+PostgreSQL revierte la transacción completa.
 
 El resultado correcto termina con:
 
