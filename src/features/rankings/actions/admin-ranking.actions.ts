@@ -142,6 +142,11 @@ function getRankingEntryFormValues(
     "penaltyPoints",
   );
 
+  const mvpCount = getNonnegativeInteger(
+    formData,
+    "mvpCount",
+  );
+
   if (
     !participantId ||
     position === null ||
@@ -153,7 +158,8 @@ function getRankingEntryFormValues(
     battleLosses === null ||
     points === null ||
     scoreTotal === null ||
-    penaltyPoints === null
+    penaltyPoints === null ||
+    mvpCount === null
   ) {
     redirectWithError(
       errorPath,
@@ -184,6 +190,7 @@ function getRankingEntryFormValues(
     points,
     scoreTotal,
     penaltyPoints,
+    mvpCount,
   };
 }
 
@@ -715,6 +722,11 @@ export async function createRankingEntry(
     "penaltyPoints",
   );
 
+  const mvpCount = getNonnegativeInteger(
+    formData,
+    "mvpCount",
+  );
+
   if (
     !participantId ||
     position === null ||
@@ -726,7 +738,8 @@ export async function createRankingEntry(
     battleLosses === null ||
     points === null ||
     scoreTotal === null ||
-    penaltyPoints === null
+    penaltyPoints === null ||
+    mvpCount === null
   ) {
     redirectWithError(
       errorPath,
@@ -815,6 +828,7 @@ export async function createRankingEntry(
       points,
       score_total: scoreTotal,
       penalty_points: penaltyPoints,
+      mvp_count: mvpCount,
       created_by: user.id,
       updated_by: user.id,
     });
@@ -958,6 +972,7 @@ export async function updateRankingEntry(
       points: values.points,
       score_total: values.scoreTotal,
       penalty_points: values.penaltyPoints,
+      mvp_count: values.mvpCount,
       updated_by: user.id,
     })
     .eq("id", entryId)

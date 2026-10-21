@@ -68,6 +68,7 @@ type AdminRankingEntriesQueryRow = {
     points: number;
     score_total: number;
     penalty_points: number;
+    mvp_count: number;
     participant: {
       freestyler: {
         stage_name: string;
@@ -299,6 +300,7 @@ export async function getAdminRankingEntriesData(
         points,
         score_total,
         penalty_points,
+        mvp_count,
         participant:league_season_participants!ranking_entries_participant_id_fkey (
           freestyler:freestylers!league_season_participants_freestyler_id_fkey (
             stage_name,
@@ -388,6 +390,7 @@ export async function getAdminRankingEntriesData(
       points: entry.points,
       scoreTotal: entry.score_total,
       penaltyPoints: entry.penalty_points,
+      mvpCount: entry.mvp_count,
     }))
     .sort((first, second) => first.position - second.position);
 

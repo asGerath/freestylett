@@ -104,6 +104,10 @@ export function RankingTable({ ranking }: RankingTableProps) {
                 <th scope="col" className="px-3 py-4 text-center">
                   PTB
                 </th>
+
+                <th scope="col" className="px-3 py-4 text-center">
+                  MVP
+                </th>
               </tr>
             </thead>
 
@@ -156,6 +160,10 @@ export function RankingTable({ ranking }: RankingTableProps) {
 
                   <td className="px-3 py-4 text-center font-bold">
                     {formatMetric(entry.scoreTotal)}
+                  </td>
+
+                  <td className="px-3 py-4 text-center">
+                    {entry.mvpCount}
                   </td>
                 </tr>
               ))}

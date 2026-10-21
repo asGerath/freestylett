@@ -1648,3 +1648,31 @@ con lint, build y pruebas relevantes, y después integrarse nuevamente a
 Si solo se dispone de unos segundos de contexto:
 
 > FreeStyle Total es un portal/hub del freestyle hispano enfocado inicialmente en México, Argentina, España, Colombia, Perú y Chile. Usa Next.js 16, React 19, TypeScript, Tailwind CSS 4 y Supabase. La base PostgreSQL, Auth, Storage, RLS, seeds y una suite pgTAP base de 226 pruebas, más 30 pruebas específicas de Rankings, ya están implementados. Eventos, Ligas, Freestylers y Blog consumen Supabase mediante repositorios y servicios; sus listados, detalles y previews de Home usan datos reales y sus mocks fueron eliminados. Los cuatro módulos cuentan con estados de interfaz, metadata y rutas públicas en el sitemap. Rankings también consume Supabase mediante repositorio y servicio, ofrece una tabla pública responsive en `/rankings`, se integra en el detalle de las ligas y cuenta con metadata, estados de interfaz, navegación y sitemap. El frontend ya resuelve la sesión y los roles, protege dashboard y admin, redirige accesos no autorizados y adapta la navegación a los permisos. El panel editorial ya permite gestionar eventos, ligas, freestylers, artículos y rankings con Server Actions, validación de permisos y persistencia en Supabase. Rankings incluye snapshots, vigencia, participantes de temporada y gestión completa de posiciones. Batallas también dispone de listado y detalle público, CRUD administrativo y gestión editorial de participantes con límites por formato protegidos en aplicación y base de datos. La prioridad actual es integrar la gestión de participantes y y el módulo de Creadores está listo para validación. El branding utiliza el logo de puño + micrófono, azul cyan #22C7F2 como color principal y amarillo #F2C230 como acento.
+
+
+---
+
+# 35. Carga real — FMS Colombia 2026/27
+
+La primera ficha real completa está en
+`docs/research/FMS_COLOMBIA_2026_27.md` y fue aprobada para importación
+controlada el 2026-10-20.
+
+Decisiones ya implementadas:
+
+- los participantes inscritos pero inactivos pueden conservarse en batallas
+  históricas únicamente cuando la etapa es `play_in`;
+- `ranking_entries` almacena `mvp_count` y la aplicación lo gestiona y
+  muestra;
+- la Jornada 2 de Cali queda verificada como evento programado para
+  2026-11-14 a las 18:00, sin cruces hasta anuncio oficial;
+- la Jornada 1 de Bogotá conserva la hora vacía porque ninguna fuente primaria
+  consultada permitió acreditarla.
+
+La importación idempotente del núcleo aprobado está preparada en
+`supabase/imports/001_fms_colombia_2026_27.sql`: organización, liga,
+temporada, roster, Jornada 1, resultados, ranking y Jornada 2. La hora de la
+Jornada 1 quedó confirmada oficialmente a las 17:30. El siguiente paso es
+ejecutar el archivo en Supabase local, revisar las pantallas públicas y
+administrativas y documentar los ajustes de UX encontrados. Antes de publicar
+datos futuros se debe reverificar la fuente oficial.

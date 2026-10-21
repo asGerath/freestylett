@@ -11,6 +11,7 @@ export type RankingEntryItem = {
   points: number;
   scoreTotal: number;
   penaltyPoints: number;
+  mvpCount: number;
   freestyler: {
     id: string;
     stageName: string;
@@ -98,6 +99,7 @@ export type AdminRankingEntryItem = {
   points: number;
   scoreTotal: number;
   penaltyPoints: number;
+  mvpCount: number;
 };
 
 export type AdminRankingEntriesData = {
@@ -127,6 +129,7 @@ export type AdminRankingEntryFormValues = {
   points: number;
   scoreTotal: number;
   penaltyPoints: number;
+  mvpCount: number;
 };
 
 export type AdminSeasonParticipantItem = {

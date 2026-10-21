@@ -243,6 +243,24 @@ export function AdminRankingEntryForm({
 
         <label className="block">
           <span className="font-bold">
+            MVP
+          </span>
+
+          <input
+            type="number"
+            name="mvpCount"
+            required
+            min="0"
+            step="1"
+            defaultValue={
+              initialValues?.mvpCount ?? 0
+            }
+            className={inputStyles}
+          />
+        </label>
+
+        <label className="block">
+          <span className="font-bold">
             Puntos de penalización
           </span>
 
