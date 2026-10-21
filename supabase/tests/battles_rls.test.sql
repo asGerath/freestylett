@@ -622,7 +622,7 @@ values (
 );
 
 select lives_ok(
-  $
+  $$
     insert into public.battle_participants (
       battle_id,
       freestyler_id,
@@ -635,7 +635,7 @@ select lives_ok(
       1,
       1
     )
-  $,
+  $$,
   'inactive season participant can be preserved in a play-in battle'
 );
 
