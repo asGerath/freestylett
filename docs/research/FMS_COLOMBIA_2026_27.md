@@ -21,9 +21,10 @@ La investigación permite verificar:
 - próxima Jornada 2 anunciada para Cali;
 - fuentes oficiales de Urban Roosters y FMS.
 
-No se deben cargar todavía la hora de inicio de la Jornada 1, la fecha final de
-la temporada ni las jornadas 3 a 5 porque no fueron confirmadas en las fuentes
-consultadas.
+No se deben cargar todavía la fecha final de la temporada ni las jornadas 3 a
+5 porque no fueron confirmadas en las fuentes consultadas. La hora de la
+Jornada 1 quedó confirmada posteriormente por publicaciones de la cuenta
+oficial de FMS Colombia.
 
 ## 2. Organización
 
@@ -133,7 +134,7 @@ batallas, pero no deben aparecer como integrantes activos del roster definitivo.
 | Tipo | `league_round` | confirmado por contexto |
 | Estado | `finished` | confirmado |
 | Fecha | `2026-10-11` | confirmado |
-| Hora | pendiente | no localizada de forma fiable |
+| Hora | `17:30` | confirmada por la cuenta oficial de FMS Colombia |
 | Zona horaria | `America/Bogota` | confirmado geográficamente |
 | País | Colombia | confirmado |
 | Ciudad | Bogotá | confirmado |
@@ -276,16 +277,13 @@ se exige una reverificación por tratarse de información futura.
 
 ### 4. Hora de la Jornada 1 de Bogotá
 
-Se revisaron Urban Roosters, FMS, Canal Trece y la ticketera. Las fuentes
-primarias consultadas confirman fecha y venue, pero no permiten acreditar una
-hora exacta de inicio. La hora permanece nula: no se inventa ni se aplica una
-convención silenciosa. El evento se importará cuando exista una fuente fiable
-o cuando el modelo soporte explícitamente eventos con fecha confirmada y hora
-desconocida.
+Resuelta el 2026-10-21: publicaciones de la cuenta oficial de FMS Colombia
+confirman las 17:30, hora de Colombia. El evento puede almacenarse como
+`2026-10-11 17:30:00-05` con zona `America/Bogota`, sin usar una convención
+editorial ni inventar una hora.
 
 ### Datos que siguen bloqueados
 
-- hora de la Jornada 1;
 - seeds del roster;
 - fecha final de temporada;
 - calendario de jornadas 3 a 5;
@@ -335,4 +333,16 @@ desconocida.
 | 2026-10-20 | Permitir inactivos históricos solo en `play_in` | implementada y cubierta por prueba |
 | 2026-10-20 | Conservar MVP oficial | implementada de base de datos a interfaz |
 | 2026-10-20 | Registrar Jornada 2 de Cali | verificada para importación controlada, sin cruces |
-| 2026-10-20 | Investigar hora exacta de Jornada 1 | sin evidencia primaria suficiente; campo vacío |
+| 2026-10-20 | Investigar hora exacta de Jornada 1 | búsqueda inicial sin evidencia suficiente |
+| 2026-10-21 | Revalidar hora de Jornada 1 | 17:30 confirmada por la cuenta oficial de FMS Colombia |
+
+
+## 13. Importación controlada
+
+Archivo: `supabase/imports/001_fms_colombia_2026_27.sql`.
+
+La importación es transaccional e idempotente. Carga organización, liga,
+temporada, doce inscritos, dos venues, Jornada 1, once batallas, veintidós
+participantes de batalla, clasificación oficial y Jornada 2 sin cruces. Al
+final valida las cantidades críticas y revierte todo si detecta una carga
+incompleta.
