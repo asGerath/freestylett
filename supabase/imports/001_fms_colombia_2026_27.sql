@@ -810,6 +810,44 @@ begin
     raise exception
       'FMS Colombia Jornada 2 must remain without battles until official matchups are published';
   end if;
+
+  -- Constantes ASCII con escapes Unicode: si el shell recodifica el archivo,
+  -- estas comparaciones siguen siendo confiables y revierten la transaccion.
+  if (
+    select stage_name
+    from public.freestylers
+    where slug = 'exodo-lirical'
+  ) is distinct from U&'\00C9xodo Lirical' then
+    raise exception
+      'FMS Colombia import detected invalid UTF-8 in Exodo Lirical';
+  end if;
+
+  if (
+    select stage_name
+    from public.freestylers
+    where slug = 'filosofo'
+  ) is distinct from U&'Fil\00F3sofo' then
+    raise exception
+      'FMS Colombia import detected invalid UTF-8 in Filosofo';
+  end if;
+
+  if (
+    select name
+    from public.countries
+    where slug = 'republica-dominicana'
+  ) is distinct from U&'Rep\00FAblica Dominicana' then
+    raise exception
+      'FMS Colombia import detected invalid UTF-8 in Republica Dominicana';
+  end if;
+
+  if (
+    select city
+    from public.venues
+    where slug = 'teatro-jorge-eliecer-gaitan'
+  ) is distinct from U&'Bogot\00E1' then
+    raise exception
+      'FMS Colombia import detected invalid UTF-8 in Bogota';
+  end if;
 end;
 $verify$;
 
