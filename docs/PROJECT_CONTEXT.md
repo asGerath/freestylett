@@ -1669,7 +1669,10 @@ Decisiones ya implementadas:
 - la Jornada 1 de Bogotá conserva la hora vacía porque ninguna fuente primaria
   consultada permitió acreditarla.
 
-La siguiente tarea es preparar y ejecutar la importación idempotente del
-núcleo aprobado: organización, liga, temporada, roster, Jornada 1, resultados,
-ranking y Jornada 2. Antes de publicar datos futuros se debe reverificar la
-fuente oficial.
+La importación idempotente del núcleo aprobado está preparada en
+`supabase/imports/001_fms_colombia_2026_27.sql`: organización, liga,
+temporada, roster, Jornada 1, resultados, ranking y Jornada 2. La hora de la
+Jornada 1 quedó confirmada oficialmente a las 17:30. El siguiente paso es
+ejecutar el archivo en Supabase local, revisar las pantallas públicas y
+administrativas y documentar los ajustes de UX encontrados. Antes de publicar
+datos futuros se debe reverificar la fuente oficial.
