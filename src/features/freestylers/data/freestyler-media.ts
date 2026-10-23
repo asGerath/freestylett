@@ -26,7 +26,7 @@ const COUNTRY_VISUALS: Readonly<Record<string, CountryVisual>> = {
     flagSrc: "/images/uni/Bander Republica Dominican.webp",
   },
   Colombia: {
-    emoji: "🇨🇴",
+    flagSrc: "/images/uni/Bandera Colombia.svg",
   },
   Cuba: {
     emoji: "🇨🇺",
